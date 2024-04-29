@@ -1,0 +1,19 @@
+{
+  "name": "comp-4800-37",
+  "version": "1.0.0",
+  "description": "Recreation of the historical 37 website which contains facts about the number.",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "nodemon app/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LukarioMC/COMP-4800-37.git"
+  },
+  "author": "Team 0x25",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LukarioMC/COMP-4800-37/issues"
+  },
+  "homepage": "https://github.com/LukarioMC/COMP-4800-37#readme"
+}
