@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/LukarioMC/COMP-4800-37/issues"
   },
-  "homepage": "https://github.com/LukarioMC/COMP-4800-37#readme"
+  "homepage": "https://github.com/LukarioMC/COMP-4800-37#readme",
+  "devDependencies": {
+    "prisma": "^5.13.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.13.0"
+  }
 }
