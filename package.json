@@ -4,6 +4,8 @@
   "description": "Recreation of the historical 37 website which contains facts about the number.",
   "main": "app/index.js",
   "scripts": {
+    "start": "node app/index.js",
+    "dev": "nodemon app/index.js",
     "test": "nodemon app/index.js"
   },
   "repository": {
@@ -15,5 +17,13 @@
   "bugs": {
     "url": "https://github.com/LukarioMC/COMP-4800-37/issues"
   },
-  "homepage": "https://github.com/LukarioMC/COMP-4800-37#readme"
+  "homepage": "https://github.com/LukarioMC/COMP-4800-37#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
 }
