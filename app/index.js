@@ -5,6 +5,7 @@
  *
  * @author Dakaro Mueller (A01294207)
  */
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
