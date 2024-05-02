@@ -1,6 +1,6 @@
 datasource db {
-    provider = "sqlite"
-    url      = "file:./db/app.db" 
+  provider = "sqlite"
+  url      = "file:./db/app.db"
 }
 
 generator client {
@@ -8,8 +8,68 @@ generator client {
 }
 
 model User {
-    id Int @id @default(autoincrement())
-    email String @unique
-    name String?
-    country String?
+  id              String    @id
+  email           String    @unique
+  hashed_password String?
+  fname           String?
+  lname           String?
+  is_admin        Boolean   @default(false)
+  Session         Session[]
+  Factoid         Factoid[]
+  Report          Report[]
+}
+
+model Session {
+  id          Int      @id @default(autoincrement())
+  user        User?    @relation(fields: [user_id], references: [id])
+  user_id     String?
+  expiry_time DateTime
+}
+
+model Factoid {
+  id             Int          @id @default(autoincrement())
+  submitter      User?        @relation(fields: [submitter_id], references: [id])
+  submitter_id   String?
+  content        String
+  posting_date   DateTime     @default(now())
+  discovery_date DateTime     @default(now())
+  note           String?
+  is_approved    Boolean      @default(false)
+  approval_date  DateTime?
+  Tag            Tag[]
+  Attachment     Attachment[]
+  Report         Report[]
+}
+
+model Category {
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  is_primary Boolean @default(false)
+  Tag        Tag[]
+}
+
+model Tag {
+  factoid     Factoid  @relation(fields: [factoid_id], references: [id])
+  factoid_id  Int
+  category    Category @relation(fields: [category_id], references: [id])
+  category_id Int
+
+  @@id([factoid_id, category_id])
+}
+
+model Attachment {
+  id         Int     @id @default(autoincrement())
+  factoid    Factoid @relation(fields: [factoid_id], references: [id])
+  factoid_id Int
+  link       String?
+}
+
+model Report {
+  id              Int      @id @default(autoincrement())
+  factoid         Factoid  @relation(fields: [factoid_id], references: [id])
+  factoid_id      Int
+  submitter       User?    @relation(fields: [submitter_id], references: [id])
+  submitter_id    String?
+  text            String
+  submission_date DateTime @default(now())
 }
