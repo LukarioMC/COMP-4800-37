@@ -15,13 +15,14 @@ app.set('views', './app/views'); // Config to use the views from our app dir
 
 // ================ APP ROUTES ================
 app.get('/', (_, res) => {
-    // Demonstrating passing an obj with values to a rendered template
-    const pageContext = { injectedVal: 'Superb!' };
-    res.render('pages/landing-page', pageContext);
+    res.render('pages/landing-page');
 });
 
-app.get('/about', (_, res) => {
-    res.render('pages/about');
+// * This route is used for example EJS usage demonstration. Should be removed after we are familiar with EJS.
+app.get('/example', (_, res) => {
+    // Demonstrating passing an obj with values to a rendered template
+    const pageContext = { injectedVal: 'Superb!' };
+    res.render('pages/example', pageContext);
 });
 
 // ================ SERVER ROUTES ================
