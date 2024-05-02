@@ -62,6 +62,7 @@ model Attachment {
   factoid    Factoid @relation(fields: [factoid_id], references: [id])
   factoid_id Int
   link       String?
+  type       String
 }
 
 model Report {
