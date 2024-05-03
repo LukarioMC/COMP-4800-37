@@ -16,7 +16,15 @@ app.set('views', './app/views'); // Config to use the views from our app dir
 
 // ================ APP ROUTES ================
 app.get('/', (_, res) => {
-    res.render('pages/landing-page');
+    const pageContext = {
+        // Fake Fact data to mock landing page fact of the day, may be replaced with random fact?
+        factoid: {
+            id: 123,
+            content: 'A super cool 37 fact',
+            // note: 'Something extra about the fact',
+        },
+    };
+    res.render('pages/landing-page', pageContext);
 });
 
 // * This route is used for example EJS usage demonstration. Should be removed after we are familiar with EJS.
