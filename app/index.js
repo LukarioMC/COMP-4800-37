@@ -3,7 +3,8 @@
  * route handlers to use for each. The application is built primarily using EJS
  * templates to serve website content.
  *
- * @author Dakaro Mueller (A01294207)
+ * @author Alex Sichitiu
+ * @author Dakaro Mueller
  */
 require('dotenv').config();
 const express = require('express');
