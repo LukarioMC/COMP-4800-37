@@ -1,0 +1,23 @@
+<div class="fact accordion-item">
+    <h2 class="accordion-header" id="heading-<%- factoid.id %>">
+        <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse-<%- factoid.id %>"
+            aria-expanded="true"
+            aria-controls="collapse-<%- factoid.id %>"
+        >
+            <%- factoid.content %>
+        </button>
+    </h2>
+
+    <div
+        id="collapse-<%- factoid.id %>"
+        class="accordion-collapse collapse"
+        aria-labelledby="heading-<%- factoid.id %>"
+        <% if(typeof accordionParent !== 'undefined') { %>data-bs-parent="<%= accordionParent %>"<% } %>
+    >
+        <div class="accordion-body"><%- factoid.note || "Nothing is here..." %></div>
+    </div>
+</div>
