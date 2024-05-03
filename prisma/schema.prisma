@@ -10,19 +10,19 @@ generator client {
 model User {
   id              String    @id
   email           String    @unique
-  hashed_password String?
+  hashed_password String
   fname           String?
   lname           String?
   is_admin        Boolean   @default(false)
-  Session         Session[]
+  Session         Session?
   Factoid         Factoid[]
   Report          Report[]
 }
 
 model Session {
   id          Int      @id @default(autoincrement())
-  user        User?    @relation(fields: [user_id], references: [id])
-  user_id     String?
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     String   @unique
   expiry_time DateTime
 }
 
@@ -61,7 +61,7 @@ model Attachment {
   id         Int     @id @default(autoincrement())
   factoid    Factoid @relation(fields: [factoid_id], references: [id])
   factoid_id Int
-  link       String?
+  link       String
   type       String
 }
 
