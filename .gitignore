@@ -1,3 +1,4 @@
-*.db
-*.db-journal
+.env*
+**.db
+**.db-journal
 node_modules
