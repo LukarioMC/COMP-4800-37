@@ -10,6 +10,21 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+// Example Prisma queries.
+// prisma.user.create({
+//     data: {
+//         id: 'aaa0037',
+//         email: 'test',
+//         hashed_password: 'test'
+//     }
+// })
+//     .catch(console.log)
+//     .then(_res => {return prisma.user.findMany()})
+//     .then(console.log)
+
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
