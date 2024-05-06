@@ -4,6 +4,39 @@ const crypto = require('crypto')
 const { PrismaClient } = require('@prisma/client');
 const { PrismaClientKnownRequestError } = require('@prisma/client/runtime/library');
 const prisma = new PrismaClient();
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+
+passport.use(new LocalStrategy(async function verify(email, password, done) {
+    let user = await prisma.user.findUnique({
+        where: {
+            email: email
+        }
+    })
+
+    crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', async (err, hashedPassword) => {
+        if (err) return done(err)
+        if (!user) return done(null, false, {message: 'Incorrect login credentials.'})
+
+        if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
+            return done(null, false, {message: 'Incorrect login credentials.'})
+        }
+
+        return done(null, user)
+    })
+}))
+
+passport.serializeUser(function(user, done) {
+    process.nextTick(function() {
+      done(null, { id: user.id, username: user.username });
+    });
+  });
+  
+  passport.deserializeUser(function(user, done) {
+    process.nextTick(function() {
+      return done(null, user);
+    });
+  });
 
 router.get('/login', (req, res, next) => res.render('pages/login'))
 
@@ -11,14 +44,14 @@ router.get('/signup', (req, res, next) => res.render('pages/signup'))
 
 router.post('/signup',  (req, res, next) => {
     let salt = crypto.randomBytes(16)
-    crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function(err, hashed_password) {
+    crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function(err, hashedPassword) {
         if (err) {res.redirect('/signup?failed=true')}
         while (true) {
             try {
                 await prisma.user.create({
                     id: generateRandomUID(),
                     email: req.body.email,
-                    hashed_password: hashed_password,
+                    hashed_password: hashedPassword,
                     salt: salt
                 })
             } catch (err) {
@@ -33,6 +66,7 @@ router.post('/signup',  (req, res, next) => {
 
         req.login(user, (err) => {
             if (err) res.redirect('/f')
+            else res.redirect('/')
         })
     })
 })
