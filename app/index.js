@@ -14,6 +14,8 @@ const PORT = process.env.PORT || 8000;
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const authRouter = require('./routes/auth')
+
 // Example Prisma queries.
 // prisma.user.create({
 //     data: {
@@ -29,6 +31,8 @@ const prisma = new PrismaClient();
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
+
+app.use('/', authRouter)
 
 // ================ APP ROUTES ================
 app.get('/', (_, res) => {
