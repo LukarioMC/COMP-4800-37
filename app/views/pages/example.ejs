@@ -1,0 +1,25 @@
+<!-- This file serves as a basic example of how to use EJS for templating -->
+<%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
+
+<main class="container-xl">
+    <div class="jumbotron">
+        <!-- Pass in { injectedVal: x } to render to see x output below -->
+        <p><%= injectedVal %></p>
+    </div>
+
+    <ol id="people">
+        <!-- forEach loop over an array of data -->
+        <% ["George", "Sal", "Janice"].forEach(name => { %>
+        <li><%= name %></li>
+        <% }) %>
+    </ol>
+
+    <ul id="numbers">
+        <!-- Simple for loop to demonstrate regular for loop -->
+        <% for( let index = 1; index <= 20; index++ ) { %>
+        <li>Item #<%- index %></li>
+        <% } %>
+    </ul>
+</main>
+
+<%- include('../partials/footer'); %>

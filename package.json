@@ -4,6 +4,8 @@
   "description": "Recreation of the historical 37 website which contains facts about the number.",
   "main": "app/index.js",
   "scripts": {
+    "start": "node app/index.js",
+    "dev": "nodemon app/index.js",
     "test": "nodemon app/index.js"
   },
   "repository": {
@@ -16,10 +18,14 @@
     "url": "https://github.com/LukarioMC/COMP-4800-37/issues"
   },
   "homepage": "https://github.com/LukarioMC/COMP-4800-37#readme",
-  "devDependencies": {
-    "prisma": "^5.13.0"
-  },
   "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
     "@prisma/client": "^5.13.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.13.0",
+    "nodemon": "^3.1.0"
   }
 }
