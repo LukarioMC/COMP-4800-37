@@ -19,17 +19,15 @@
   </div>
 
   <!-- Factoids Section -->
-  <!-- <div id="factoids">
-    <% factoids.forEach(function(factoid) { %>
-      <% include('../partials/fact', { factoid: factoid }); %>
-    <% }); %>
-  </div> -->
-  <div id="factoids">
-    <% for (let i=0; i < factoids.length; i++) { %>
-      <% include('../partials/fact', { factoid: factoids[i], factIndex: i + 1 }); %>
+  <div id="factoids" class="container mb-3 ps-0">
+    <% for (let i=0; i < 10; i++) { %>
+      <div class="accordion" id="fact-<%= i %>">
+        <%- include('../partials/fact', { factoid, accordionParent: '#fact-' + i }); %>
+      </div>
+      <% factoid.id = i; %>
     <% } %>
   </div>
-  
+
 </main>
 
 <%- include('../partials/footer'); %>

@@ -6,6 +6,7 @@
  * @author Alex Sichitiu
  * @author Dakaro Mueller
  * @author Justin Ng
+ * @author Elijah Fabon
  */
 require('dotenv').config();
 const express = require('express');
@@ -80,7 +81,15 @@ app.get('/admin', (req, res) => {
 
 // This route is for the factoids listings page where users can view and search for factoids.
 app.get('/factoids', async (req, res) => {
-    res.render('pages/factoid-listings');
+    const pageContext = {
+      // Fake Fact data to mock factoid, may be replaced with actual data from the database
+        factoid: {
+            id: 777,
+            content: 'A super cool 37 fact',
+            note: 'Something extra about the fact',
+        },
+    };
+    res.render('pages/factoid-listings', pageContext);
 });
 
 // ================ SERVER ROUTES ================
