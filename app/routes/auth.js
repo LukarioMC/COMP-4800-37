@@ -14,7 +14,6 @@ passport.use(new LocalStrategy(async function verify(email, password, done) {
             email: email
         }
     })
-    console.log(user)
     if (!user) return done(null, false, { message: 'Incorrect login credentials.' })
 
     crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', async (err, hashedPassword) => {
