@@ -5,7 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h3 class="text-left mb-4">Submit a Fact: </h3>
-            <small id="submit-note" class="form-text text-muted">Please make sure all fields are filled.</small>
+            <% if (!user) { %>
+                <small id="submit-note" class="form-text text-muted">You are not logged in. Your fact will be submitted anonymously.</small>
+            <% } %>
         </div>
     </div>
 </main>
