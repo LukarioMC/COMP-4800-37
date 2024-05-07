@@ -1,6 +1,8 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
 
 <main class="container-xl">
+  <br>
+
   <div class="input-group">
     <input 
       class="form-control" 
@@ -15,6 +17,19 @@
       Search
     </button>
   </div>
+
+  <!-- Factoids Section -->
+  <!-- <div id="factoids">
+    <% factoids.forEach(function(factoid) { %>
+      <% include('../partials/fact', { factoid: factoid }); %>
+    <% }); %>
+  </div> -->
+  <div id="factoids">
+    <% for (let i=0; i < factoids.length; i++) { %>
+      <% include('../partials/fact', { factoid: factoids[i], factIndex: i + 1 }); %>
+    <% } %>
+  </div>
+  
 </main>
 
 <%- include('../partials/footer'); %>
