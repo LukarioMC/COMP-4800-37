@@ -15,6 +15,10 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const authRouter = require('./routes/auth')
+const passport = require('passport')
+const session = require('express-session')
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
+const bodyParser = require('body-parser');
 
 // Example Prisma queries.
 // prisma.user.create({
@@ -32,8 +36,24 @@ const authRouter = require('./routes/auth')
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
 
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(session({
+    cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+    },
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: new PrismaSessionStore(
+        prisma,
+        {
+            checkPeriod: 2 * 60 * 1000,  //ms
+            dbRecordIdIsSessionId: true,
+            dbRecordIdFunction: undefined,
+        }
+    )
+}))
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.authenticate('session'));
 
 app.use('/', authRouter)
 
@@ -56,6 +76,11 @@ app.get('/example', (_, res) => {
     const pageContext = { injectedVal: 'Superb!' };
     res.render('pages/example', pageContext);
 });
+
+app.get('/account', (req, res) => {
+    console.log(req.user)
+    res.render('pages/account', {email: req.user ? req.user.email : "not logged in"})
+})
 
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma

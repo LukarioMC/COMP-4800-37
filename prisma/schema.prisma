@@ -19,6 +19,13 @@ model User {
   Report          Report[]
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt   DateTime
+}
+
 model Factoid {
   id             Int          @id @default(autoincrement())
   submitter      User?        @relation(fields: [submitter_id], references: [id])

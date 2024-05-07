@@ -1,0 +1,10 @@
+<%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
+
+<main class="container-xl">
+    <%= email %>
+    <form action="/logout" method="post">
+        <button class="logout" type="submit">Sign out</button>
+    </form>
+</main>
+
+<%- include('../partials/footer'); %>
