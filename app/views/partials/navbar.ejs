@@ -90,4 +90,9 @@
             </address>
         </div>
     </div>
+    <% if (user && user.id) { %>
+        <span class="px-3">Hi <%= user.id %>!</span>
+    <% } else { %>
+        <a href="/login" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-3">Log In</a>
+    <% } %>
 </nav>

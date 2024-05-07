@@ -39,9 +39,7 @@ app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine"
 app.set('views', './app/views'); // Config to use the views from our app dir
 
 app.use(session({
-    cookie: {
-        maxAge: 7 * 24 * 60 * 60 * 1000 // ms
-    },
+    cookie: { maxAge: 2 * 60 * 60 * 1000 },
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -57,7 +55,14 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.authenticate('session'));
 
+app.use(function (req, res, next) {
+    res.locals.user = req.user ? {id: req.user.id, email: req.user.email} : undefined
+    next();
+});
+
+// ================ ROUTERS ========================
 app.use('/', authRouter)
+
 // ================ JS AND CSS PATH SETUP ================
 app.use(express.static(path.join(__dirname, 'public/css')));
 app.use(express.static(path.join(__dirname, 'public/js')));
@@ -82,6 +87,7 @@ app.get('/example', (_, res) => {
     res.render('pages/example', pageContext);
 });
 
+// Route for seeing user account data.
 app.get('/account', (req, res) => {
     console.log(req.user)
     res.render('pages/account', {email: req.user ? req.user.email : "not logged in"})
