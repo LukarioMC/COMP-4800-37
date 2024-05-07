@@ -43,7 +43,7 @@ passport.deserializeUser(function (user, done) {
 // Route for log in page.
 router.get('/login', (req, res, next) => {
     let error
-    if (req.query.err) error = `Error: ${req.query.err}`
+    if (req.query.error) error = `Error: ${req.query.err}`
     if (req.user) error = `You're already logged in as ${req.user.id}` 
     res.render('pages/login', { err: error })
 })
@@ -51,7 +51,7 @@ router.get('/login', (req, res, next) => {
 // API route to log a user in.
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/account',
-    failureRedirect: '/login?err=loginfailed'
+    failureRedirect: '/login?error=true'
 }))
 
 // Route for sign up page.
@@ -97,7 +97,6 @@ router.post('/signup', (req, res, next) => {
             break
         }
 
-        console.log(user)
         req.login(user, (err) => {
             if (err) return next(err)
             res.redirect('/')
@@ -107,10 +106,10 @@ router.post('/signup', (req, res, next) => {
 
 // API route to log a user out.
 router.post('/logout', function (req, res, next) {
-    console.log('signing out')
     req.logout(function (err) {
         if (err) { return next(err); }
-        res.redirect('/login');
+        let url = req.header('Referer') || '/'
+        res.redirect(url);
     });
 });
 
@@ -119,19 +118,29 @@ router.post('/logout', function (req, res, next) {
  * @returns string containing the random user id
  */
 function generateRandomUID() {
-    let userid = ""
+    let userid = []
     let upperLimit = 9999
     let prefixLength = 3
 
     for (let i = 0; i < prefixLength; i++) {
         let n = Math.floor(Math.random() * 26)
-        userid += String.fromCharCode(97 + n)
+        userid.push(String.fromCharCode(97 + n))
     }
 
-    let factor = Math.floor(Math.random() * upperLimit / 37)
-    userid += String(factor).padStart(4, '0')
+    let factor = Math.ceil(Math.random() * Math.floor(upperLimit / 37))
+    userid.push(String(factor * 37).padStart(4, '0'))
 
-    return userid
+    return userid.join("")
 }
+
+// Unit Testing for UID Generation
+// for (let i = 0; i < 10000; i++) {
+//     let uid = generateRandomUID()
+//     console.assert(uid.length == 7, "UID is not 7 char long.")
+//     let multipleOf37 = parseInt(uid.substring(3))
+//     console.assert(multipleOf37 % 37 == 0, "Number postfix is not a multiple of 37")
+//     console.assert(multipleOf37 != 0, "Number postfix is 0000")
+// }
+
 
 module.exports = router

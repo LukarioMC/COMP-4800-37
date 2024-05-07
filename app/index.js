@@ -89,8 +89,7 @@ app.get('/example', (_, res) => {
 
 // Route for seeing user account data.
 app.get('/account', (req, res) => {
-    console.log(req.user)
-    res.render('pages/account', {email: req.user ? req.user.email : "not logged in"})
+    res.render('pages/account')
 })
 
 // This route is for the admin dashboard where the admin can approved, edit, and delete fact submissions.

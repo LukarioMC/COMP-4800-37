@@ -1,10 +1,13 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
 
 <main class="container-xl">
-    <%= email %>
-    <form action="/logout" method="post">
-        <button class="logout" type="submit">Sign out</button>
-    </form>
+    <% if (user) { %>
+        <p><b>Email:</b> <%= user.email %></p>
+        <p></p><b>ID:</b> <%= user.id %></p>
+    <% } else { %>
+        <span>Not Logged In</span>
+    <% } %>
+    
 </main>
 
 <%- include('../partials/footer'); %>
