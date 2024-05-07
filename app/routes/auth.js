@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
+// Configuring passport strategy.
 passport.use(new LocalStrategy(async function verify(email, password, done) {
     let user = await prisma.user.findUnique({
         where: {
@@ -26,6 +27,7 @@ passport.use(new LocalStrategy(async function verify(email, password, done) {
     })
 }))
 
+// Serialization Functions
 passport.serializeUser(function (user, done) {
     process.nextTick(function () {
         done(null, { id: user.id, email: user.email });
@@ -38,6 +40,7 @@ passport.deserializeUser(function (user, done) {
     })
 });
 
+// Route for log in page.
 router.get('/login', (req, res, next) => {
     let error
     if (req.query.err) error = `Error: ${req.query.err}`
@@ -45,25 +48,33 @@ router.get('/login', (req, res, next) => {
     res.render('pages/login', { err: error })
 })
 
+// API route to log a user in.
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/account',
     failureRedirect: '/login?err=loginfailed'
 }))
 
+// Route for sign up page.
 router.get('/signup', (req, res, next) => {
-    const error = req.query.err
+    let error
+    switch (req.query.error) {
+        case "email":
+            error = "Email is already in use."
+            break
+        case "other":
+            error = "Error occurred, please try again at another time."
+            break
+    }
     res.render('pages/signup', { err: error })
 })
 
-router.get('/test', (req, res, next) => {
-    res.redirect('/login')
-})
-
+// API route to sign a new user up.
 router.post('/signup', (req, res, next) => {
     let salt = crypto.randomBytes(16)
     let user
+    let attemptsLeft = 10000
     crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function (err, hashedPassword) {
-        if (err) { res.redirect('/signup?failed=true') }
+        if (err) { res.redirect('/signup?error=other') }
         while (true) {
             try {
                 user = await prisma.user.create({
@@ -76,11 +87,11 @@ router.post('/signup', (req, res, next) => {
                 })
             } catch (err) {
                 console.log(err)
-                if (err instanceof PrismaClientKnownRequestError && err.code === "P2002" && err.meta.target[0] === 'id') {
+                if (err instanceof PrismaClientKnownRequestError && err.code === "P2002" && err.meta.target[0] === 'id' && attemptsLeft <= 0) {
+                    attemptsLeft--
                     continue
                 } else {
-                    console.log("fail to reg")
-                    return res.redirect('/')
+                    return res.redirect(`/signup?error=${attemptsLeft <= 0 ? 'other' : 'email'}`)
                 }
             }
             break
@@ -94,6 +105,7 @@ router.post('/signup', (req, res, next) => {
     })
 })
 
+// API route to log a user out.
 router.post('/logout', function (req, res, next) {
     console.log('signing out')
     req.logout(function (err) {
