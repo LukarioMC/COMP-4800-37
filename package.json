@@ -19,13 +19,14 @@
   },
   "homepage": "https://github.com/LukarioMC/COMP-4800-37#readme",
   "dependencies": {
+    "@prisma/client": "^5.13.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "@prisma/client": "^5.13.0"
+    "path": "^0.12.7"
   },
   "devDependencies": {
-    "prisma": "^5.13.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "prisma": "^5.13.0"
   }
 }
