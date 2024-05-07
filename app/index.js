@@ -32,10 +32,9 @@ const prisma = new PrismaClient();
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
 
-
 // ================ JS AND CSS PATH SETUP ================
-app.use(express.static(path.join(__dirname, "public/css")));
-app.use(express.static(path.join(__dirname, "public/js")));
+app.use(express.static(path.join(__dirname, 'public/css')));
+app.use(express.static(path.join(__dirname, 'public/js')));
 
 // ================ APP ROUTES ================
 app.get('/', (_, res) => {
@@ -64,20 +63,20 @@ app.get('/admin', (req, res) => {
             dateSubmitted: '05 / 04 / 2024',
             user: 'abc0185',
             fact: 'The number of pages in this book is a multiple of 37!',
-            note: 'Name of the book: \"All things 37\" by Greg Jones',
-            tags: 'media, books'
+            note: 'Name of the book: "All things 37" by Greg Jones',
+            tags: 'media, books',
         },
         {
             dateSubmitted: '05 / 06 / 2024',
             user: 'mag3737',
             fact: 'Another super cool 37 fact',
             note: 'Found in Vancouver, BC',
-            tags: 'nature'
-        }
+            tags: 'nature',
+        },
     ];
-    const adminName = "mag3737";
-    res.render('pages/admin-dashboard', {testData, adminName});
-})
+    const adminName = 'mag3737';
+    res.render('pages/admin-dashboard', { submissions: testData, adminName });
+});
 
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma

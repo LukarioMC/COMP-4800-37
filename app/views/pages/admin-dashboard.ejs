@@ -1,80 +1,80 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
-        <link rel="stylesheet" href="/admin-dashboard.css">
+<link rel="stylesheet" href="/admin-dashboard.css" />
 
-        <main>
-            <h1 class="text-center my-5">Welcome back, <%= adminName %></h1>
+<main>
+    <h1 class="text-center my-5">Welcome back, <%= adminName %></h1>
 
-            <div class="container mb-3 ps-0">
-                <h3>Pending Fact Submissions</h3>
+    <div class="container mb-3 ps-0">
+        <h3>Pending Fact Submissions</h3>
+    </div>
+
+    <div id="dashboard" class="container text-center">
+        <div class="row text-start fw-bold text-wrap">
+            <div class="col mt-3">
+                <p>Date Submitted</p>
             </div>
-
-            <div id="dashboard" class="container text-center">
-                <div class="row text-start fw-bold text-wrap">
-                    <div class="col mt-3">
-                        <p>Date Submitted</p>
-                    </div>
-                    <div class="col mt-3">
-                        <p>User</p>
-                    </div>
-                    <div class="col mt-3">
-                        <p>Fact</p>
-                    </div>
-                    <div class="col mt-3">
-                        <p>Note</p>
-                    </div>
-                    <div class="col mt-3">
-                        <p>Tags</p>
-                    </div>
-                    <div class="col mt-3">
-
-                    </div>
-                </div>
-
-                <hr>
-
-                <% if (testData.length> 0) { %>
-                    <% testData.forEach(function (submission) { %>
-                        <div class="row text-start text-wrap pb-4">
-                            <div class="col">
-                                <%= submission.dateSubmitted %>
-                            </div>
-                            <div class="col">
-                                <%= submission.user %>
-                            </div>
-                            <div class="col">
-                                <%= submission.fact %>
-                            </div>
-                            <div class="col">
-                                <%= submission.note %>
-                            </div>
-                            <div class="col">
-                                <%= submission.tags %>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="btn btn-success btn-sm">Approve</button>
-                                <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                                <button type="button" class="btn btn-warning btn-sm">Edit</button>
-                            </div>
-                        </div>
-                    <% }); %>
-                <% } %>
-                
+            <div class="col mt-3">
+                <p>User</p>
             </div>
-
-            <div class="container mt-5 mb-3 ps-0">
-                <h3>Create a New Tag</h3>
+            <div class="col mt-3">
+                <p>Fact</p>
             </div>
+            <div class="col mt-3">
+                <p>Note</p>
+            </div>
+            <div class="col mt-3">
+                <p>Tags</p>
+            </div>
+            <div class="col mt-3"></div>
+        </div>
 
-            <div class="container mb-3 ps-0">
-                <div class="row text-start">
-                    <div class="col-3">
-                        <input type="text" class="form-control" placeholder="Tag name" aria-label="Tag name" aria-describedby="basic-addon1">
-                    </div>
+        <hr />
+
+        <% if (submissions.length > 0) { %>
+            <% submissions.forEach(function (submission) { %>
+                <div class="row text-start text-wrap pb-4">
+                    <div class="col"><%= submission.dateSubmitted %></div>
+                    <div class="col"><%= submission.user %></div>
+                    <div class="col"><%= submission.fact %></div>
+                    <div class="col"><%= submission.note %></div>
+                    <div class="col"><%= submission.tags %></div>
                     <div class="col">
-                        <button type="button" class="btn btn-success btn">Create Tag</button>
+                        <button type="button" class="btn btn-success btn-sm">
+                            Approve
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm">
+                            Delete
+                        </button>
+                        <button type="button" class="btn btn-warning btn-sm">
+                            Edit
+                        </button>
                     </div>
                 </div>
-            </div>
-        </main>
+            <% }); %>
+        <% } %>
+    </div>
 
-        <%- include('../partials/footer'); %>
+    <div class="container mt-5 mb-3 ps-0">
+        <h3>Create a New Tag</h3>
+    </div>
+
+    <div class="container mb-3 ps-0">
+        <div class="row text-start">
+            <div class="col-3">
+                <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Tag name"
+                    aria-label="Tag name"
+                />
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-success btn">
+                    Create Tag
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer'); %>
