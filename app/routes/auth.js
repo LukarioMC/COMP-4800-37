@@ -90,7 +90,7 @@ router.post('/signup', (req, res, next) => {
                 })
             } catch (err) {
                 console.log(err)
-                if (err instanceof PrismaClientKnownRequestError && err.code === "P2002" && err.meta.target[0] === 'id' && attemptsLeft <= 0) {
+                if (err instanceof PrismaClientKnownRequestError && err.code === "P2002" && err.meta.target[0] === 'id' && attemptsLeft > 0) {
                     attemptsLeft--
                     continue
                 } else {
