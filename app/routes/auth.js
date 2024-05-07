@@ -6,6 +6,8 @@ const { PrismaClientKnownRequestError } = require('@prisma/client/runtime/librar
 const prisma = new PrismaClient();
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
+const passwordValidator = require('password-validator')
+const emailValidator = require('email-validator')
 
 // Configuring passport strategy.
 passport.use(new LocalStrategy(async function verify(email, password, done) {
