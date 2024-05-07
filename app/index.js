@@ -6,6 +6,7 @@
  * @author Alex Sichitiu
  * @author Dakaro Mueller
  * @author Justin Ng
+ * @author Liana Diu
  */
 require('dotenv').config();
 const express = require('express');
@@ -76,6 +77,16 @@ app.get('/admin', (req, res) => {
     ];
     const adminName = 'mag3737';
     res.render('pages/admin-dashboard', { submissions: testData, adminName });
+});
+
+// route for submitting facts when logged in
+app.get('/fact_submission', (req, res) => {
+    res.render('pages/fact-submission-page', {user: req.user });
+});
+
+// route for submitting facts when not logged in
+app.get('/fact_submission', (req, res) => {
+    res.render('pages/fact-submission-page');
 });
 
 // ================ SERVER ROUTES ================
