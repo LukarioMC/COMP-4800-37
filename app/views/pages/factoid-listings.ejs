@@ -3,7 +3,7 @@
 <main class="container-xl">
   <br>
 
-  <div class="input-group">
+  <div class="input-group mb-5 mt-3">
     <input 
       class="form-control" 
       type="text" 
@@ -17,12 +17,11 @@
       Search
     </button>
   </div>
-  <br>
 
   <!-- Factoids Section -->
   <div id="factoids" class="container mb-3 ps-0">
     <% for (let i=0; i < 10; i++) { %>
-      <div class="accordion" id="fact-<%= i %>">
+      <div class="accordion mb-3" id="fact-<%= i %>">
         <%- include('../partials/fact', { factoid, accordionParent: '#fact-' + i }); %>
       </div>
       <% factoid.id = i; %>
