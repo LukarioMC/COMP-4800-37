@@ -12,6 +12,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
+const flash = require('connect-flash');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
