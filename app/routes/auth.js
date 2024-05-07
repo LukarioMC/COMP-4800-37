@@ -43,15 +43,19 @@ passport.deserializeUser(function (user, done) {
 // Route for log in page.
 router.get('/login', (req, res, next) => {
     let error
-    if (req.query.error) error = `Error: ${req.query.err}`
-    if (req.user) error = `You're already logged in as ${req.user.id}` 
+    if (req.session && req.session.messages) {
+        error = req.session.messages
+        req.session.messages = undefined
+    }
+    if (req.user) error = `You're already logged in as ${req.user.id}`
     res.render('pages/login', { err: error })
 })
 
 // API route to log a user in.
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/account',
-    failureRedirect: '/login?error=true'
+    failureRedirect: '/login',
+    failureMessage: true
 }))
 
 // Route for sign up page.
