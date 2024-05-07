@@ -1,0 +1,12 @@
+body {
+    background-color: rgb(111, 185, 185);
+}
+
+#dashboard {
+    background-color: white;
+}
+
+hr {
+    border-top: 2px solid black;
+    margin-top: 0;
+}

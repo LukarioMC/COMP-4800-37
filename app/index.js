@@ -5,11 +5,13 @@
  *
  * @author Alex Sichitiu
  * @author Dakaro Mueller
+ * @author Justin Ng
  */
 require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
+const path = require('path');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -30,6 +32,11 @@ const prisma = new PrismaClient();
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
 
+
+// ================ JS AND CSS PATH SETUP ================
+app.use(express.static(path.join(__dirname, "public/css")));
+app.use(express.static(path.join(__dirname, "public/js")));
+
 // ================ APP ROUTES ================
 app.get('/', (_, res) => {
     const pageContext = {
@@ -49,6 +56,28 @@ app.get('/example', (_, res) => {
     const pageContext = { injectedVal: 'Superb!' };
     res.render('pages/example', pageContext);
 });
+
+// This route is for the admin dashboard where the admin can approved, edit, and delete fact submissions.
+app.get('/admin', (req, res) => {
+    const testData = [
+        {
+            dateSubmitted: '05 / 04 / 2024',
+            user: 'abc0185',
+            fact: 'The number of pages in this book is a multiple of 37!',
+            note: 'Name of the book: \"All things 37\" by Greg Jones',
+            tags: 'media, books'
+        },
+        {
+            dateSubmitted: '05 / 06 / 2024',
+            user: 'mag3737',
+            fact: 'Another super cool 37 fact',
+            note: 'Found in Vancouver, BC',
+            tags: 'nature'
+        }
+    ];
+    const adminName = "mag3737";
+    res.render('pages/admin-dashboard', {testData, adminName});
+})
 
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma
