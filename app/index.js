@@ -78,6 +78,10 @@ app.get('/admin', (req, res) => {
     res.render('pages/admin-dashboard', { submissions: testData, adminName });
 });
 
+app.get('/contact', (req, res) => {
+    res.render('pages/contact');
+})
+
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma
 
