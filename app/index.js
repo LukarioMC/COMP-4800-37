@@ -56,7 +56,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.authenticate('session'));
 
 app.use(function (req, res, next) {
-    res.locals.user = req.user ? {id: req.user.id, email: req.user.email} : undefined
+    res.locals.user = req.user ? {id: req.user.id, email: req.user.email, fname: req.user.fname, lname: req.user.lname} : undefined
     next();
 });
 
@@ -86,11 +86,6 @@ app.get('/example', (_, res) => {
     const pageContext = { injectedVal: 'Superb!' };
     res.render('pages/example', pageContext);
 });
-
-// Route for seeing user account data.
-app.get('/account', (req, res) => {
-    res.render('pages/account')
-})
 
 // This route is for the admin dashboard where the admin can approved, edit, and delete fact submissions.
 app.get('/admin', (req, res) => {

@@ -2,8 +2,14 @@
 
 <main class="container-xl">
     <% if (user) { %>
+        <p><b>ID:</b> <%= user.id %></p>
         <p><b>Email:</b> <%= user.email %></p>
-        <p></p><b>ID:</b> <%= user.id %></p>
+        <% if (user.fname) { %>
+            <p><b>First Name:</b> <%= user.fname %></p> 
+        <%  } %>
+        <% if (user.lname) { %>
+            <p><b>Last Name:</b> <%= user.lname %></p> 
+        <%  } %>
     <% } else { %>
         <span>Not Logged In</span>
     <% } %>

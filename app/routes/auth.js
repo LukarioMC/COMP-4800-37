@@ -30,7 +30,7 @@ passport.use(new LocalStrategy(async function verify(email, password, done) {
 // Serialization Functions
 passport.serializeUser(function (user, done) {
     process.nextTick(function () {
-        done(null, { id: user.id, email: user.email });
+        done(null, { id: user.id, email: user.email, fname: user.fname, lname: user.lname });
     })
 });
 
@@ -39,6 +39,11 @@ passport.deserializeUser(function (user, done) {
         return done(null, user);
     })
 });
+
+// Middleware that redirects to login page if user is not logged in.
+function isLoggedIn(req, res, next) {
+    req.user ? next() : res.redirect('/login')
+}
 
 // Route for log in page.
 router.get('/login', (req, res, next) => {
@@ -85,7 +90,9 @@ router.post('/signup', (req, res, next) => {
                         id: generateRandomUID(),
                         email: req.body.email,
                         hashed_password: hashedPassword,
-                        salt: salt
+                        salt: salt,
+                        fname: req.body.fname,
+                        lname: req.body.lname
                     }
                 })
             } catch (err) {
@@ -115,6 +122,11 @@ router.post('/logout', function (req, res, next) {
         res.redirect(url);
     });
 });
+
+// Route for seeing user account data.
+router.get('/account', isLoggedIn, (req, res) => {
+    res.render('pages/account')
+})
 
 /**
  * Generates a random user id where the first 3 chars are random lowercase alphabet letters and the last 4 chars are a zero-padded multiple of 37.
