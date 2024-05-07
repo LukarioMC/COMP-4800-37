@@ -14,7 +14,9 @@
             </div>
             <div class="mb-3">
                 <label for="new-password" class="form-label">Password</label>
-                <input id="new-password" name="password" type="password" class="form-control" autocomplete="new-password" required>
+                <input id="new-password" name="password" type="password" class="form-control" autocomplete="new-password" required name="password" 
+                pattern="^(?=.*\d)(?!.*\s).{8,100}$" 
+                title="Password must be between 8 and 100 characters long, contain no spaces, and include at least one digit">
             </div>
             <div class="mb-3">
                 <label for="fname" class="form-label">First Name (Optional)</label>

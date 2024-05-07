@@ -73,6 +73,12 @@ router.get('/signup', (req, res, next) => {
         case "other":
             error = "Error occurred, please try again at another time."
             break
+        case "invalid-email":
+            error = "Email is invalid."
+            break
+        case "invalid-password":
+            error = "Password is invalid"
+            break
     }
     res.render('pages/signup', { err: error })
 })
@@ -82,6 +88,18 @@ router.post('/signup', (req, res, next) => {
     let salt = crypto.randomBytes(16)
     let user
     let attemptsLeft = 10000
+
+    let passwordSchema = new passwordValidator()
+        .is().min(8)
+        .is().max(100)
+        .has().not().spaces()
+        .has().digits(1)
+    
+    if (!passwordSchema.validate(req.body.password)) return res.redirect('/signup?error=invalid-password')
+    if (!emailValidator.validate(req.body.email)) return res.redirect('/signup?error=invalid-email')
+    if (req.body.fname) req.body.fname = req.body.fname.trim()
+    if (req.body.lname) req.body.lname = req.body.lname.trim()
+
     crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function (err, hashedPassword) {
         if (err) { res.redirect('/signup?error=other') }
         while (true) {
