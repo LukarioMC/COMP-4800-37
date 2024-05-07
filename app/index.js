@@ -78,6 +78,11 @@ app.get('/admin', (req, res) => {
     res.render('pages/admin-dashboard', { submissions: testData, adminName });
 });
 
+// This route is for the factoids listings page where users can view and search for factoids.
+app.get('/factoids', async (req, res) => {
+    res.render('pages/factoid-listings');
+});
+
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma
 
