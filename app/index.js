@@ -13,6 +13,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
+const flash = require('connect-flash');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -82,7 +83,7 @@ app.get('/admin', (req, res) => {
 // This route is for the factoids listings page where users can view and search for factoids.
 app.get('/factoids', async (req, res) => {
     const pageContext = {
-      // Fake Fact data to mock factoid, may be replaced with actual data from the database
+        // Fake Fact data to mock factoid, may be replaced with actual data from the database
         factoid: {
             id: 777,
             content: 'A super cool 37 fact',
@@ -95,6 +96,11 @@ app.get('/factoids', async (req, res) => {
 // This route is for the about/why 37? page.
 app.get('/about', async (req, res) => {
     res.render('pages/about');
+});
+
+// This route displays contact information
+app.get('/contact', (req, res) => {
+    res.render('pages/contact');
 });
 
 // ================ SERVER ROUTES ================

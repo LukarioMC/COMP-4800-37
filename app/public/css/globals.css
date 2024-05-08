@@ -1,0 +1,8 @@
+body {
+    background-color: rgb(111, 185, 185);
+}
+
+nav,
+nav > .offcanvas {
+    background-color: #d0d0d0;
+}
