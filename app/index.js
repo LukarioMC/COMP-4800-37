@@ -92,6 +92,11 @@ app.get('/factoids', async (req, res) => {
     res.render('pages/factoid-listings', pageContext);
 });
 
+// This route is for the about/why 37? page.
+app.get('/about', async (req, res) => {
+    res.render('pages/about');
+});
+
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma
 
