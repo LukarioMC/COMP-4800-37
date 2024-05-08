@@ -23,7 +23,22 @@
                 <div class="mb-3">
                     <label for="attachment" class="form-label">Attachment:</label>
                     <input type="file" class="form-control" id="attachment" name="attachment" multiple>
-                </div>          
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label"> Discovery Date: </label>
+                    <input type="date" class="form-control" id="discovery-date" name="date" value="<%= new Date().toISOString().substr(0, 10) %>">
+                </div>
+
+                <% if (!user) { %>
+                    <div class="mb-4">
+                        <h5 type="button" data-bs-toggle="collapse" data-bs-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo" class="text-left mb-4">Submitter Information (Optional) ▼</h5>
+                        <div class="collapse" id="additionalInfo">
+                            <div class="additional-component">
+                                
+                            </div>
+                        </div>
+                    </div>
+                <% } %>         
             </form>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary text-left">Submit</button>
