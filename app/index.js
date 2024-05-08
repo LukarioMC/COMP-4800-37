@@ -6,12 +6,14 @@
  * @author Alex Sichitiu
  * @author Dakaro Mueller
  * @author Justin Ng
+ * @author Elijah Fabon
  */
 require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
+const flash = require('connect-flash');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -111,6 +113,29 @@ app.get('/admin', (req, res) => {
     ];
     const adminName = 'mag3737';
     res.render('pages/admin-dashboard', { submissions: testData, adminName });
+});
+
+// This route is for the factoids listings page where users can view and search for factoids.
+app.get('/factoids', async (req, res) => {
+    const pageContext = {
+        // Fake Fact data to mock factoid, may be replaced with actual data from the database
+        factoid: {
+            id: 777,
+            content: 'A super cool 37 fact',
+            note: 'Something extra about the fact',
+        },
+    };
+    res.render('pages/factoid-listings', pageContext);
+});
+
+// This route is for the about/why 37? page.
+app.get('/about', async (req, res) => {
+    res.render('pages/about');
+});
+
+// This route displays contact information
+app.get('/contact', (req, res) => {
+    res.render('pages/contact');
 });
 
 // ================ SERVER ROUTES ================
