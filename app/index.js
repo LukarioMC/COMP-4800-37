@@ -12,6 +12,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
+const flash = require('connect-flash');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -77,6 +78,10 @@ app.get('/admin', (req, res) => {
     const adminName = 'mag3737';
     res.render('pages/admin-dashboard', { submissions: testData, adminName });
 });
+
+app.get('/contact', (req, res) => {
+    res.render('pages/contact');
+})
 
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma
