@@ -95,7 +95,7 @@
         </div>
     </div>
     <% if (user && user.id) { %>
-        <form action="/logout" method="post">
+        <form action="/api/logout" method="post">
             <span>Hi <%= user.id %>!</span>
             <button class="btn btn-primary" type="submit">Sign out</button>
         </form>

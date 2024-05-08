@@ -1,25 +1,22 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
 
 <main class="container-xl">
-    <main class="container-xl">
-        <% if (err) { %>
-            <div class="alert alert-danger" role="alert"><%= err %></div>
-        <% } %>  
-        <h1>Log In</h1>
-        <form action="/login" method="post">
-            <div class="mb-3">
-                <label for="username" class="form-label">Email</label>
-                <input id="username" name="username" type="email" class="form-control" autocomplete="username" required autofocus>
-            </div>
-            <div class="mb-3">
-                <label for="current-password" class="form-label">Password</label>
-                <input id="current-password" name="password" type="password" class="form-control" autocomplete="current-password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Log in</button>
-            <div class="mt-3"><a href="/signup">Don't have an account? Sign up here!</a></div>
-        </form>
-    </main>
-    
+    <% if (err) { %>
+        <div class="alert alert-danger" role="alert"><%= err %></div>
+    <% } %>  
+    <h1>Log In</h1>
+    <form action="/api/login" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Email</label>
+            <input id="username" name="username" type="email" class="form-control" autocomplete="username" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label for="current-password" class="form-label">Password</label>
+            <input id="current-password" name="password" type="password" class="form-control" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Log in</button>
+        <div class="mt-3"><a href="/signup">Don't have an account? Sign up here!</a></div>
+    </form>
 </main>
 
 <%- include('../partials/footer'); %>

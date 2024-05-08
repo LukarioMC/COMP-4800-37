@@ -8,6 +8,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const passwordValidator = require('password-validator')
 const emailValidator = require('email-validator')
+const middleware = require('../middleware')
 
 // Configuring passport strategy.
 passport.use(new LocalStrategy(async function verify(email, password, done) {
@@ -41,23 +42,20 @@ passport.deserializeUser(function (user, done) {
     })
 });
 
-// Middleware that redirects to login page if user is not logged in.
-function isLoggedIn(req, res, next) {
-    req.user ? next() : res.redirect('/login')
-}
+
 
 // Route for log in page.
 router.get('/login', (req, res, next) => {
     let error
     if (req.query.error && req.session && req.session.messages) {
-        error = req.session.messages
+        error = req.session.messages.pop()
     }
     if (req.user) error = `You're already logged in as ${req.user.id}`
     res.render('pages/login', { err: error })
 })
 
 // API route to log a user in.
-router.post('/login', passport.authenticate('local', {
+router.post('/api/login', passport.authenticate('local', {
     successRedirect: '/account',
     failureRedirect: '/login?error=true',
     failureMessage: true
@@ -84,7 +82,7 @@ router.get('/signup', (req, res, next) => {
 })
 
 // API route to sign a new user up.
-router.post('/signup', (req, res, next) => {
+router.post('/api/signup', (req, res, next) => {
     let salt = crypto.randomBytes(16)
     let user
     let attemptsLeft = 10000
@@ -94,6 +92,7 @@ router.post('/signup', (req, res, next) => {
         .is().max(100)
         .has().not().spaces()
         .has().digits(1)
+        .has().letters(1)
     
     if (!passwordSchema.validate(req.body.password)) return res.redirect('/signup?error=invalid-password')
     if (!emailValidator.validate(req.body.email)) return res.redirect('/signup?error=invalid-email')
@@ -134,7 +133,7 @@ router.post('/signup', (req, res, next) => {
 })
 
 // API route to log a user out.
-router.post('/logout', function (req, res, next) {
+router.post('/api/logout', function (req, res, next) {
     req.logout(function (err) {
         if (err) { return next(err); }
         let url = req.header('Referer') || '/'
@@ -143,7 +142,7 @@ router.post('/logout', function (req, res, next) {
 });
 
 // Route for seeing user account data.
-router.get('/account', isLoggedIn, (req, res) => {
+router.get('/account', middleware.isLoggedIn, (req, res) => {
     res.render('pages/account')
 })
 
@@ -161,7 +160,7 @@ function generateRandomUID() {
         userid.push(String.fromCharCode(97 + n))
     }
 
-    let factor = Math.ceil(Math.random() * Math.floor(upperLimit / 37))
+    let factor = Math.floor(Math.random() * Math.floor(upperLimit / 37)) + 1
     userid.push(String(factor * 37).padStart(4, '0'))
 
     return userid.join("")
