@@ -19,11 +19,9 @@
   </div>
 
   <!-- Factoids Section -->
-  <div id="factoids" class="container mb-3 ps-0">
+  <div id="factoids" class="container accordion ps-0">
     <% for (let i=0; i < 10; i++) { %>
-      <div class="accordion mb-3" id="fact-<%= i %>">
-        <%- include('../partials/fact', { factoid, accordionParent: '#fact-' + i }); %>
-      </div>
+      <%- include('../partials/fact', { factoid, accordionParent: '#factoids' }); %>
       <% factoid.id = i; %>
     <% } %>
   </div>
