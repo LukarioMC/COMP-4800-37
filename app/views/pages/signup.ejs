@@ -13,9 +13,14 @@
         </div>
         <div class="mb-3">
             <label for="new-password" class="form-label">Password</label>
-            <input id="new-password" name="password" type="password" class="form-control" autocomplete="new-password" required name="password" 
+            <input id="new-password" name="password" type="password" class="form-control" autocomplete="new-password" required
             pattern="^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).{8,100}$" 
             title="Password must be between 8 and 100 characters long, contain no spaces, and include at least one digit and one letter.">
+        </div>
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <span class="text-danger" id="passwordMismatchAlert" style="display:none">(Passwords do not match!)</span>
+            <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" autocomplete="confirm-password" required>
         </div>
         <div class="mb-3">
             <label for="fname" class="form-label">First Name (Optional)</label>
@@ -25,9 +30,11 @@
             <label for="lname" class="form-label">Last Name (Optional)</label>
             <input id="lname" name="lname" type="text" class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary">Sign up</button>
+        <button id="submit" type="submit" class="btn btn-primary">Sign up</button>
         <div class="mt-3"><a href="/login">Already have an account? Log in here!</a></div>
-    </form>  
+    </form>
+
+    <script src="signup.js"></script>
 </main>
 
 <%- include('../partials/footer'); %>
