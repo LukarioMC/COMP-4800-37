@@ -23,6 +23,8 @@ const passport = require('passport')
 const session = require('express-session')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 
+const apiRouter = require('./routes/api')
+
 // Example Prisma queries.
 // prisma.user.create({
 //     data: {
@@ -68,6 +70,7 @@ app.use(function (req, res, next) {
 
 // ================ ROUTERS ========================
 app.use('/', authRouter)
+app.use('/', apiRouter)
 
 // ================ JS AND CSS PATH SETUP ================
 app.use(express.static(path.join(__dirname, 'public/css')));
