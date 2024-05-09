@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8000;
 const path = require('path');
 const flash = require('connect-flash');
 
-// const authRouter = require('./routes/auth')
+const authRouter = require('./routes/auth')
 const passport = require('passport')
 const session = require('express-session')
 
@@ -34,7 +34,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: new SQLiteStore({db: 'app.db', dir: 'db'})
+    store: new SQLiteStore({db: 'app.db'})
 }))
 app.use(express.urlencoded({extended: true}));
 app.use(passport.authenticate('session'));
@@ -46,7 +46,7 @@ app.use(function (req, res, next) {
 });
 
 // ================ ROUTERS ========================
-// app.use('/', authRouter)
+app.use('/', authRouter)
 
 // ================ JS AND CSS PATH SETUP ================
 app.use(express.static(path.join(__dirname, 'public/css')));
