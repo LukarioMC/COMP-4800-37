@@ -10,26 +10,15 @@ router.get('/api/fact', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     let list = ["Cat A"]
     try {
-        // let cond = {
-        //     where: {
-        //         is_approved: true,
-        //         tags: {
-                    
-        //         }
-        //     }
-        // }
-
-        // prisma.factoid.findMany(cond)
-        //     .then((facts) => {
-        //         let publicFieldFacts = facts.map(fact => {
-        //             let {is_approved, approval_date, ...publicFields} = fact
-        //             return publicFields
-        //         }) 
-        //         return res.status(200).send(publicFieldFacts)
-        //     })
+        let facts = getFacts()
+        let publicFieldFacts = facts.map(fact => {
+            let { is_approved, approval_date, ...publicFields } = fact
+            return publicFields
+        })
+        return res.status(200).send(publicFieldFacts)
     } catch (e) {
         console.log(e)
-        return res.status(500).send( { message: "Server error." } )
+        return res.status(500).send({ message: "Server error." })
     }
 })
 
@@ -38,17 +27,17 @@ router.get('/api/fact/:id', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         let id = parseInt(req.params.id)
-        if (isNaN(id)) { return res.status(400).send( {message: "Fact ID is not of the correct format."} ) }
+        if (isNaN(id)) { return res.status(400).send({ message: "Fact ID is not of the correct format." }) }
         let fact = getFactByID(id)
-            if (fact) { 
-                let {is_approved, approval_date, ...publicFields} = fact
-                return res.status(200).send(publicFields) 
-            } else { 
-                return res.status(404).send( {message: "Fact not found."} )
-            }
+        if (fact) {
+            let { is_approved, approval_date, ...publicFields } = fact
+            return res.status(200).send(publicFields)
+        } else {
+            return res.status(404).send({ message: "Fact not found." })
+        }
     } catch (e) {
         console.log(e)
-        return res.status(500).send( { message: "Server error." } )
+        return res.status(500).send({ message: "Server error." })
     }
 })
 
@@ -68,7 +57,12 @@ function getFactByID(factID) {
 }
 
 function getFacts(tags = undefined) {
-    
+    if (tags) {
+        return []
+    } else {
+        let getFactsStmt = db.prepare('SELECT * FROM factoid WHERE is_approved')
+        return getFactsStmt.all()
+    }
 }
 
-module.exports = {router, getFactByID}
+module.exports = { router, getFactByID }
