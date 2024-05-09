@@ -1,8 +1,7 @@
 /**
  * Fact API Routes.
  */
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const db = require('better-sqlite3')('app.db')
 const express = require('express')
 const router = express.Router()
 
@@ -11,23 +10,23 @@ router.get('/api/fact', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     let list = ["Cat A"]
     try {
-        let cond = {
-            where: {
-                is_approved: true,
-                tags: {
+        // let cond = {
+        //     where: {
+        //         is_approved: true,
+        //         tags: {
                     
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
-        prisma.factoid.findMany(cond)
-            .then((facts) => {
-                let publicFieldFacts = facts.map(fact => {
-                    let {is_approved, approval_date, ...publicFields} = fact
-                    return publicFields
-                }) 
-                return res.status(200).send(publicFieldFacts)
-            })
+        // prisma.factoid.findMany(cond)
+        //     .then((facts) => {
+        //         let publicFieldFacts = facts.map(fact => {
+        //             let {is_approved, approval_date, ...publicFields} = fact
+        //             return publicFields
+        //         }) 
+        //         return res.status(200).send(publicFieldFacts)
+        //     })
     } catch (e) {
         console.log(e)
         return res.status(500).send( { message: "Server error." } )
@@ -71,4 +70,4 @@ async function getFactByID(id) {
     })
 }
 
-module.exports = router
+module.exports = { router, getFactByID }
