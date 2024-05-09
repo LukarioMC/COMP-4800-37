@@ -67,4 +67,8 @@ function getFactByID(factID) {
     }
 }
 
+function getFacts(tags = undefined) {
+    
+}
+
 module.exports = {router, getFactByID}
