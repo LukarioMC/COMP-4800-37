@@ -16,7 +16,7 @@ const path = require('path');
 const flash = require('connect-flash');
 
 const authRouter = require('./routes/auth')
-const { apiRouter } = require('./routes/api')
+const apiRouter = require('./routes/api').router
 const passport = require('passport')
 const session = require('express-session')
 

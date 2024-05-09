@@ -38,36 +38,33 @@ router.get('/api/fact/:id', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         let id = parseInt(req.params.id)
-        if (isNaN(id)) {
-            return res.status(400).send( {message: "Fact ID is not of the correct format."} )
-        }
-        prisma.factoid.findUnique({
-            where: {
-                id: id,
-                is_approved: true
+        if (isNaN(id)) { return res.status(400).send( {message: "Fact ID is not of the correct format."} ) }
+        let fact = getFactByID(id)
+            if (fact) { 
+                let {is_approved, approval_date, ...publicFields} = fact
+                return res.status(200).send(publicFields) 
+            } else { 
+                return res.status(404).send( {message: "Fact not found."} )
             }
-        })
-            .then((fact) => {
-                if (fact) { 
-                    let {is_approved, approval_date, ...publicFields} = fact
-                    return res.status(200).send(publicFields) 
-                } else { 
-                    return res.status(404).send( {message: "Fact not found."} )
-                }
-            })
     } catch (e) {
         console.log(e)
         return res.status(500).send( { message: "Server error." } )
     }
 })
 
-async function getFactByID(id) {
-    prisma.factoid.findUnique({
-        where: {
-            id: id,
-            is_approved: true
-        }
-    })
+/**
+ * Given an id, returns the associated fact.
+ * @param {number} factID An integer representing a fact ID.
+ * @returns Fact object with the corresponding id. Undefined if the id is not associated with any fact or is invalid.
+ */
+function getFactByID(factID) {
+    try {
+        let id = parseInt(factID)
+        let getFactStmt = db.prepare('SELECT * FROM factoid WHERE id = ? AND is_approved')
+        return getFactStmt.get(id)
+    } catch (e) {
+        return undefined
+    }
 }
 
-module.exports = { router, getFactByID }
+module.exports = {router, getFactByID}
