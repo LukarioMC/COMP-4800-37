@@ -1,9 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const crypto = require('crypto')
-const { PrismaClient } = require('@prisma/client');
-const { PrismaClientKnownRequestError } = require('@prisma/client/runtime/library');
-const prisma = new PrismaClient();
+const db = require('better-sqlite3')('app.db')
+const { SqliteError } = require('better-sqlite3')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const passwordValidator = require('password-validator')
@@ -12,21 +11,24 @@ const middleware = require('../middleware')
 
 // Configuring passport strategy.
 passport.use(new LocalStrategy(async function verify(email, password, done) {
-    let user = await prisma.user.findUnique({
-        where: {
-            email: email
-        }
-    })
-    if (!user) return done(null, false, { message: 'Incorrect login credentials.' })
-
-    crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', async (err, hashedPassword) => {
-        if (err) return done(err)
-        if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
-            return done(null, false, { message: 'Incorrect login credentials.' });
-        }
-
-        return done(null, user)
-    })
+    try {
+        let getUserStmt = db.prepare("SELECT * FROM user WHERE email = ?")
+        let user = getUserStmt.get(email)
+        if (!user) return done(null, false, { message: 'Incorrect login credentials.' })
+    
+        crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', async (err, hashedPassword) => {
+            if (err) return done(err)
+            if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
+                return done(null, false, { message: 'Incorrect login credentials.' });
+            }
+    
+            return done(null, user)
+        })
+    } catch (e) {
+        console.log(e)
+        return done(null, false, {message: 'Server error.'})
+    }
+    
 }))
 
 // Serialization Functions
@@ -103,19 +105,12 @@ router.post('/api/signup', (req, res, next) => {
         if (err) { res.redirect('/signup?error=other') }
         while (true) {
             try {
-                user = await prisma.user.create({
-                    data: {
-                        id: generateRandomUID(),
-                        email: req.body.email,
-                        hashed_password: hashedPassword,
-                        salt: salt,
-                        fname: req.body.fname,
-                        lname: req.body.lname
-                    }
-                })
+                let insertNewUserStmt = db.prepare('INSERT INTO user (id, email, hashed_password, salt, fname, lname) VALUES (?, ?, ?, ?, ?, ?) RETURNING *')
+                user = insertNewUserStmt.get(generateRandomUID(), req.body.email, hashedPassword, salt, req.body.fname, req.body.lname)
+
             } catch (err) {
                 console.log(err)
-                if (err instanceof PrismaClientKnownRequestError && err.code === "P2002" && err.meta.target[0] === 'id' && attemptsLeft > 0) {
+                if (err instanceof SqliteError && err.code === 'SQLITE_CONSTRAINT_PRIMARYKEY' && attemptsLeft > 0) {
                     attemptsLeft--
                     continue
                 } else {

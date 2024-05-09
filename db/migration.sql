@@ -1,20 +1,17 @@
-/*
-  Warnings:
-
-  - The primary key for the `User` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - You are about to drop the column `country` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the column `name` on the `User` table. All the data in the column will be lost.
-
-*/
 -- CreateTable
-CREATE TABLE "Session" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "user_id" TEXT,
-    "expiry_time" DATETIME NOT NULL,
-    CONSTRAINT "Session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+DROP TABLE IF EXISTS user;
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "email" TEXT NOT NULL,
+    "hashed_password" BLOB NOT NULL,
+    "fname" TEXT,
+    "lname" TEXT,
+    "is_admin" BOOLEAN NOT NULL DEFAULT false,
+    "salt" BLOB NOT NULL
 );
 
 -- CreateTable
+DROP TABLE IF EXISTS factoid;
 CREATE TABLE "Factoid" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "submitter_id" TEXT,
@@ -28,6 +25,7 @@ CREATE TABLE "Factoid" (
 );
 
 -- CreateTable
+DROP TABLE IF EXISTS category;
 CREATE TABLE "Category" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
@@ -35,6 +33,7 @@ CREATE TABLE "Category" (
 );
 
 -- CreateTable
+DROP TABLE IF EXISTS tag;
 CREATE TABLE "Tag" (
     "factoid_id" INTEGER NOT NULL,
     "category_id" INTEGER NOT NULL,
@@ -45,14 +44,17 @@ CREATE TABLE "Tag" (
 );
 
 -- CreateTable
+DROP TABLE IF EXISTS attachment;
 CREATE TABLE "Attachment" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "factoid_id" INTEGER NOT NULL,
-    "link" TEXT,
+    "link" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
     CONSTRAINT "Attachment_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
+DROP TABLE IF EXISTS report;
 CREATE TABLE "Report" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "factoid_id" INTEGER NOT NULL,
@@ -63,22 +65,10 @@ CREATE TABLE "Report" (
     CONSTRAINT "Report_submitter_id_fkey" FOREIGN KEY ("submitter_id") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
--- RedefineTables
-PRAGMA foreign_keys=OFF;
-CREATE TABLE "new_User" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "email" TEXT NOT NULL,
-    "hashed_password" TEXT,
-    "fname" TEXT,
-    "lname" TEXT,
-    "is_admin" BOOLEAN NOT NULL DEFAULT false
-);
-INSERT INTO "new_User" ("email", "id") SELECT "email", "id" FROM "User";
-DROP TABLE "User";
-ALTER TABLE "new_User" RENAME TO "User";
+-- CreateIndex
+DROP INDEX IF EXISTS User_email_key;
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-PRAGMA foreign_key_check;
-PRAGMA foreign_keys=ON;
 
 -- CreateIndex
+DROP INDEX IF EXISTS Category_name_key;
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
