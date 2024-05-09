@@ -77,6 +77,10 @@
                 </li>
                 <hr size="1" />
                 <li class="nav-item">
+                    <a href="/account">Account</a>
+                </li>
+                <hr size="1" />
+                <li class="nav-item">
                     <a href="/about">but why??</a>
                 </li>
                 <li class="nav-item">
@@ -93,4 +97,12 @@
             </address>
         </div>
     </div>
+    <% if (user && user.id) { %>
+        <form action="/api/logout" method="post">
+            <span>Hi <%= user.id %>!</span>
+            <button class="btn btn-primary" type="submit">Sign out</button>
+        </form>
+    <% } else { %>
+        <a href="/login" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-3">Log In</a>
+    <% } %>
 </nav>
