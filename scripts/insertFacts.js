@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-function insertFacts() {
+async function insertFacts() {
     prisma.factoid.createMany({
         data: [
             {
@@ -36,4 +36,27 @@ function insertFacts() {
         .then((res) => console.log)
 }
 
-insertFacts()
+async function insertCategories() {
+    prisma.category.createMany({
+        data: [
+            {name: "Cat A"},
+            {name: "Cat B"},
+            {name: "Cat C"}
+        ]
+    })
+}
+
+async function insertTags() {
+    prisma.tag.createMany({
+        data: [
+            {factoid_id: 1, category_id: 1},
+            {factoid_id: 1, category_id: 2},
+            {factoid_id: 2, category_id: 3},
+            {factoid_id: 3, category_id: 3},
+            {factoid_id: 3, category_id: 2},
+        ]
+    })
+}
+
+
+insertFacts().then(insertCategories).then(insertTags)

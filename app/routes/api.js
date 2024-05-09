@@ -9,12 +9,18 @@ const router = express.Router()
 // API endpoint to get all facts that fulfill the given condition(s).
 router.get('/api/fact', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
+    let list = ["Cat A"]
     try {
-        prisma.factoid.findMany({
+        let cond = {
             where: {
-                is_approved: true
+                is_approved: true,
+                tags: {
+                    
+                }
             }
-        })
+        }
+
+        prisma.factoid.findMany(cond)
             .then((facts) => {
                 let publicFieldFacts = facts.map(fact => {
                     let {is_approved, approval_date, ...publicFields} = fact
@@ -55,5 +61,14 @@ router.get('/api/fact/:id', (req, res, next) => {
         return res.status(500).send( { message: "Server error." } )
     }
 })
+
+async function getFactByID(id) {
+    prisma.factoid.findUnique({
+        where: {
+            id: id,
+            is_approved: true
+        }
+    })
+}
 
 module.exports = router
