@@ -5,12 +5,15 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="text-center">Submit a Fact </h2>
+
+            <!-- note that will appear when user is not passed in -->
             <% if (!user) { %>
                 <div class="mb-3 text-center">
                     <small id="submit-note" class="form-text text-muted text-center">You are not logged in. Your fact will be submitted anonymously.</small>
                 </div>
             <% } %>
    
+            <!-- submission form -->
             <form id="submission-form" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="text-line" class="form-label">Fact:</label>
@@ -29,21 +32,22 @@
                     <input type="date" class="form-control" id="discovery-date" name="date" value="<%= new Date().toISOString().substr(0, 10) %>">
                 </div>
 
+                <!-- additional component appearing when user is not passed in  -->
                 <% if (!user) { %>
                     <div class="mb-4">
                         <h5 type="button" data-bs-toggle="collapse" data-bs-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo" class="text-left mb-4">Submitter Information (Optional) ▼</h5>
                         <div class="collapse" id="additionalInfo">
                             <div class="additional-component">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Name</label>
+                                    <label for="name" class="form-label">Name:</label>
                                     <input type="text" class="form-control" id="name" name="name">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
+                                    <label for="email" class="form-label">Email:</label>
                                     <input type="email" class="form-control" id="email" name="email">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="country" class="form-label">Country</label>
+                                    <label for="country" class="form-label">Country:</label>
                                     <select class="form-select" id="country" name="country">
                                         <option value="USA">United States</option>
                                         <option value="UK">United Kingdom</option>
