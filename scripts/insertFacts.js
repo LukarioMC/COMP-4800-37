@@ -14,7 +14,9 @@ function insertFacts() {
              o o o o o o o
               o o o o o o
                o o o o o
-                o o o o`
+                o o o o`,
+                is_approved: true,
+                approval_date: new Date().toISOString()
             },
             {
                 content: "There are 37 bars in the digits of a digital watch.",
@@ -25,7 +27,9 @@ function insertFacts() {
              | |_| * |_| |_| * |_| |_|`
             },
             {
-                content: "All American Express card numbers begin with 37."
+                content: "All American Express card numbers begin with 37.",
+                is_approved: true,
+                approval_date: new Date().toISOString()
             }
         ]
     })

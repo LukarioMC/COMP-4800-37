@@ -10,9 +10,17 @@ const router = express.Router()
 router.get('/api/fact', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
-        prisma.factoid.findMany()
+        prisma.factoid.findMany({
+            where: {
+                is_approved: true
+            }
+        })
             .then((facts) => {
-                return res.status(200).send(facts)
+                let publicFieldFacts = facts.map(fact => {
+                    let {is_approved, approval_date, ...publicFields} = fact
+                    return publicFields
+                }) 
+                return res.status(200).send(publicFieldFacts)
             })
     } catch (e) {
         console.log(e)
@@ -30,7 +38,8 @@ router.get('/api/fact/:id', (req, res, next) => {
         }
         prisma.factoid.findUnique({
             where: {
-                id: id
+                id: id,
+                is_approved: true
             }
         })
             .then((fact) => {
