@@ -18,6 +18,11 @@ const flash = require('connect-flash');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const authRouter = require('./routes/auth')
+const passport = require('passport')
+const session = require('express-session')
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
+
 // Example Prisma queries.
 // prisma.user.create({
 //     data: {
@@ -33,6 +38,36 @@ const prisma = new PrismaClient();
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
+
+
+app.use(session({
+    cookie: { 
+        maxAge: 2 * 60 * 60 * 1000,
+        secure: !(process.env.HTTPS_ENABLED === "false")
+    },
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: new PrismaSessionStore(
+        prisma,
+        {
+            checkPeriod: 2 * 60 * 1000,  
+            dbRecordIdIsSessionId: true,
+            dbRecordIdFunction: undefined,
+        }
+    )
+}))
+app.use(express.urlencoded({extended: true}));
+app.use(passport.authenticate('session'));
+
+// Middleware to make user data available to EJS on all pages.
+app.use(function (req, res, next) {
+    res.locals.user = req.user ? {id: req.user.id, email: req.user.email, fname: req.user.fname, lname: req.user.lname} : undefined
+    next();
+});
+
+// ================ ROUTERS ========================
+app.use('/', authRouter)
 
 // ================ JS AND CSS PATH SETUP ================
 app.use(express.static(path.join(__dirname, 'public/css')));
