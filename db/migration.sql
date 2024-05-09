@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE IF NOT EXISTS "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "email" TEXT NOT NULL,
     "hashed_password" BLOB NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Factoid" (
+CREATE TABLE IF NOT EXISTS "Factoid" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "submitter_id" TEXT,
     "content" TEXT NOT NULL,
@@ -23,14 +23,14 @@ CREATE TABLE "Factoid" (
 );
 
 -- CreateTable
-CREATE TABLE "Category" (
+CREATE TABLE IF NOT EXISTS "Category" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "is_primary" BOOLEAN NOT NULL DEFAULT false
 );
 
 -- CreateTable
-CREATE TABLE "Tag" (
+CREATE TABLE IF NOT EXISTS "Tag" (
     "factoid_id" INTEGER NOT NULL,
     "category_id" INTEGER NOT NULL,
 
@@ -40,7 +40,7 @@ CREATE TABLE "Tag" (
 );
 
 -- CreateTable
-CREATE TABLE "Attachment" (
+CREATE TABLE IF NOT EXISTS "Attachment" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "factoid_id" INTEGER NOT NULL,
     "link" TEXT NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE "Attachment" (
 );
 
 -- CreateTable
-CREATE TABLE "Report" (
+CREATE TABLE IF NOT EXISTS "Report" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "factoid_id" INTEGER NOT NULL,
     "submitter_id" TEXT,
@@ -60,7 +60,7 @@ CREATE TABLE "Report" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+CREATE UNIQUE INDEX IF NOT EXISTS "Category_name_key" ON "Category"("name");

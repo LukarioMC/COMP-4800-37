@@ -19,7 +19,7 @@ const flash = require('connect-flash');
 const passport = require('passport')
 const session = require('express-session')
 
-const db = require('../db/db')
+const db = require('better-sqlite3')('app.db')
 const SQLiteStore = require('connect-sqlite3')(session)
 
 // ================ SERVER SETUP ================

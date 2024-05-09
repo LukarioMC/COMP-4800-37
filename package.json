@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app/index.js",
     "dev": "nodemon app/index.js",
-    "test": "nodemon app/index.js"
+    "resetdb": "node db/configDB.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/LukarioMC/COMP-4800-37#readme",
   "dependencies": {
+    "better-sqlite3": "^9.6.0",
     "connect-flash": "^0.1.1",
     "connect-sqlite3": "^0.9.15",
     "dotenv": "^16.4.5",
