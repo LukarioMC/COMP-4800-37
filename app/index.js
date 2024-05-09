@@ -7,15 +7,22 @@
  * @author Dakaro Mueller
  * @author Justin Ng
  * @author Liana Diu
+ * @author Elijah Fabon
  */
 require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
+const flash = require('connect-flash');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+
+const authRouter = require('./routes/auth')
+const passport = require('passport')
+const session = require('express-session')
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 
 // Example Prisma queries.
 // prisma.user.create({
@@ -32,6 +39,36 @@ const prisma = new PrismaClient();
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
+
+
+app.use(session({
+    cookie: { 
+        maxAge: 2 * 60 * 60 * 1000,
+        secure: !(process.env.HTTPS_ENABLED === "false")
+    },
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: new PrismaSessionStore(
+        prisma,
+        {
+            checkPeriod: 2 * 60 * 1000,  
+            dbRecordIdIsSessionId: true,
+            dbRecordIdFunction: undefined,
+        }
+    )
+}))
+app.use(express.urlencoded({extended: true}));
+app.use(passport.authenticate('session'));
+
+// Middleware to make user data available to EJS on all pages.
+app.use(function (req, res, next) {
+    res.locals.user = req.user ? {id: req.user.id, email: req.user.email, fname: req.user.fname, lname: req.user.lname} : undefined
+    next();
+});
+
+// ================ ROUTERS ========================
+app.use('/', authRouter)
 
 // ================ JS AND CSS PATH SETUP ================
 app.use(express.static(path.join(__dirname, 'public/css')));
@@ -87,6 +124,29 @@ app.get('/fact_submission', (req, res) => {
 // route for submitting facts when not logged in
 app.get('/fact_submission', (req, res) => {
     res.render('pages/fact-submission-page');
+});
+
+// This route is for the factoids listings page where users can view and search for factoids.
+app.get('/factoids', async (req, res) => {
+    const pageContext = {
+        // Fake Fact data to mock factoid, may be replaced with actual data from the database
+        factoid: {
+            id: 777,
+            content: 'A super cool 37 fact',
+            note: 'Something extra about the fact',
+        },
+    };
+    res.render('pages/factoid-listings', pageContext);
+});
+
+// This route is for the about/why 37? page.
+app.get('/about', async (req, res) => {
+    res.render('pages/about');
+});
+
+// This route displays contact information
+app.get('/contact', (req, res) => {
+    res.render('pages/contact');
 });
 
 // ================ SERVER ROUTES ================
