@@ -15,30 +15,16 @@ const PORT = process.env.PORT || 8000;
 const path = require('path');
 const flash = require('connect-flash');
 
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-
-const authRouter = require('./routes/auth')
+// const authRouter = require('./routes/auth')
 const passport = require('passport')
 const session = require('express-session')
-const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 
-// Example Prisma queries.
-// prisma.user.create({
-//     data: {
-//         id: 'aaa0037',
-//         email: 'test',
-//         hashed_password: 'test'
-//     }
-// })
-//     .catch(console.log)
-//     .then(_res => {return prisma.user.findMany()})
-//     .then(console.log)
+const db = require('../db/db')
+const SQLiteStore = require('connect-sqlite3')(session)
 
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
-
 
 app.use(session({
     cookie: { 
@@ -48,14 +34,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: new PrismaSessionStore(
-        prisma,
-        {
-            checkPeriod: 2 * 60 * 1000,  
-            dbRecordIdIsSessionId: true,
-            dbRecordIdFunction: undefined,
-        }
-    )
+    store: new SQLiteStore({db: 'app.db', dir: 'db'})
 }))
 app.use(express.urlencoded({extended: true}));
 app.use(passport.authenticate('session'));
@@ -67,7 +46,7 @@ app.use(function (req, res, next) {
 });
 
 // ================ ROUTERS ========================
-app.use('/', authRouter)
+// app.use('/', authRouter)
 
 // ================ JS AND CSS PATH SETUP ================
 app.use(express.static(path.join(__dirname, 'public/css')));
