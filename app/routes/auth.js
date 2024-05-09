@@ -32,7 +32,7 @@ passport.use(new LocalStrategy(async function verify(email, password, done) {
 // Serialization Functions
 passport.serializeUser(function (user, done) {
     process.nextTick(function () {
-        done(null, { id: user.id, email: user.email, fname: user.fname, lname: user.lname });
+        done(null, { id: user.id, email: user.email, fname: user.fname, lname: user.lname, isAdmin: user.is_admin });
     })
 });
 
