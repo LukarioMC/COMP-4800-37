@@ -10,4 +10,4 @@ Contents of .env:
 
 Scripts:
 Run the following using 'npm run [cmd]'
- - `resetdb` - Drops all database entities and recreates them according to the script in db/migration.sql.
+ - `resetdb` - Creates all database entitities (e.g. tables, indices) in app.db. Will drop pre-existing entities.
