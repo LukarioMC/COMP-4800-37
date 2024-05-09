@@ -15,6 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
 const flash = require('connect-flash');
+const countryUtils = require('./utils/countryUtils');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -116,14 +117,19 @@ app.get('/admin', (req, res) => {
     res.render('pages/admin-dashboard', { submissions: testData, adminName });
 });
 
-// route for submitting facts when logged in
+// route for submitting facts
 app.get('/fact_submission', (req, res) => {
-    res.render('pages/fact-submission-page', {user: req.user });
-});
-
-// route for submitting facts when not logged in
-app.get('/fact_submission', (req, res) => {
-    res.render('pages/fact-submission-page');
+    if (!req.user) {
+        // gets country data from json for fact submitter country options
+        countryUtils.readCountryData((err, countries) => {
+            if (err) {
+                return res.status(500).send('Internal Server Error');
+            }
+            res.render('pages/fact-submission-page', { countries: countries});
+        });
+    } else {
+        res.render('pages/fact-submission-page', { user: req.user });
+    }
 });
 
 // This route is for the factoids listings page where users can view and search for factoids.
