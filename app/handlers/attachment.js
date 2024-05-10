@@ -2,20 +2,14 @@ const db = require('better-sqlite3')('app.db');
 
 function deleteAttachmentforFactoid(attachmentID){
     try {
-        db.prepare('DELETE FROM attachments WHERE id = ?');
-        const result = deleteAttachmentStmt.run(attachmentID);
-        if (result.changes > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        const result = db.run('DELETE FROM attachments WHERE id = ?', attachmentID);
+        return result.changes > 0;
     } catch (e) {
-        console.log(e);
+        console.error('Error deleting attachment:', e);
         return false;
     }
-
 }
 
 module.exports = {
     deleteAttachmentforFactoid,
-};
+}
