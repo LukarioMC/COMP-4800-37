@@ -121,8 +121,9 @@ function getFacts(tags = undefined) {
  * @returns a filtered list of facts.
  */
 function filterFacts(facts, tags = []) {
-    tags = !Array.isArray(tags) ? [tags] : tags
+    tags = !Array.isArray(tags) ? tags.split(',') : tags    // Split passed tags into comma-separated array
     return facts.filter(fact => {
+        // Check if all provided filter tags are included in the facts tag list
         return tags.every(tag => {
             return fact.taglist.includes(tag)
         })
