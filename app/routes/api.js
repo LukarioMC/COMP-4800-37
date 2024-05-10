@@ -46,7 +46,7 @@ router.get('/api/fact/:id', (req, res, next) => {
 /**
  * Given an id, returns the associated fact.
  * @param {number} factID An integer representing a fact ID.
- * @returns Fact  with the corresponding id. Undefined if the id is not associated with any fact or is invalid.
+ * @returns Fact with the corresponding id and associated tags and attachments. Undefined if the id is not associated with any fact or is invalid.
  */
 function getFactByID(factID) {
     try {
@@ -77,7 +77,7 @@ function getFactByID(factID) {
 /**
  * Given a list of tags, returns facts filtering out those who do not have all the given tags.
  * @param {*} tags a list of tag strings
- * @returns a list of facts (with taglist) whose tags are a superset of the input tags. Returns empty list if error occurs.
+ * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags. Returns empty list if error occurs.
  */
 function getFacts(tags = undefined) {
     try {
