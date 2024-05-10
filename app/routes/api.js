@@ -12,7 +12,7 @@ router.get('/api/fact', (req, res, next) => {
     try {
         let facts = getFacts(req.query.tag)
         let publicFieldFacts = facts.map(fact => {
-            let { is_approved, approval_date, ...publicFields } = fact
+            let { is_approved, approval_date, cat_id, ...publicFields } = fact
             return publicFields
         })
         return res.status(200).send(publicFieldFacts)
@@ -30,7 +30,7 @@ router.get('/api/fact/:id', (req, res, next) => {
         if (isNaN(id)) { return res.status(400).send({ message: "Fact ID is not of the correct format." }) }
         let fact = getFactByID(id)
         if (fact) {
-            let { is_approved, approval_date, ...publicFields } = fact
+            let { is_approved, approval_date, cat_id, ...publicFields } = fact
             return res.status(200).send(publicFields)
         } else {
             return res.status(404).send({ message: "Fact not found." })
@@ -53,7 +53,13 @@ function getFactByID(factID) {
         let id = parseInt(factID)
         let getFactStmt = db.prepare(`
         SELECT 
-            *, group_concat(name) as taglist
+            id, 
+            submitter_id,
+            content,
+            posting_date,
+            discovery_date,
+            note,
+            group_concat(name) as taglist
         FROM (
             SELECT fulltag.id as cat_id, * FROM
             factoid LEFT JOIN (
@@ -65,7 +71,9 @@ function getFactByID(factID) {
         WHERE is_approved AND id = ?
         GROUP BY id         
         `)
-        return getFactStmt.get(id)
+        let fact = getFactStmt.get(id)
+        fact.taglist = fact.taglist ? fact.taglist.split(',').sort() : []
+        return fact
     } catch (e) {
         console.log(e)
         return undefined
@@ -81,7 +89,13 @@ function getFactByID(factID) {
 function getFacts(tags = undefined) {
     let getFactsStmt = db.prepare(`
     SELECT 
-        *, group_concat(name) as taglist
+        id, 
+        submitter_id,
+        content,
+        posting_date,
+        discovery_date,
+        note,
+        group_concat(name) as taglist
     FROM (
         SELECT 
             fulltag.id as cat_id, * 
