@@ -9,15 +9,15 @@ function readCountryData(callback) {
 
         // parses json
         const countries = Object.entries(JSON.parse(data))
-        // maps data to array
-        .map(([code, name]) => ({ code, name }))
-        // alphabetizes
-        .sort((a, b) => a.name.localeCompare(b.name));
+            // maps data to array
+            .map(([code, name]) => ({ code, name }))
+            // alphabetizes
+            .sort((a, b) => a.name.localeCompare(b.name));
 
-        callback(null, countries)
-    })
+        callback(null, countries);
+    });
 }
 
 module.exports = {
-    readCountryData: readCountryData
+    readCountryData: readCountryData,
 };
