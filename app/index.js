@@ -23,6 +23,10 @@ const session = require('express-session')
 const db = require('better-sqlite3')('app.db')
 const SQLiteStore = require('connect-sqlite3')(session)
 
+const swaggerUI = require('swagger-ui-express')
+const yaml = require('yaml')
+const fs = require('fs')
+
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
@@ -45,6 +49,12 @@ app.use(function (req, res, next) {
     res.locals.user = req.user ? {id: req.user.id, email: req.user.email, fname: req.user.fname, lname: req.user.lname} : undefined
     next();
 });
+
+// Configuring API docs via Swagger.
+const swaggerFile = fs.readFileSync('./swagger.yaml', 'utf-8')
+const swaggerDoc = yaml.parse(swaggerFile)
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc))
+
 
 // ================ ROUTERS ========================
 app.use('/', authRouter)

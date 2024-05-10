@@ -1,0 +1,115 @@
+# How to write OpenAPI docs: https://swagger.io/docs/specification/basic-structure/
+openapi: 3.0.0
+
+info:
+  title: 37 Fact API
+  description: API for facts about the number 37.
+  version: 1.0.0
+
+servers:
+  - url: "http://localhost:8000/"
+    description: "Local server"
+
+components:
+  schemas:
+    Fact:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        note:
+          type: string
+        posting_date:
+          type: string
+        discovery_date:
+          type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+    Tag:
+      type: object
+      properties:
+        factoid_id:
+          type: integer
+        category_id:
+          type: integer
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: integer
+        link:
+          type: string
+        type:
+          type: string
+          
+
+paths:
+  /api/fact:
+    get:
+      summary: Returns a list of facts that have been optionally filtered by tags.
+      parameters:
+        - name: tag
+          in: query
+          required: false
+          description: A category to filter facts by.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of facts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fact'
+        '500':
+          description: Server error.
+  /api/fact/{factID}:
+    get:
+      summary: Returns a fact by ID.
+      parameters:
+        - name: factID
+          in: path
+          description: An ID for a fact.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A fact with the corresponding ID.
+          content:
+            application/json:
+              $ref: '#/components/schemas/Fact'
+        '404':
+          description: Fact not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: An error message.
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: An error message.
+
+
+
+

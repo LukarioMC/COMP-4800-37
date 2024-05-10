@@ -15,7 +15,7 @@ router.get('/api/fact', (req, res, next) => {
             let { is_approved, approval_date, ...publicFields } = fact
             return publicFields
         })
-        return res.status(200).send(publicFieldFacts)
+        return res.status(200).send(JSON.stringify(publicFieldFacts))
     } catch (e) {
         console.log(e)
         return res.status(500).send({ message: "Server error." })
@@ -31,7 +31,7 @@ router.get('/api/fact/:id', (req, res, next) => {
         let fact = getFactByID(id)
         if (fact) {
             let { is_approved, approval_date, cat_id, ...publicFields } = fact
-            return res.status(200).send(publicFields)
+            return res.status(200).send(JSON.stringify(publicFields))
         } else {
             return res.status(404).send({ message: "Fact not found." })
         }
