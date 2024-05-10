@@ -49,7 +49,19 @@ router.get('/api/fact/:id', (req, res, next) => {
 function getFactByID(factID) {
     try {
         let id = parseInt(factID)
-        let getFactStmt = db.prepare('SELECT * FROM factoid WHERE id = ? AND is_approved')
+        let getFactStmt = db.prepare(`
+        SELECT 
+            *, group_concat(name) as taglist
+        FROM (
+            factoid JOIN (
+                tag JOIN category
+                ON tag.category_id = category.id
+            )
+            ON factoid.id = tag.factoid_id
+        )
+        WHERE is_approved AND id = ?
+        GROUP BY factoid.id         
+        `)
         return getFactStmt.get(id)
     } catch (e) {
         return undefined
@@ -63,32 +75,36 @@ function getFactByID(factID) {
  */
 
 function getFacts(tags = undefined) {
+    let getFactsStmt = db.prepare(`
+    SELECT 
+        *, group_concat(name) as taglist
+    FROM (
+        factoid JOIN (
+            tag JOIN category
+            ON tag.category_id = category.id
+        )
+        ON factoid.id = tag.factoid_id
+    )
+    WHERE is_approved
+    GROUP BY factoid.id         
+    `)
+    let rawFacts = getFactsStmt.all()
+    rawFacts.forEach(fact => {
+        fact.taglist = fact.taglist.split(',').sort()
+    })
+
+    let facts = rawFacts
     if (tags) {
-        let getFactsStmt = db.prepare(`
-                SELECT 
-                    *, group_concat(name) as taglist
-                FROM (
-                    factoid JOIN (
-                        tag JOIN category
-                        ON tag.category_id = category.id
-                    )
-                    ON factoid.id = tag.factoid_id
-                )
-                WHERE is_approved
-                GROUP BY factoid.id         
-            `)
-        let unfilteredFacts = getFactsStmt.all()
-        return unfilteredFacts.filter(fact => {
-            let tagsArray = fact.taglist.split(',')
+        tags = !Array.isArray(tags) ?  [tags] : tags
+        facts = rawFacts.filter(fact => {
             return tags.every(tag => {
-                return tagsArray.includes(tag)
+                return fact.taglist.includes(tag)
             })
         })
-    } else {
-        let getFactsStmt = db.prepare('SELECT * FROM factoid WHERE is_approved')
-        return getFactsStmt.all()
     }
+    
+    return facts
 }
 
 
-module.exports = { router, getFactByID }
+module.exports = { router, getFactByID, getFacts }
