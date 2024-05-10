@@ -15,49 +15,58 @@ const PORT = process.env.PORT || 8000;
 const path = require('path');
 const flash = require('connect-flash');
 
-const authRouter = require('./routes/auth')
-const apiRouter = require('./routes/api')
-const passport = require('passport')
-const session = require('express-session')
+const authRouter = require('./routes/auth');
+const apiRouter = require('./routes/api');
+const passport = require('passport');
+const session = require('express-session');
 
-const db = require('better-sqlite3')('app.db')
-const SQLiteStore = require('connect-sqlite3')(session)
+const db = require('better-sqlite3')('app.db');
+const SQLiteStore = require('connect-sqlite3')(session);
 
-const swaggerUI = require('swagger-ui-express')
-const yaml = require('yaml')
-const fs = require('fs')
+const swaggerUI = require('swagger-ui-express');
+const yaml = require('yaml');
+const fs = require('fs');
 
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
 
-app.use(session({
-    cookie: { 
-        maxAge: 2 * 60 * 60 * 1000,
-        secure: !(process.env.HTTPS_ENABLED === "false")
-    },
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: new SQLiteStore({db: 'app.db'})
-}))
-app.use(express.urlencoded({extended: true}));
+app.use(
+    session({
+        cookie: {
+            maxAge: 2 * 60 * 60 * 1000,
+            secure: !(process.env.HTTPS_ENABLED === 'false'),
+        },
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: new SQLiteStore({ db: 'app.db' }),
+    })
+);
+app.use(express.urlencoded({ extended: true }));
 app.use(passport.authenticate('session'));
 
 // Middleware to make user data available to EJS on all pages.
 app.use(function (req, res, next) {
-    res.locals.user = req.user ? {id: req.user.id, email: req.user.email, fname: req.user.fname, lname: req.user.lname} : undefined
+    res.locals.user = req.user
+        ? {
+              id: req.user.id,
+              email: req.user.email,
+              fname: req.user.fname,
+              lname: req.user.lname,
+          }
+        : undefined;
     next();
 });
 
 // Configuring API docs via Swagger.
-const swaggerFile = fs.readFileSync('./swagger.yaml', 'utf-8')
-const swaggerDoc = yaml.parse(swaggerFile)
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc))
+const swaggerFile = fs.readFileSync('./swagger.yaml', 'utf-8');
+const swaggerDoc = yaml.parse(swaggerFile);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 // ================ ROUTERS ========================
-app.use('/', authRouter)
-app.use('/api', apiRouter)
+app.use('/', authRouter);
+app.use('/api', apiRouter);
 
 // ================ JS AND CSS PATH SETUP ================
 app.use(express.static(path.join(__dirname, 'public/css')));
