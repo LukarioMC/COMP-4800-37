@@ -16,7 +16,7 @@ const path = require('path');
 const flash = require('connect-flash');
 
 const authRouter = require('./routes/auth')
-const apiRouter = require('./routes/api').router
+const apiRouter = require('./routes/api')
 const passport = require('passport')
 const session = require('express-session')
 
@@ -54,7 +54,6 @@ app.use(function (req, res, next) {
 const swaggerFile = fs.readFileSync('./swagger.yaml', 'utf-8')
 const swaggerDoc = yaml.parse(swaggerFile)
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc))
-
 
 // ================ ROUTERS ========================
 app.use('/', authRouter)
