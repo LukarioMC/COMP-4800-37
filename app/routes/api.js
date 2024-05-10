@@ -6,11 +6,11 @@ const express = require('express')
 const router = express.Router()
 
 // API endpoint to get all facts that fulfill the given condition(s).
+// Accepts query param 'tag' for filtering by tag. Can be given multiple tag arguments for finer filtering.
 router.get('/api/fact', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
-    let list = ["Cat A"]
     try {
-        let facts = getFacts()
+        let facts = getFacts(req.query.tag)
         let publicFieldFacts = facts.map(fact => {
             let { is_approved, approval_date, ...publicFields } = fact
             return publicFields
@@ -56,13 +56,39 @@ function getFactByID(factID) {
     }
 }
 
+/**
+ * Given a list of tags, returns facts filtering out those who do not have all the given tags.
+ * @param {*} tags a list of tag strings
+ * @returns a list of facts whose tags are a superset of the input tags 
+ */
+
 function getFacts(tags = undefined) {
     if (tags) {
-        return []
+        let getFactsStmt = db.prepare(`
+                SELECT 
+                    *, group_concat(name) as taglist
+                FROM (
+                    factoid JOIN (
+                        tag JOIN category
+                        ON tag.category_id = category.id
+                    )
+                    ON factoid.id = tag.factoid_id
+                )
+                WHERE is_approved
+                GROUP BY factoid.id         
+            `)
+        let unfilteredFacts = getFactsStmt.all()
+        return unfilteredFacts.filter(fact => {
+            let tagsArray = fact.taglist.split(',')
+            return tags.every(tag => {
+                return tagsArray.includes(tag)
+            })
+        })
     } else {
         let getFactsStmt = db.prepare('SELECT * FROM factoid WHERE is_approved')
         return getFactsStmt.all()
     }
 }
+
 
 module.exports = { router, getFactByID }
