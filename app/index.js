@@ -32,6 +32,11 @@ const fs = require('fs');
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
 
+if (process.env.BEHIND_PROXY) {
+    // Configures the app to trust proxy forwarding headers. (See: https://expressjs.com/en/resources/middleware/session.html#cookiesecure)
+    app.set('trust proxy', 1);
+}
+
 app.use(
     session({
         cookie: {
