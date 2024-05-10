@@ -46,35 +46,27 @@ router.get('/api/fact/:id', (req, res, next) => {
 /**
  * Given an id, returns the associated fact.
  * @param {number} factID An integer representing a fact ID.
- * @returns Fact (with taglist) with the corresponding id. Undefined if the id is not associated with any fact or is invalid.
+ * @returns Fact  with the corresponding id. Undefined if the id is not associated with any fact or is invalid.
  */
 function getFactByID(factID) {
     try {
         let id = parseInt(factID)
-        let getFactStmt = db.prepare(`
-        SELECT 
-            id, 
-            submitter_id,
-            content,
-            posting_date,
-            discovery_date,
-            note,
-            group_concat(name) as taglist
-        FROM (
-            SELECT 
-                fulltag.id as cat_id, *
-            FROM
-                factoid LEFT JOIN (
-                    tag JOIN category
-                    ON tag.category_id = category.id
-                ) as fulltag
-                ON factoid.id = factoid_id
-        ) as fullfactoid
-        WHERE is_approved AND id = ?
-        GROUP BY id         
-        `)
-        let fact = getFactStmt.get(id)
-        fact.taglist = fact.taglist ? fact.taglist.split(',').sort() : []
+        let fact, tags, attachments
+
+        let fetch = db.transaction((id) => {
+            let getFactStmt = db.prepare(`SELECT * FROM factoid WHERE id = ?`)
+            fact = getFactStmt.get(id)
+    
+            let getTagsStmt = db.prepare(`SELECT * FROM (tag JOIN category on category_id = category.id) WHERE factoid_id = ?`)
+            tags = getTagsStmt.get(id)
+    
+            let getAttachmentsStmt = db.prepare(`SELECT * FROM attachment WHERE factoid_id = ?`)
+            attachments = getAttachmentsStmt.get(id)
+        })
+        fetch(id)
+
+        fact.tags = tags
+        fact.attachments = attachments
         return fact
     } catch (e) {
         console.log(e)
