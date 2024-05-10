@@ -41,6 +41,8 @@ router.get('/api/fact/:id', (req, res, next) => {
     }
 })
 
+
+
 /**
  * Given an id, returns the associated fact.
  * @param {number} factID An integer representing a fact ID.
@@ -53,17 +55,19 @@ function getFactByID(factID) {
         SELECT 
             *, group_concat(name) as taglist
         FROM (
-            factoid JOIN (
+            SELECT fulltag.id as cat_id, * FROM
+            factoid LEFT JOIN (
                 tag JOIN category
                 ON tag.category_id = category.id
-            )
-            ON factoid.id = tag.factoid_id
-        )
+            ) as fulltag
+            ON factoid.id = factoid_id
+        ) as fullfactoid
         WHERE is_approved AND id = ?
-        GROUP BY factoid.id         
+        GROUP BY id         
         `)
         return getFactStmt.get(id)
     } catch (e) {
+        console.log(e)
         return undefined
     }
 }
@@ -79,18 +83,21 @@ function getFacts(tags = undefined) {
     SELECT 
         *, group_concat(name) as taglist
     FROM (
-        factoid JOIN (
-            tag JOIN category
-            ON tag.category_id = category.id
-        )
-        ON factoid.id = tag.factoid_id
-    )
+        SELECT 
+            fulltag.id as cat_id, * 
+        FROM
+            factoid LEFT JOIN 
+                (tag JOIN category
+                ON tag.category_id = category.id
+                ) as fulltag
+            ON factoid.id = factoid_id
+    ) as fullfactoid
     WHERE is_approved
-    GROUP BY factoid.id         
+    GROUP BY id         
     `)
     let rawFacts = getFactsStmt.all()
     rawFacts.forEach(fact => {
-        fact.taglist = fact.taglist.split(',').sort()
+        fact.taglist = fact.taglist ? fact.taglist.split(',').sort() : []
     })
 
     let facts = rawFacts

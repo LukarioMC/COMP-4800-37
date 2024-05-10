@@ -26,7 +26,7 @@ VALUES
     ('fact c', null, true, null),
     ('fact d', null, true, null),
     ('fact e', null, true, null),
-    ('unapproved fact', null, false, null),
+    ('unapproved fact', null, false, null)
 ;
 
 INSERT INTO category (name)
