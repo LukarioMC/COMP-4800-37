@@ -119,6 +119,17 @@ app.get('/contact', (req, res) => {
 
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma
+// ----- FACTS -----
+// POST /api/fact: [API] Add new fact + attachments to be approved 
+app.post('/api/fact', (req, res) => {
+
+});
+
+// ----- ADMIN -----
+// PUT /api/fact: [API] Update/edit a facts contents
+app.put('/api/fact', (req, res) => {
+
+});
 
 // Begin the server and listen on the configured port
 app.listen(PORT);
