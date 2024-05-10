@@ -64,7 +64,7 @@ router.post('/api/login', passport.authenticate('local', {
 }))
 
 // Route for sign up page.
-router.get('/signup', (req, res, next) => {
+router.get('/register', (req, res, next) => {
     let error
     switch (req.query.error) {
         case "email":
@@ -80,11 +80,11 @@ router.get('/signup', (req, res, next) => {
             error = "Password is invalid"
             break
     }
-    res.render('pages/signup', { err: error })
+    res.render('pages/register', { err: error })
 })
 
 // API route to sign a new user up.
-router.post('/api/signup', (req, res, next) => {
+router.post('/api/register', (req, res, next) => {
     let salt = crypto.randomBytes(16)
     let user
     let attemptsLeft = 10000
@@ -96,13 +96,13 @@ router.post('/api/signup', (req, res, next) => {
         .has().digits(1)
         .has().letters(1)
     
-    if (!passwordSchema.validate(req.body.password)) return res.redirect('/signup?error=invalid-password')
-    if (!emailValidator.validate(req.body.email)) return res.redirect('/signup?error=invalid-email')
+    if (!passwordSchema.validate(req.body.password)) return res.redirect('/register?error=invalid-password')
+    if (!emailValidator.validate(req.body.email)) return res.redirect('/register?error=invalid-email')
     if (req.body.fname) req.body.fname = req.body.fname.trim()
     if (req.body.lname) req.body.lname = req.body.lname.trim()
 
     crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', async function (err, hashedPassword) {
-        if (err) { res.redirect('/signup?error=other') }
+        if (err) { res.redirect('/register?error=other') }
         while (true) {
             try {
                 let insertNewUserStmt = db.prepare('INSERT INTO user (id, email, hashed_password, salt, fname, lname) VALUES (?, ?, ?, ?, ?, ?) RETURNING *')
@@ -114,7 +114,7 @@ router.post('/api/signup', (req, res, next) => {
                     attemptsLeft--
                     continue
                 } else {
-                    return res.redirect(`/signup?error=${attemptsLeft <= 0 ? 'other' : 'email'}`)
+                    return res.redirect(`/register?error=${attemptsLeft <= 0 ? 'other' : 'email'}`)
                 }
             }
             break
