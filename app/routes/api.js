@@ -58,10 +58,10 @@ function getFactByID(factID) {
             fact = getFactStmt.get(id)
     
             let getTagsStmt = db.prepare(`SELECT * FROM (tag JOIN category on category_id = category.id) WHERE factoid_id = ?`)
-            tags = getTagsStmt.get(id)
+            tags = getTagsStmt.all(id)
     
             let getAttachmentsStmt = db.prepare(`SELECT * FROM attachment WHERE factoid_id = ?`)
-            attachments = getAttachmentsStmt.get(id)
+            attachments = getAttachmentsStmt.all(id)
         })
         fetch(id)
 
