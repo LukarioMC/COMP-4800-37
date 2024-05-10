@@ -6,6 +6,7 @@
  * @author Alex Sichitiu
  * @author Dakaro Mueller
  * @author Justin Ng
+ * @author Liana Diu
  * @author Elijah Fabon
  */
 require('dotenv').config();
@@ -14,6 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const path = require('path');
 const flash = require('connect-flash');
+const countryUtils = require('./utils/countryUtils');
 
 const authRouter = require('./routes/auth')
 const passport = require('passport')
@@ -92,6 +94,21 @@ app.get('/admin', (req, res) => {
     ];
     const adminName = 'mag3737';
     res.render('pages/admin-dashboard', { submissions: testData, adminName });
+});
+
+// route for submitting facts
+app.get('/fact_submission', (req, res) => {
+    if (!req.user) {
+        // gets country data from json for fact submitter country options
+        countryUtils.readCountryData((err, countries) => {
+            if (err) {
+                return res.status(500).send('Internal Server Error');
+            }
+            res.render('pages/fact-submission-page', { countries: countries});
+        });
+    } else {
+        res.render('pages/fact-submission-page', { user: req.user });
+    }
 });
 
 // This route is for the factoids listings page where users can view and search for factoids.
