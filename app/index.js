@@ -22,6 +22,8 @@ const session = require('express-session')
 const db = require('better-sqlite3')('app.db')
 const SQLiteStore = require('connect-sqlite3')(session)
 
+const nodemailer = require('nodemailer');
+
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
@@ -44,6 +46,16 @@ app.use(function (req, res, next) {
     res.locals.user = req.user ? {id: req.user.id, email: req.user.email, fname: req.user.fname, lname: req.user.lname} : undefined
     next();
 });
+
+// Configures email settings for reporting
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+})
 
 // ================ ROUTERS ========================
 app.use('/', authRouter)
@@ -116,6 +128,24 @@ app.get('/about', async (req, res) => {
 app.get('/contact', (req, res) => {
     res.render('pages/contact');
 });
+
+app.post('/api/report', (req, res) => {
+    const reporter = res.locals.user.id;
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_RECEIVER,
+        subject: "thirty-seven.org - Fact #" + req.body.fact.id +  " Has Been Reported",
+        text: "Reported by: " + reporter + "\nFact #" + req.body.fact.id + "\nFact: " + req.body.fact.content + "\n\n" + req.body.report.issue || "No issues!"
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error("Error sending email: ", error);
+        } else {
+            console.log("Email sent: ", info.response);
+        }
+    });
+    res.redirect("/factoids");
+})
 
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma

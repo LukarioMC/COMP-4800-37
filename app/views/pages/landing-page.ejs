@@ -36,11 +36,11 @@
           <h1 class="modal-title fs-5" id="reportModalLabel">Report an issue with this fact</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form>
+        <form action="/api/report" method="POST">
             <div class="modal-body">
               <div class="mb-3">
                 <label for="issueTextarea" class="form-label">Please describe the issue.</label>
-                <textarea class="form-control" id="issueTextarea" rows="3"></textarea>
+                <textarea class="form-control" id="issueTextarea" rows="3" name="report[issue]"></textarea>
               </div>
             </div>
             <div class="modal-footer">
