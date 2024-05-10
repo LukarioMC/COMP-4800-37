@@ -68,7 +68,20 @@ router.delete('/api/delete/attachment/:attachmentID', (req, res, next) => {
 
 // API endpoint to delete a tag for a given factoid ID and category ID
 router.delete('/fact/:factoidId/tag/:categoryId', (req, res) => {
+    try {
+        const { factoidId, categoryId } = req.params;
+        
+        const result = deleteTagForFactoid(parseInt(factoidId), parseInt(categoryId));
 
+        if (result) {
+            return res.status(200).send({ message: 'Tag deleted successfully.' });
+        } else {
+            return res.status(404).send({ message: 'Tag not found.' });
+        }
+    } catch (e) {
+        console.log(e);
+        return res.status(500).send({ message: 'Server error.' });
+    }
 });
 
 module.exports = router;
