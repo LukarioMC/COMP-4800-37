@@ -115,17 +115,11 @@ router.post('/api/register', (req, res, next) => {
     let attemptsLeft = 10000;
 
     let passwordSchema = new passwordValidator()
-        .is()
-        .min(8)
-        .is()
-        .max(100)
-        .has()
-        .not()
-        .spaces()
-        .has()
-        .digits(1)
-        .has()
-        .letters(1);
+        .is().min(8)
+        .is().max(100)
+        .has().not().spaces()
+        .has().digits(1)
+        .has().letters(1);
 
     if (!passwordSchema.validate(req.body.password))
         return res.redirect('/register?error=invalid-password');
