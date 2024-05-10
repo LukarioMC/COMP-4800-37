@@ -47,10 +47,11 @@ router.get('/fact/:id', (req, res) => {
     }
 });
 
+// API endpoint to delete an attachment for a given attachemntID
 router.delete('/api/delete/attachment/:attachmentID', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
-        const attachmentID = req.params.attachmentId;
+        const attachmentID = req.params.attachmentID;
 
         const result = deleteAttachmentforFactoid(attachmentID)
 
