@@ -46,4 +46,8 @@ router.get('/fact/:id', (req, res) => {
     }
 });
 
+router.delete('/api/fact/:factId/attachment/:attachmentId', (req, res, next) => {
+
+});
+
 module.exports = router;
