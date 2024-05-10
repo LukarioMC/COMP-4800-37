@@ -7,7 +7,7 @@ const router = express.Router()
 
 // API endpoint to get all facts that fulfill the given condition(s).
 // Accepts query param 'tag' for filtering by tag. Can be given multiple tag arguments for finer filtering.
-router.get('/api/fact', (req, res, next) => {
+router.get('/fact', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         let facts = getFacts(req.query.tag)
@@ -23,7 +23,7 @@ router.get('/api/fact', (req, res, next) => {
 })
 
 // API endpoint to get the fact with the given id.
-router.get('/api/fact/:id', (req, res, next) => {
+router.get('/fact/:id', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         let id = parseInt(req.params.id)

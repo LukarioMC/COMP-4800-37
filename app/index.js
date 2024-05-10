@@ -58,7 +58,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc))
 
 // ================ ROUTERS ========================
 app.use('/', authRouter)
-app.use('/', apiRouter)
+app.use('/api', apiRouter)
 
 // ================ JS AND CSS PATH SETUP ================
 app.use(express.static(path.join(__dirname, 'public/css')));
