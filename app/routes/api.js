@@ -47,7 +47,7 @@ router.get('/fact/:id', (req, res) => {
     }
 });
 
-// API endpoint to delete an attachment for a given attachemntID
+// API endpoint to delete an attachment for a given attachemnt ID
 router.delete('/api/delete/attachment/:attachmentID', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
@@ -64,6 +64,11 @@ router.delete('/api/delete/attachment/:attachmentID', (req, res, next) => {
         console.error('Error deleting attachment:', error);
         return res.status(500).send({ message: 'Server error.' });
     }
+});
+
+// API endpoint to delete a tag for a given factoid ID and category ID
+router.delete('/fact/:factoidId/tag/:categoryId', (req, res) => {
+
 });
 
 module.exports = router;
