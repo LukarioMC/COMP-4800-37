@@ -21,7 +21,6 @@ const apiRouter = require('./routes/api');
 const passport = require('passport');
 const session = require('express-session');
 
-const db = require('better-sqlite3')('app.db');
 const SQLiteStore = require('connect-sqlite3')(session);
 
 const swaggerUI = require('swagger-ui-express');

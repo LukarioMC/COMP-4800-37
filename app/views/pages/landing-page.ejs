@@ -9,48 +9,11 @@
         </div>
     </div>
     <div class="input-group">
-        <input
-            class="form-control"
-            type="text"
-            placeholder="Look up a fact by text..."
-        />
-        <button
-            class="btn btn-outline-secondary"
-            type="button"
-            id="search-by-text-btn"
-        >
+        <input class="form-control" type="text" placeholder="Look up a fact by text..." />
+        <button class="btn btn-outline-secondary" type="button" id="search-by-text-btn">
             Search
         </button>
     </div>
-
-    <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mt-5" data-bs-toggle="modal" data-bs-target="#reportModal">
-    Test Report Modal
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="reportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="reportModalLabel">Report an issue with this fact</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label for="issueTextarea" class="form-label">Please describe the issue.</label>
-                <textarea class="form-control" id="issueTextarea" rows="3"></textarea>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
-      </div>
-    </div>
-  </div>
 </main>
 
 <%- include('../partials/footer'); %>
