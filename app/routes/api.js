@@ -6,6 +6,17 @@ const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID } = require('../handlers/factoid');
 
+const nodemailer = require('nodemailer');
+// Configures email settings for reporting
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
 // API endpoint to get all facts that fulfill the given condition(s).
 // Accepts query param 'tag' for filtering by tag. Can be given multiple tag arguments for finer filtering.
 router.get('/fact', (req, res) => {
@@ -44,6 +55,35 @@ router.get('/fact/:id', (req, res) => {
         console.log(e);
         return res.status(500).send({ message: 'Server error.' });
     }
+});
+
+router.post('/report', (req, res) => {
+    const reporter = res.locals.user.id;
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_RECEIVER,
+        subject:
+            'thirty-seven.org - Fact #' +
+            req.body.fact.id +
+            ' Has Been Reported',
+        text:
+            'Reported by: ' +
+                reporter +
+                '\nFact #' +
+                req.body.fact.id +
+                '\nFact: ' +
+                req.body.fact.content +
+                '\n\n' +
+                req.body.report.issue || 'No issues!',
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email: ', error);
+        } else {
+            console.log('Email sent: ', info.response);
+        }
+    });
+    res.redirect('/facts');
 });
 
 module.exports = router;
