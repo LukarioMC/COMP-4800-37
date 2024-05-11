@@ -67,11 +67,11 @@ router.delete('/api/delete/attachment/:attachmentID', (req, res, next) => {
 });
 
 // API endpoint to delete a tag for a given factoid ID and category ID
-router.delete('/fact/:factoidId/tag/:categoryId', (req, res) => {
+router.delete('/api/delete/fact/:factoidID/tag/:categoryID', (req, res) => {
     try {
-        const { factoidId, categoryId } = req.params;
+        const { factoidID, categoryID } = req.params;
         
-        const result = deleteTagForFactoid(parseInt(factoidId), parseInt(categoryId));
+        const result = deleteTagForFactoid(parseInt(factoidID), parseInt(categoryID));
 
         if (result) {
             return res.status(200).send({ message: 'Tag deleted successfully.' });
@@ -83,5 +83,10 @@ router.delete('/fact/:factoidId/tag/:categoryId', (req, res) => {
         return res.status(500).send({ message: 'Server error.' });
     }
 });
+
+// API endpoint to delete a fact, given the factoid ID
+router.delete('/api/delete/fact/:factoidID', (req, res) => {
+
+})
 
 module.exports = router;
