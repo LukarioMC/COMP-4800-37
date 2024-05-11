@@ -58,7 +58,7 @@ router.get('/fact/:id', (req, res) => {
 });
 
 router.post('/report', (req, res) => {
-    const reporter = res.locals.user.id;
+    const reporter = res.locals.user?.id || 'Anonymous User';
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_RECEIVER,
@@ -83,7 +83,7 @@ router.post('/report', (req, res) => {
             console.log('Email sent: ', info.response);
         }
     });
-    res.redirect('/facts');
+    res.redirect('back');
 });
 
 module.exports = router;
