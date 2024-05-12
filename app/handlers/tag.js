@@ -10,6 +10,19 @@ function deleteTagforFactoid(factoidID, categoryID){
     }
 }
 
+function deleteAllTagsforFactoid(factoidID){
+    try {
+        const tags = db.prepare('SELECT * FROM Tag WHERE factoid_id = ?')
+    
+        tags.forEach(tag => {
+            deleteTagforFactoid(tag.factoidID, tag.categoryID);
+        });
+
+    } catch (e) {
+
+    }
+}
+
 module.exports = {
     deleteTagforFactoid,
 }
