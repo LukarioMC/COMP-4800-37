@@ -1,3 +1,5 @@
+PRAGMA foreign_keys=OFF;
+
 -- CreateTable
 DROP TABLE IF EXISTS user;
 CREATE TABLE "User" (
@@ -72,3 +74,5 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 -- CreateIndex
 DROP INDEX IF EXISTS Category_name_key;
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+
+PRAGMA foreign_keys=ON;
