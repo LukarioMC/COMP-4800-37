@@ -45,12 +45,10 @@ router.post('/fact', (req, res) => {
         return;
     }
 
-    // Assuming there's a database table named 'facts', you can insert the new fact into the database
-    const stmt = db.prepare('INSERT INTO facts (content, note, userId) VALUES (?, ?, ?)');
-    const result = stmt.run(content, note, userId);
+    // Call addFact function to add the new fact to the database
+    const success = addFact({ submitter_id: userId, content, note });
 
-    // Assuming the result variable holds the status of the database operation
-    if (result.changes > 0) {
+    if (success) {
         res.status(201).json({ message: 'Fact added successfully' });
     } else {
         res.status(500).json({ error: 'Failed to add fact' });
@@ -59,7 +57,18 @@ router.post('/fact', (req, res) => {
 
 // API endpoint to update an existing fact in the database.
 router.put('/fact', (req, res) => {
+  // Extract necessary information from the request body
+    const factID = req.params.factID;
+    const { content, note, discovery_date } = req.body;
 
+    // Call updateFact function to update the existing fact in the database
+    const success = updateFact(factID, { content, note, discovery_date });
+
+    if (success) {
+        res.status(200).json({ message: 'Fact updated successfully' });
+    } else {
+        res.status(500).json({ error: 'Failed to update fact' });
+    }
 });
 
 // API endpoint to get the fact with the given id.
