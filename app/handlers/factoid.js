@@ -91,7 +91,53 @@ function filterFacts(facts, tags = []) {
     });
 }
 
+/**
+ * Adds a new fact to the database.
+ * @param {Object} factData An object containing data for the new fact.
+ * @returns {boolean} True if the fact was successfully added, false otherwise.
+ */
+function addFact(factData) {
+    try {
+        const { submitter_id, content, discovery_date, note } = factData;
+
+        const stmt = db.prepare(`
+            INSERT INTO Factoid (submitter_id, content, posting_date, discovery_date, note, is_approved, approval_date)
+            VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
+        `);
+        stmt.run(submitter_id, content, discovery_date, note);
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+/**
+ * Updates an existing fact in the database.
+ * @param {number} factID The ID of the fact to be updated.
+ * @param {Object} updatedData An object containing updated data for the fact.
+ * @returns {boolean} True if the fact was successfully updated, false otherwise.
+ */
+function updateFact(factID, updatedData) {
+    try {
+        const { content, note, discovery_date } = updatedData;
+
+        const stmt = db.prepare(`
+            UPDATE Factoid 
+            SET content = ?, note = ?, discovery_date = ?
+            WHERE id = ?
+        `);
+        stmt.run(content, note, discovery_date, factID);
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
 module.exports = {
     getFactByID,
     getFacts,
+    addFact,
+    updateFact,
 };
