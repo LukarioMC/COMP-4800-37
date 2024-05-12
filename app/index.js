@@ -119,35 +119,6 @@ app.get('/contact', (req, res) => {
 
 // ================ SERVER ROUTES ================
 // TODO: Add server REST route calls for making SQLite queries through prisma
-// ----- FACTS -----
-// POST /api/fact: [API] Add new fact + attachments to be approved 
-app.post('/api/fact', (req, res) => {
-  // Extract necessary information from the request body
-    const { content, note, userId } = req.body;
-
-    // Perform any necessary validation on the incoming data
-    if (!content || !userId) {
-        res.status(400).json({ error: 'Missing required information' });
-        return;
-    }
-
-    // Assuming there's a database table named 'facts', you can insert the new fact into the database
-    const stmt = db.prepare('INSERT INTO facts (content, note, userId) VALUES (?, ?, ?)');
-    const result = stmt.run(content, note, userId);
-
-    // Assuming the result variable holds the status of the database operation
-    if (result.changes > 0) {
-        res.status(201).json({ message: 'Fact added successfully' });
-    } else {
-        res.status(500).json({ error: 'Failed to add fact' });
-    }
-});
-
-// ----- ADMIN -----
-// PUT /api/fact: [API] Update/edit a facts contents
-app.put('/api/fact', (req, res) => {
-
-});
 
 // Begin the server and listen on the configured port
 app.listen(PORT);
