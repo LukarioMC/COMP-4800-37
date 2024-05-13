@@ -58,6 +58,7 @@ router.get('/fact/:id', (req, res) => {
     }
 });
 
+// Route to get all categories.
 router.get('/tags', (req, res) => {
     try { 
         res.status(200).json(getTags())
