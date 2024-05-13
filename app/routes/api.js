@@ -36,17 +36,16 @@ router.get('/fact', (req, res) => {
 
 // API endpoint to add a new fact to the database.
 router.post('/fact', (req, res) => {
-  // Extract necessary information from the request body
     const { content, note, userId } = req.body;
 
-    // Perform any necessary validation on the incoming data
-    if (!content || !userId) {
-        res.status(400).json({ error: 'Missing required information' });
+    const submitter_id = userId || 'zzz3737';
+
+    if (!content) {
+        res.status(400).json({ error: 'Content field is required' });
         return;
     }
 
-    // Call addFact function to add the new fact to the database
-    const success = addFact({ submitter_id: userId, content, note });
+    const success = addFact({ submitter_id, content, note });
 
     if (success) {
         res.status(201).json({ message: 'Fact added successfully' });
@@ -57,11 +56,9 @@ router.post('/fact', (req, res) => {
 
 // API endpoint to update an existing fact in the database.
 router.put('/fact', (req, res) => {
-  // Extract necessary information from the request body
     const factID = req.params.factID;
     const { content, note, discovery_date } = req.body;
 
-    // Call updateFact function to update the existing fact in the database
     const success = updateFact(factID, { content, note, discovery_date });
 
     if (success) {
