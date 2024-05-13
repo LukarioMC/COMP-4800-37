@@ -49,7 +49,18 @@ components:
           type: string
         type:
           type: string
-          
+    Report:
+      type: object
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+        subject:
+          type: string
+        text:
+          type: string
+
 
 paths:
   /api/fact:
@@ -109,7 +120,26 @@ paths:
                   message:
                     type: string
                     description: An error message.
-
+  /api/report:
+    post:
+      summary: Sends an email report to the admin with information about the selected fact. The email functionality is configured with host, port, and sender email/password.
+      description: Sends an email report to the admin with information about the selected fact. Consists of from (sender), to (receiver), subject, and text (report content). 
+      requestBody:
+        description: Consists of from (sender), to (receiver), subject, and text (report content). Text contains submitter ID, fact ID, fact content, the content the user has typed into the report, and a link to the dashboard.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+        required: true
+      responses:
+        '200':
+          description: Email successfully sent with all the required information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '500':
+          description: Server error.
 
 
 
