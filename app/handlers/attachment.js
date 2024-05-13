@@ -9,6 +9,7 @@ function deleteAttachmentforFactoid(attachmentID){
         return false;
     }
 }
+
 function deleteAllAttachmentsforFactoid(attachmentID){
     try {
         const attachments = db.prepare('SELECT * FROM Attachment WHERE id = ?').all(attachmentID)

@@ -4,8 +4,9 @@
  */
 const express = require('express');
 const router = express.Router();
-const { getFacts, getFactByID } = require('../handlers/factoid');
-const { deleteAttachmentforFactoid } = require('../handlers/attachment');
+const { getFacts, getFactByID, deleteFactByID } = require('../handlers/factoid');
+const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid } = require('../handlers/attachment');
+const { deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tags');
 
 // API endpoint to get all facts that fulfill the given condition(s).
 // Accepts query param 'tag' for filtering by tag. Can be given multiple tag arguments for finer filtering.
@@ -86,7 +87,26 @@ router.delete('/api/delete/fact/:factoidID/tag/:categoryID', (req, res) => {
 
 // API endpoint to delete a fact, given the factoid ID
 router.delete('/api/delete/fact/:factoidID', (req, res) => {
+    const { factoidID } = req.params;
 
+    try {
+
+        deleteAllAttachmentsforFactoid(factoidID);
+
+        deleteAllTagsforFactoid(factoidID);
+
+        const factDeleted = deleteFactByID(factoidID);
+
+        if (factDeleted) {
+            return res.status(200).send({ message: 'Fact and associated attachments/tags deleted successfully.' });
+        } else {
+            return res.status(404).send({ message: 'Fact not found.' });
+        }
+        
+    } catch (e) {
+        console.error('Error deleting fact:', e);
+        return res.status(500).send({ message: 'Server error.' });
+    }
 })
 
 module.exports = router;
