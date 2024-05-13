@@ -17,4 +17,11 @@ let tomSalt = crypto.randomBytes(16)
 let tomPwd = crypto.pbkdf2Sync(process.env.TOMS_PWD, tomSalt, 310000, 32, 'sha256')
 addUserStmt.run('tom3737', 'tom@magliery.com', tomPwd, 'Thomas', 'Magliery', 1, tomSalt)
 
+let updateAnonFactsStmt = db.prepare(`
+    UPDATE factoid
+    SET submitter_id = 'zzz3737'
+    WHERE submitter_id IS NULL
+`)
+updateAnonFactsStmt.run() 
+
 db.close();
