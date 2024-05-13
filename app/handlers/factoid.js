@@ -11,7 +11,7 @@ function getFactByID(factID) {
         let fact, tags, attachments;
 
         let fetch = db.transaction((id) => {
-            let getFactStmt = db.prepare(`SELECT * FROM factoid WHERE id = ?`);
+            let getFactStmt = db.prepare(`SELECT * FROM factoid WHERE id = ? AND is_approved`);
             fact = getFactStmt.get(id);
 
             let getTagsStmt = db.prepare(
