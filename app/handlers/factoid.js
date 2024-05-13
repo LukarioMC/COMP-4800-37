@@ -91,7 +91,19 @@ function filterFacts(facts, tags = []) {
     });
 }
 
+function deleteFactByID(factoidID) {
+    try {
+        const result = db.prepare('DELETE FROM Factoid WHERE id = ?').run(factoidID);
+
+        return result.changes > 0;
+    } catch (e) {
+        console.error('Error deleting fact:', e);
+        return false;
+    }
+}
+
 module.exports = {
     getFactByID,
     getFacts,
+    deleteFactByID
 };
