@@ -5,13 +5,16 @@ const db = require('better-sqlite3')('app.db');
  * @param {number} factID An integer representing a fact ID.
  * @returns Fact with the corresponding id and associated tags and attachments. Undefined if the id is not associated with any fact or is invalid.
  */
-function getFactByID(factID) {
+function getFactByID(factID, isApproved = true) {
     try {
         let id = parseInt(factID);
         let fact, tags, attachments;
 
         let fetch = db.transaction((id) => {
-            let getFactStmt = db.prepare(`SELECT * FROM factoid WHERE id = ?`);
+            const statement = isApproved
+                ? 'SELECT * FROM factoid WHERE id = ? AND is_approved'
+                : 'SELECT * FROM factoid WHERE id = ?';
+            let getFactStmt = db.prepare(statement);
             fact = getFactStmt.get(id);
 
             let getTagsStmt = db.prepare(
