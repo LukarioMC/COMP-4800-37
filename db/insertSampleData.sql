@@ -29,12 +29,12 @@ VALUES
     ('unapproved fact', null, false, null)
 ;
 
-INSERT INTO category (name)
+INSERT INTO category (name, is_primary)
 VALUES
-    ('Cat A'),
-    ('Cat B'),
-    ('Cat C'),
-    ('Cat D')
+    ('Cat A', true),
+    ('Cat B', true),
+    ('Cat C', false),
+    ('Cat D', true)
 ;
 
 INSERT INTO tag

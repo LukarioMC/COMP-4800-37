@@ -5,6 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID } = require('../handlers/factoid');
+const getTags = require('../handlers/tag')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -56,6 +57,15 @@ router.get('/fact/:id', (req, res) => {
         return res.status(500).send({ message: 'Server error.' });
     }
 });
+
+router.get('/tags', (req, res) => {
+    try { 
+        res.status(200).json(getTags())
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Server error."})
+    }
+})
 
 router.post('/report', (req, res) => {
     const reporter = res.locals.user?.id || 'Anonymous User';
