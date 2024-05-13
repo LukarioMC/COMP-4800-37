@@ -70,6 +70,9 @@ router.get('/tags', (req, res) => {
 
 // Route to add a new tag.
 router.put('/tag', (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({message: 'Must have admin access to create tags'})
+    }
     if (req.body.tagName) {
         let queryRes = defineTag(req.body.tagName, req.body.isPrimary)
         if (queryRes.successful) {
