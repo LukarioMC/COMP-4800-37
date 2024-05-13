@@ -29,6 +29,9 @@ function getFactByID(factID, isApproved = true) {
         });
         fetch(id);
 
+        // Return undefined if there was no fact retrieved
+        if (!fact) return undefined;
+
         fact.tags = tags;
         fact.attachments = attachments;
         return fact;

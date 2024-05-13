@@ -130,6 +130,50 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Category'
+  /api/tag:
+    put:
+      summary: Add a new category for tags in the database.
+      requestBody:
+        description: Object with category name and optional isPrimary flag.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tagName:
+                  type: string
+                isPrimary:
+                  type: boolean
+      responses:
+        '201':
+          description: Tag successfully added.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+        '400':
+          description: Invalid arguments.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+
 
 
 
