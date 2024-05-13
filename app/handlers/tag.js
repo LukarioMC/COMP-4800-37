@@ -12,7 +12,7 @@ function deleteTagforFactoid(factoidID, categoryID){
 
 function deleteAllTagsforFactoid(factoidID){
     try {
-        const tags = db.prepare('SELECT * FROM Tag WHERE factoid_id = ?')
+        const tags = db.prepare('SELECT * FROM Tag WHERE factoid_id = ?').all(factoidID)
     
         tags.forEach(tag => {
             deleteTagforFactoid(tag.factoidID, tag.categoryID);
@@ -25,4 +25,5 @@ function deleteAllTagsforFactoid(factoidID){
 
 module.exports = {
     deleteTagforFactoid,
+    deleteAllTagsforFactoid
 }

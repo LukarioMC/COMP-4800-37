@@ -9,7 +9,12 @@ function deleteAttachmentforFactoid(attachmentID){
         return false;
     }
 }
+function deleteAllAttachmentsforFactoid(attachmentID){
+
+}
+
 
 module.exports = {
     deleteAttachmentforFactoid,
+    deleteAllAttachmentsforFactoid
 }
