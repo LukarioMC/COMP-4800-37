@@ -8,11 +8,11 @@
     <div id="collapse-<%- factoid.id %>" class="accordion-collapse collapse" aria-labelledby="heading-<%- factoid.id %>" <% if(typeof accordionParent !== 'undefined') { %> data-bs-parent="<%= accordionParent %>" <% } %>>
         <div class="accordion-body">
             <div style="white-space: pre"><%= factoid.note || "Nothing is here..." %></div>
-            <div>Posted: <%= new Date(factoid.posting_date).toUTCString() %></div>
-            <div>By: <%= factoid.submitter_id || 'zzz3737' %></div>
+            <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
+            <div><b>By:</b> <%= factoid.submitter_id %></div>
             <!-- Button trigger modal -->
             <br/>
-            <button type="button" class="btn btn-primary mb-3 ms-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
         </div>
     </div>
 
