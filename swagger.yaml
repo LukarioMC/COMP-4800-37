@@ -146,15 +146,15 @@ paths:
                 isPrimary:
                   type: boolean
       responses:
-        '200':
+        '201':
           description: Tag successfully added.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message: string
-                  responses:
+                  message: 
+                    type: string
         '400':
           description: Invalid arguments.
           content:
@@ -162,7 +162,8 @@ paths:
               schema:
                 type: object
                 properties:
-                  message: string
+                  message: 
+                    type: string
         '500':
           description: Server error.
           content:
@@ -170,7 +171,8 @@ paths:
               schema:
                 type: object
                 properties:
-                  message: string
+                  message: 
+                    type: string
 
 
 
