@@ -75,7 +75,7 @@ router.put('/tag', (req, res) => {
         if (queryRes.successful) {
             return res.status(200).json({message: `Successfully added tag ${req.body.tagName}.`})
         } else {
-            return res.status(400).json({message: queryRes.message})
+            return res.status(500).json({message: queryRes.message})
         }
     } else {
         return res.status(400).json({message: 'Invalid args.'})

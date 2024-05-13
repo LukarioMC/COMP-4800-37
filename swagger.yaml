@@ -118,7 +118,7 @@ paths:
                   message:
                     type: string
                     description: An error message.
-  /api/tag:
+  /api/tags:
     get:
       summary: Returns a list of all categories.
       responses:
@@ -130,6 +130,48 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Category'
+  /api/tag:
+    put:
+      summary: Add a new category for tags in the database.
+      requestBody:
+        description: Object with category name and optional isPrimary flag.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tagName:
+                  type: string
+                isPrimary:
+                  type: boolean
+      responses:
+        '200':
+          description: Tag successfully added.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: string
+                  responses:
+        '400':
+          description: Invalid arguments.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: string
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: string
+
 
 
 
