@@ -71,7 +71,7 @@ router.get('/tags', (req, res) => {
 // Route to add a new tag.
 router.put('/tag', (req, res) => {
     if (req.body.tagName) {
-        let queryRes = req.body.isPrimary ? defineTag(req.body.tagName, req.body.isPrimary) : defineTag(req.body.tagName)
+        let queryRes = defineTag(req.body.tagName, req.body.isPrimary)
         if (queryRes.successful) {
             return res.status(201).json({message: `Successfully added tag ${req.body.tagName}.`})
         } else {
