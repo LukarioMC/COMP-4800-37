@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
 const flash = require('connect-flash');
+const { getFacts } = require('../handlers/factoid');
 
 router.get('/', (_, res) => {
     const pageContext = {
@@ -57,15 +58,11 @@ router.get('/submit', (req, res) => {
 
 // This route is for the factoids listings page where users can view and search for factoids.
 router.get('/facts', async (_, res) => {
-    const pageContext = {
-        // Fake Fact data to mock factoid, may be replaced with actual data from the database
-        factoid: {
-            id: 777,
-            content: 'A super cool 37 fact',
-            note: 'Something extra about the fact',
-        },
-    };
-    res.render('pages/factoid-listings', pageContext);
+    let factoids = getFacts().map((fact) => {
+        let { is_approved, approval_date, ...publicFields } = fact;
+        return publicFields;
+    });
+    res.render('pages/factoid-listings', {factoids: factoids});
 });
 
 // This route is for the about/why 37? page.
