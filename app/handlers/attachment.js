@@ -10,7 +10,16 @@ function deleteAttachmentforFactoid(attachmentID){
     }
 }
 function deleteAllAttachmentsforFactoid(attachmentID){
+    try {
+        const attachments = db.prepare('SELECT * FROM Attachment WHERE id = ?').all(attachmentID)
+    
+        attachments.forEach(attachment => {
+            deleteAttachmentforFactoid(attachment.ID);
+        });
 
+    } catch (e) {
+
+    }
 }
 
 
