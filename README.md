@@ -8,6 +8,9 @@ Contents of .env:
  - `SESSION_SECRET=` - String used to encrypt express-session.
  - `HTTPS_ENABLED=` - Boolean that specifies whether cookies are secure or not (if not defined, cookies default to secure.)
  - `BEHIND_PROXY=` - Configures the server to allow HTTPS/secure cookies when behind a reverse proxy.
+ - `ANON_EMAIL=` - Placeholder email for the anonymous user.
+ - `ANON_PWD=` - Placeholder password for the anonymous user. Best made very complex.
+ - `TOMS_PWD` - Password for Tom to use as a site administrator.
 
 Scripts:
 Run the following using 'npm run [cmd]'
