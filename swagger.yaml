@@ -118,7 +118,7 @@ paths:
                   message:
                     type: string
                     description: An error message.
-  /api/tag:
+  /api/tags:
     get:
       summary: Returns a list of all categories.
       responses:
