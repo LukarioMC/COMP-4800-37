@@ -10,6 +10,11 @@
             <div style="white-space: pre"><%= factoid.note || "Nothing is here..." %></div>
             <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
             <div><b>By:</b> <%= factoid.submitter_id %></div>
+            <div>
+                <% factoid.tags.forEach((tag) => { %>
+                    <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
+                <% }) %>
+            </div>
             <!-- Button trigger modal -->
             <br/>
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
