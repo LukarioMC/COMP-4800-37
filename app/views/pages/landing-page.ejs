@@ -6,7 +6,7 @@
         <div class="accordion" id="fact-of-the-day">
         <% if (typeof factoid !== 'undefined') { %>
             <%- include('../partials/fact.ejs', { factoid, accordionParent:
-            '#fact-of-the-day' }); %>
+            '#fact-of-the-day', rand: "rand" }); %>
         <% } %>
         </div>
     </div>
