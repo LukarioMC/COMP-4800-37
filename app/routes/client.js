@@ -8,19 +8,24 @@ const flash = require('connect-flash');
 const { getFacts, getRandomFact } = require('../handlers/factoid');
 const { getTags } = require('../handlers/tag')
 
+const PAGE_SIZE = 5
+
 router.get('/', (req, res) => {
-    let factoids = getFacts(req.query.tag, req.query.searchText).map((fact) => {
+    let factoids = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, PAGE_SIZE).map((fact) => {
         let { is_approved, approval_date, ...publicFields } = fact;
         return publicFields;
     });
 
+    maxPages = Math.ceil(getFacts(req.query.tag, req.query.searchText).length / PAGE_SIZE)
+
     let pageContext = {
-        factoids: factoids, tags: getTags(), 
+        factoids: factoids, 
+        tags: getTags(), 
         activeTags: req.query.tag || [],
         isAdmin: req.user ? req.user.isAdmin : false,
         factoid: getRandomFact(),
-        pageSize: req.query.pageSize || 3,
-        pageNum: req.query.pageNum || 1
+        pageNum: req.query.pageNum || 1,
+        maxPages: maxPages
     }
     res.render('pages/landing-page', pageContext);
 });
@@ -64,17 +69,21 @@ router.get('/submit', (req, res) => {
 
 // This route is for the factoids listings page where users can view and search for factoids.
 router.get('/facts', async (req, res) => {
-    let factoids = getFacts(req.query.tag, req.query.searchText).map((fact) => {
+    let factoids = getFacts(req.query.tag, req.query.searchText, req.query.pageNum || 1, PAGE_SIZE).map((fact) => {
         let { is_approved, approval_date, ...publicFields } = fact;
         return publicFields;
     });
 
+    maxPages = Math.ceil(getFacts(req.query.tag, req.query.searchText).length / PAGE_SIZE)
+
     let pageContext = {
-        factoids: factoids, tags: getTags(), 
+        factoids: factoids, 
+        tags: getTags(), 
         activeTags: req.query.tag || [],
         isAdmin: req.user ? req.user.isAdmin : false,
         pageSize: req.query.pageSize || 3,
-        pageNum: req.query.pageNum || 1
+        pageNum: req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1,
+        maxPages: maxPages
     }
     res.render('pages/factoid-listings', pageContext);
 });

@@ -55,6 +55,50 @@ function configPage() {
     }
     
     document.getElementById('search-by-text-btn').onclick = () => search()
+
+    configPagination()
+}
+
+function configPagination() {
+    let pagesMenu = document.getElementById('pages')
+    let next = document.getElementById('next')
+    let prev = document.getElementById('prev')
+    let pages = []
+
+    try {
+        
+
+        current = parseInt(current)
+        if (current > 1) {
+            pagesMenu.insertBefore(createPageButton(current - 1), next)
+            let url = new URL(window.location.href)
+            url.searchParams.set('pageNum', current - 1)
+            prev.children[0].href = url.toString()
+        }
+        pagesMenu.insertBefore(createPageButton(current), next)
+        if (current + 1 <= maxPages) {
+            pagesMenu.insertBefore(createPageButton(current + 1), next)
+            let url = new URL(window.location.href)
+            url.searchParams.set('pageNum', current + 1)
+            next.children[0].href = url.toString()
+        }
+    } catch (e) {
+        console.log(e)
+    }  
+}
+
+function createPageButton(n) {
+    let pageBtn = document.createElement('li')
+    pageBtn.className = 'page-item'
+    let pageBtnLink = document.createElement('a')
+    pageBtnLink.className = 'page-link'
+    pageBtnLink.innerHTML = n
+    let url = new URL(window.location.href)
+    url.searchParams.set('pageNum', n)
+    pageBtnLink.href = url.toString()
+
+    pageBtn.appendChild(pageBtnLink)
+    return pageBtn
 }
 
 configPage()

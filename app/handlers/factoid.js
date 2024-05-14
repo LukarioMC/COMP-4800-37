@@ -85,9 +85,9 @@ function getFacts(tags = undefined, searchText = undefined, pageNum = undefined,
             })
         }
 
-        if (pageNum && pageSize && pageNum >= 0 && pageSize >= 0) {
+        if (pageNum && pageSize && pageNum > 0 && pageSize > 0) {
             let offset = (pageNum - 1) * pageSize
-            fetchedFacts = fetchedFacts.slice(offset, pageSize)
+            fetchedFacts = fetchedFacts.slice(offset, offset + pageSize)
         }
 
         return fetchedFacts
