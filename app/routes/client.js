@@ -87,6 +87,7 @@ function prepForFactList(req, pageContext = {}) {
     
     pageContext.factoids = factoids, 
     pageContext.tags = getTags(), 
+    pageContext.searchText = req.query.searchText
     pageContext.activeTags = req.query.tag || [],
     pageContext.isAdmin = req.user ? req.user.isAdmin : false,
     pageContext.pageNum = pageNum,
