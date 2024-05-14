@@ -20,6 +20,7 @@ const clientRouter = require('./routes/client');
 const apiRouter = require('./routes/api');
 const passport = require('passport');
 const session = require('express-session');
+const flash = require('connect-flash');
 
 const SQLiteStore = require('connect-sqlite3')(session);
 
@@ -51,6 +52,7 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(passport.authenticate('session'));
+app.use(flash());
 
 // Middleware to make user data available to EJS on all pages.
 app.use(function (req, res, next) {
@@ -62,6 +64,8 @@ app.use(function (req, res, next) {
               lname: req.user.lname,
           }
         : undefined;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
 });
 

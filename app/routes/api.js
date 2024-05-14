@@ -86,7 +86,8 @@ router.put('/tag', (req, res) => {
 
 router.post('/report', (req, res) => {
     if (!req.body.issue || !req.body.fact?.id) {
-        return res.sendStatus(500);
+        req.flash('error', 'There is no issue submitted.');
+        return res.status(500).redirect('back');
     }
     const reporter = res.locals.user?.id || 'zzz3737';
     const factID = req.body.fact.id;
@@ -113,6 +114,7 @@ router.post('/report', (req, res) => {
             console.log('Email sent: ', info.response);
         }
     });
+    req.flash('success', 'Report successfully sent!');
     res.redirect('back');
 });
 
