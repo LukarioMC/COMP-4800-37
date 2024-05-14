@@ -18,7 +18,9 @@ router.get('/', (req, res) => {
         factoids: factoids, tags: getTags(), 
         activeTags: req.query.tag || [],
         isAdmin: req.user ? req.user.isAdmin : false,
-        factoid: getRandomFact()
+        factoid: getRandomFact(),
+        pageSize: req.query.pageSize || 3,
+        pageNum: req.query.pageNum || 1
     }
     res.render('pages/landing-page', pageContext);
 });
@@ -70,7 +72,9 @@ router.get('/facts', async (req, res) => {
     let pageContext = {
         factoids: factoids, tags: getTags(), 
         activeTags: req.query.tag || [],
-        isAdmin: req.user ? req.user.isAdmin : false
+        isAdmin: req.user ? req.user.isAdmin : false,
+        pageSize: req.query.pageSize || 3,
+        pageNum: req.query.pageNum || 1
     }
     res.render('pages/factoid-listings', pageContext);
 });
