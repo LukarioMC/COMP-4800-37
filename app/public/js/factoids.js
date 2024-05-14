@@ -59,6 +59,9 @@ function configPage() {
     configPagination()
 }
 
+/**
+ * Configures the page naviation buttons.
+ */
 function configPagination() {
     let pagesMenu = document.getElementById('pages')
     let next = document.getElementById('next')
@@ -66,8 +69,6 @@ function configPagination() {
     let pages = []
 
     try {
-        
-
         current = parseInt(current)
         if (current > 1) {
             pagesMenu.insertBefore(createPageButton(current - 1), next)
@@ -87,6 +88,11 @@ function configPagination() {
     }  
 }
 
+/**
+ * Creates a page navigation button.
+ * @param {number} n The page number. 
+ * @returns The page navigation button.
+ */
 function createPageButton(n) {
     let pageBtn = document.createElement('li')
     pageBtn.className = 'page-item'
