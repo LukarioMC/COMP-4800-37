@@ -65,10 +65,12 @@ router.put('/fact/:id', (req, res) => {
     const factID = req.params.id;
     const { content, note, discovery_date } = req.body;
 
-    const success = updateFact(factID, { content, note, discovery_date });
+    const result = updateFact(factID, { content, note, discovery_date });
 
-    if (success) {
+    if (result.success) {
         res.status(200).json({ message: 'Fact updated successfully' });
+    } else if (result.message === 'Fact not found') {
+        res.status(404).json({ error: 'Fact not found' });
     } else {
         res.status(500).json({ error: 'Failed to update fact' });
     }

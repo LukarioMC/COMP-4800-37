@@ -134,7 +134,7 @@ function updateFact(factID, updatedData) {
 
         if (!currentFact) {
             console.log(`Fact with ID ${factID} not found`);
-            return false;
+            return { success: false, message: 'Fact not found' };
         }
 
         // Use existing values if the new values are not provided
@@ -149,10 +149,10 @@ function updateFact(factID, updatedData) {
         `);
         stmt.run(newContent, newNote, newDiscoveryDate, factID);
 
-        return true;
+        return { success: true };
     } catch (e) {
         console.log(e);
-        return false;
+        return { success: false, message: 'Server error' };
     }
 }
 
