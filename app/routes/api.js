@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID } = require('../handlers/factoid');
-const { getTags, defineTag } = require('../handlers/tag')
+const { getTags, defineTag } = require('../handlers/tag');
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -60,49 +60,51 @@ router.get('/fact/:id', (req, res) => {
 
 // Route to get all categories.
 router.get('/tags', (req, res) => {
-    try { 
-        res.status(200).json(getTags())
+    try {
+        res.status(200).json(getTags());
     } catch (err) {
-        console.log(err)
-        res.status(500).json({message: "Server error."})
+        console.log(err);
+        res.status(500).json({ message: 'Server error.' });
     }
-})
+});
 
 // Route to add a new tag.
 router.put('/tag', (req, res) => {
     if (req.body.tagName) {
-        let queryRes = defineTag(req.body.tagName, req.body.isPrimary)
+        let queryRes = defineTag(req.body.tagName, req.body.isPrimary);
         if (queryRes.successful) {
-            return res.status(201).json({message: `Successfully added tag ${req.body.tagName}.`})
+            return res.status(201).json({
+                message: `Successfully added tag ${req.body.tagName}.`,
+            });
         } else {
-            return res.status(500).json({message: queryRes.message})
+            return res.status(500).json({ message: queryRes.message });
         }
     } else {
-        return res.status(400).json({message: 'Invalid args.'})
+        return res.status(400).json({ message: 'Invalid args.' });
     }
-})
+});
 
 router.post('/report', (req, res) => {
+    if (!req.body.issue || !req.body.fact?.id) {
+        return res.sendStatus(500);
+    }
     const reporter = res.locals.user?.id || 'zzz3737';
-    const factID = req.body.fact?.id || 'Unknown';
+    const factID = req.body.fact.id;
     const factContent = req.body.fact?.content || 'Unknown';
-    const reportContent = req.body.report?.issue || 'No issues!';
+    const reportContent = req.body.issue;
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_RECEIVER,
-        subject:
-            'thirty-seven.org - Fact #' +
-            factID +
-            ' Has Been Reported',
+        subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
         text:
             'Reported by: ' +
-                reporter +
-                '\nFact #' +
-                factID +
-                '\nFact: ' +
-                factContent +
-                '\n\n' +
-                reportContent
+            reporter +
+            '\nFact #' +
+            factID +
+            '\nFact: ' +
+            factContent +
+            '\n\n' +
+            reportContent,
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {

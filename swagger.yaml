@@ -54,19 +54,14 @@ components:
       properties:
         fact:
           $ref: '#/components/schemas/FactJSON'
-        report:
-          $ref: '#/components/schemas/ReportJSON'
+        issue:
+          type: string
     FactJSON:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         content:
-          type: string
-    ReportJSON:
-      type: object
-      properties:
-        issue:
           type: string
     Category:
       type: object
