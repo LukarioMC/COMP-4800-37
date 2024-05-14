@@ -49,6 +49,7 @@ app.use(
     })
 );
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(passport.authenticate('session'));
 
 // Middleware to make user data available to EJS on all pages.

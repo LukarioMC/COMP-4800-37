@@ -13,6 +13,9 @@ Contents of .env:
  - `EMAIL_USER=` - Email that sends the report
  - `EMAIL_PASS=` - Password of the email that sends the report
  - `EMAIL_RECEIVER` - Email that receives the report
+ - `ANON_EMAIL=` - Placeholder email for the anonymous user.
+ - `ANON_PWD=` - Placeholder password for the anonymous user. Best made very complex.
+ - `TOMS_PWD` - Password for Tom to use as a site administrator.
 
 Scripts:
 Run the following using 'npm run [cmd]'
