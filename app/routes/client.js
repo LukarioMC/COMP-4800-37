@@ -70,10 +70,10 @@ router.get('/contact', (_, res) => {
 });
 
 /**
- * Returns an object with properties necessary to render factList.ejs. Can modify an existing object via the pageContext arg or return a new one if pageContext is undefined.
+ * Returns an object with properties necessary to render fact-list.ejs. Can modify an existing object via the pageContext arg or return a new one if pageContext is undefined.
  * @param {*} req Request
  * @param {*} pageContext Optional pageContext object to be modified with necessary properties.
- * @returns object with necessary properties to render factList.ejs.
+ * @returns object with necessary properties to render fact-list.ejs.
  */
 function prepForFactList(req, pageContext = {}) {
     pageNum = req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1
