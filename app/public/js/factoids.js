@@ -20,8 +20,6 @@ function createSearchTag(name) {
         let i = searchTags.indexOf(tag.id)
         if (i > -1) searchTags.splice(i, 1)
         tag.remove()
-        
-        console.log(searchTags)
     }
 }
 
