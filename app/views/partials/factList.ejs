@@ -1,0 +1,49 @@
+<div>
+<% if (typeof activeTags !== 'undefined') { %>
+    <script>
+      activeTagsString = "<%= activeTags %>"
+    </script>
+<% } %>
+  <script src="factoids.js" defer></script>
+  
+  <main class="container-xl">
+    <br>
+  
+    <div class="input-group mb-5 mt-3">
+      <input 
+        class="form-control" 
+        type="text" 
+        placeholder="Look up a fact by text..."
+        id="searchBarText" 
+      />
+      <button 
+        class="btn btn-outline-primary" 
+        type="button" 
+        id="search-by-text-btn"
+      >
+        Search
+      </button>
+    </div>
+  
+    <div id="tags" class="mb-3"></div>
+  
+    <div class="dropdown mb-3">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Dropdown button
+      </button>
+      <ul class="dropdown-menu">
+        <% tags.forEach((tag) => { %>
+          <li class="ddtag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
+        <% })%>
+      </ul>
+    </div>
+  
+    <!-- Factoids Section -->
+    <div id="factoids" class="container accordion ps-0">
+      <% if (typeof factoids !== 'undefined') { %>
+        <% factoids.forEach((factoid) => { %>
+        <%- include('../partials/fact', { factoid, accordionParent: '#factoids' }) %>
+      <% }) %>
+      <% } %>
+    </div>
+</div>

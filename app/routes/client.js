@@ -8,10 +8,18 @@ const flash = require('connect-flash');
 const { getFacts, getRandomFact } = require('../handlers/factoid');
 const { getTags } = require('../handlers/tag')
 
-router.get('/', (_, res) => {
-    const pageContext = {
+router.get('/', (req, res) => {
+    let factoids = getFacts(req.query.tag, req.query.searchText).map((fact) => {
+        let { is_approved, approval_date, ...publicFields } = fact;
+        return publicFields;
+    });
+
+    let pageContext = {
+        factoids: factoids, tags: getTags(), 
+        activeTags: req.query.tag || [],
+        isAdmin: req.user ? req.user.isAdmin : false,
         factoid: getRandomFact()
-    };
+    }
     res.render('pages/landing-page', pageContext);
 });
 
