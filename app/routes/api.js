@@ -74,6 +74,7 @@ router.get('/tags', (req, res) => {
 
 // Route to add a new tag.
 router.put('/tag', (req, res) => {
+    // TODO: Change with middleware once merged/pushed
     if (!req.user || !req.user.isAdmin) {
         return res.status(403).json({message: 'Must have admin access to create tags'})
     }
