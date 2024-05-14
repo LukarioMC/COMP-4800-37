@@ -25,17 +25,27 @@ function search() {
     searchTags.forEach(tagname => {
         url = url.concat(`&tag=${tagname}`)
     });
-    console.log(url)
+    
+    let searchText = document.getElementById('searchBarText').value
+    if (searchText !== '') {
+        url = url.concat(`&searchText=${searchText}`)
+    }
+
     window.location.href = url
 }
 
-let ddtags = document.getElementsByClassName('ddtag')
-for (let i = 0; i < ddtags.length; i++) {
-    ddtags[i].onclick = () => createSearchTag(ddtags[i].id)
-}
-if (activeTagsString) {
-    activeTagsJS = activeTagsString.split(',')
-    activeTagsJS.forEach((tagname) => createSearchTag(tagname))
+function configPage() {
+    let ddtags = document.getElementsByClassName('ddtag')
+    for (let i = 0; i < ddtags.length; i++) {
+        ddtags[i].onclick = () => createSearchTag(ddtags[i].id)
+    }
+    
+    if (activeTagsString) {
+        activeTagsJS = activeTagsString.split(',')
+        activeTagsJS.forEach((tagname) => createSearchTag(tagname))
+    }
+    
+    document.getElementById('search-by-text-btn').onclick = () => search()
 }
 
-document.getElementById('search-by-text-btn').onclick = () => search()
+configPage()

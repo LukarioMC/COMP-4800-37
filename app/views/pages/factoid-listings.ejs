@@ -2,7 +2,7 @@
 
 <% if (activeTags) { %>
   <script>
-    let activeTagsString = "<%= activeTags %>"
+    activeTagsString = "<%= activeTags %>"
   </script>
 <% } %>
 <script src="factoids.js" defer></script>
@@ -14,7 +14,8 @@
     <input 
       class="form-control" 
       type="text" 
-      placeholder="Look up a fact by text..." 
+      placeholder="Look up a fact by text..."
+      id="searchBarText" 
     />
     <button 
       class="btn btn-outline-primary" 
