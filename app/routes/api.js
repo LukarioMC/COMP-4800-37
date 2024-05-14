@@ -22,6 +22,10 @@ const transporter = nodemailer.createTransport({
 // Accepts query param 'tag' for filtering by tag. Can be given multiple tag arguments for finer filtering.
 router.get('/fact', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
+    if ((req.query.pageNum && req.query.pageNum < 1) || 
+        (req.query.pageSize && req.query.pageSize < 0)) {
+            return res.status(400).json({message: 'Page number and size must be greater than 0.'})
+        }
     try {
         let facts = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
         let publicFieldFacts = facts.map((fact) => {
