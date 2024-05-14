@@ -46,7 +46,7 @@ function getFactByID(factID, isApproved = true) {
  * @param {*} tags a list of tag strings
  * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags. Returns empty list if error occurs.
  */
-function getFacts(tags = undefined) {
+function getFacts(tags = undefined, searchText = undefined) {
     try {
         let getFactsStmt = db.prepare(`
 				SELECT 
@@ -72,9 +72,19 @@ function getFacts(tags = undefined) {
 
         let filteredFacts = filterFacts(unfilteredFacts, tags);
 
-        return filteredFacts.map((fact) => {
+        let fetchedFacts = filteredFacts.map((fact) => {
             return getFactByID(fact.id);
         });
+
+        if (searchText) {
+            searchText = searchText.toLowerCase()
+            fetchedFacts = fetchedFacts.filter(fact => {
+                if (fact.note && fact.note.toLowerCase().includes(searchText)) return true
+                else return fact.content.toLowerCase().includes(searchText)
+            })
+        }
+
+        return fetchedFacts
     } catch (e) {
         console.log(e);
         return [];
