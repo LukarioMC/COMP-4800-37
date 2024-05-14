@@ -40,7 +40,9 @@ router.post('/fact', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     const { userId, content, discovery_date, note } = req.body;
 
-    const submitter_id = userId || 'zzz3737';
+    // v fails foreign key constraint
+    //const submitter_id = userId || 'zzz3737';
+    const submitter_id = null;
 
     if (!content) {
         res.status(400).json({ error: 'Content field is required' });
