@@ -1,8 +1,8 @@
 const db = require('better-sqlite3')('app.db');
 const fs = require('fs')
 
-const BACKUP_INTERVAL = 1000
-const maxBackups = 5
+const BACKUP_INTERVAL = 1000 * 60 * 60 * 24
+const maxBackups = 100
 const backUpDirName = 'db_backups'
 
 function init() {

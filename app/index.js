@@ -27,6 +27,8 @@ const swaggerUI = require('swagger-ui-express');
 const yaml = require('yaml');
 const fs = require('fs');
 
+const backupTimer = require('./modules/backupTimer').start()
+
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
