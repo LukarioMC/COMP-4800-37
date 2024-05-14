@@ -5,16 +5,13 @@
     <div class="jumbotron text-center mb-5">
         <h1 class="p-5">Welcome to 37 Heaven!</h1>
         <div class="accordion" id="fact-of-the-day">
+        <% if (typeof factoid !== 'undefined') { %>
             <%- include('../partials/fact.ejs', { factoid, accordionParent:
-            '#fact-of-the-day' }); %>
+            '#fact-of-the-day', rand: "rand" }); %>
+        <% } %>
         </div>
     </div>
-    <div class="input-group">
-        <input class="form-control" type="text" placeholder="Look up a fact by text..." />
-        <button class="btn btn-outline-secondary" type="button" id="search-by-text-btn">
-            Search
-        </button>
-    </div>
+    <%- include('../partials/fact-list') %>
 </main>
 
 <%- include('../partials/footer'); %>
