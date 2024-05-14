@@ -7,7 +7,7 @@
 
     <div id="collapse-<%- factoid.id %>" class="accordion-collapse collapse" aria-labelledby="heading-<%- factoid.id %>" <% if(typeof accordionParent !== 'undefined') { %> data-bs-parent="<%= accordionParent %>" <% } %>>
         <div class="accordion-body">
-            <div style="white-space: pre"><%= factoid.note || "Nothing is here..." %></div>
+            <div style="white-space: pre-wrap"><%= factoid.note || "Nothing is here..." %></div>
             <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
             <div><b>By:</b> <%= factoid.submitter_id %></div>
             <div>
