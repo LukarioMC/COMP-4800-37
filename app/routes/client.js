@@ -63,7 +63,13 @@ router.get('/facts', async (req, res) => {
         let { is_approved, approval_date, ...publicFields } = fact;
         return publicFields;
     });
-    res.render('pages/factoid-listings', {factoids: factoids, tags: getTags(), activeTags: req.query.tag || []});
+
+    let pageContext = {
+        factoids: factoids, tags: getTags(), 
+        activeTags: req.query.tag || [],
+        isAdmin: req.user ? req.user.isAdmin : false
+    }
+    res.render('pages/factoid-listings', pageContext);
 });
 
 // This route is for the about/why 37? page.

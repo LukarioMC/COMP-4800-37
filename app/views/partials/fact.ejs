@@ -18,6 +18,11 @@
             <!-- Button trigger modal -->
             <br/>
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
+            <% if (isAdmin) { %>
+                <!-- TODO: Link edit fact page here -->
+                <a class="btn btn-primary mb-3" id=<%= factoid.id %> href="#">Edit</a>
+            <% } %>
+             
         </div>
     </div>
 
