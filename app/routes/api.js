@@ -4,7 +4,7 @@
  */
 const express = require('express');
 const router = express.Router();
-const { getFacts, getFactByID } = require('../handlers/factoid');
+const { getFacts, getFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag } = require('../handlers/tag')
 
 const nodemailer = require('nodemailer');
