@@ -49,7 +49,29 @@ components:
           type: string
         type:
           type: string
-          
+    FactReport:
+      type: object
+      properties:
+        fact:
+          $ref: '#/components/schemas/FactJSON'
+        issue:
+          type: string
+    FactJSON:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        is_primary:
+          type: boolean
 
 paths:
   /api/fact:
@@ -109,7 +131,81 @@ paths:
                   message:
                     type: string
                     description: An error message.
-
+  /api/report:
+    post:
+      summary: Sends an email report to the admin with information about the selected fact. The email functionality is configured with host, port, and sender email/password.
+      description: Sends an email report to the admin with information about the selected fact. Consists of from (sender), to (receiver), subject, and text (report content). 
+      requestBody:
+        description: Consists of from (sender), to (receiver), subject, and text (report content). Text contains submitter ID, fact ID, fact content, the content the user has typed into the report, and a link to the dashboard.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FactReport'
+        required: true
+      responses:
+        '200':
+          description: Email successfully sent with all the required information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FactReport'
+        '500':
+          description: Server error.
+  /api/tags:
+    get:
+      summary: Returns a list of all categories.
+      responses:
+        '200':
+          description: A list of all fact categories sorted by whether they are primary.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+  /api/tag:
+    put:
+      summary: Add a new category for tags in the database.
+      requestBody:
+        description: Object with category name and optional isPrimary flag.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tagName:
+                  type: string
+                isPrimary:
+                  type: boolean
+      responses:
+        '201':
+          description: Tag successfully added.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+        '400':
+          description: Invalid arguments.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
 
 
 

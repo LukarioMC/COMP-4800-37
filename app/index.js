@@ -20,8 +20,8 @@ const clientRouter = require('./routes/client');
 const apiRouter = require('./routes/api');
 const passport = require('passport');
 const session = require('express-session');
+const flash = require('connect-flash');
 
-const db = require('better-sqlite3')('app.db');
 const SQLiteStore = require('connect-sqlite3')(session);
 
 const swaggerUI = require('swagger-ui-express');
@@ -31,6 +31,11 @@ const fs = require('fs');
 // ================ SERVER SETUP ================
 app.set('view engine', 'ejs'); // Config express to use ejs as the "view engine" (See: https://expressjs.com/en/guide/using-template-engines.html)
 app.set('views', './app/views'); // Config to use the views from our app dir
+
+if (process.env.BEHIND_PROXY) {
+    // Configures the app to trust proxy forwarding headers. (See: https://expressjs.com/en/resources/middleware/session.html#cookiesecure)
+    app.set('trust proxy', 1);
+}
 
 app.use(
     session({
@@ -45,7 +50,9 @@ app.use(
     })
 );
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(passport.authenticate('session'));
+app.use(flash());
 
 // Middleware to make user data available to EJS on all pages.
 app.use(function (req, res, next) {
@@ -57,6 +64,8 @@ app.use(function (req, res, next) {
               lname: req.user.lname,
           }
         : undefined;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
 });
 

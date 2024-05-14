@@ -4,7 +4,6 @@
 const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
-const flash = require('connect-flash');
 
 router.get('/', (_, res) => {
     const pageContext = {

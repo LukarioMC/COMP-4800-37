@@ -1,23 +1,41 @@
 <div class="fact accordion-item mb-3">
     <h2 class="accordion-header" id="heading-<%- factoid.id %>">
-        <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapse-<%- factoid.id %>"
-            aria-expanded="true"
-            aria-controls="collapse-<%- factoid.id %>"
-        >
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%- factoid.id %>" aria-expanded="true" aria-controls="collapse-<%- factoid.id %>">
             <%- factoid.content %>
         </button>
     </h2>
 
-    <div
-        id="collapse-<%- factoid.id %>"
-        class="accordion-collapse collapse"
-        aria-labelledby="heading-<%- factoid.id %>"
-        <% if(typeof accordionParent !== 'undefined') { %>data-bs-parent="<%= accordionParent %>"<% } %>
-    >
-        <div class="accordion-body"><%- factoid.note || "Nothing is here..." %></div>
+    <div id="collapse-<%- factoid.id %>" class="accordion-collapse collapse" aria-labelledby="heading-<%- factoid.id %>" <% if(typeof accordionParent !== 'undefined') { %> data-bs-parent="<%= accordionParent %>" <% } %>>
+        <div class="accordion-body">
+            <%- factoid.note || "Nothing is here..." %>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mb-3 ms-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="reportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="reportModalLabel">Report an issue with this fact</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/api/report" method="POST">
+                    <div class="modal-body">
+                        <div class="text-start mb-3">
+                            <label for="issueTextarea" class="form-label">Please describe the issue.</label>
+                            <textarea class="form-control" id="issueTextarea" rows="3" name="issue"></textarea>
+                        </div>
+                    </div>
+                    <input type="hidden" name="fact[id]" value="<%= factoid.id %>" />
+                    <input type="hidden" name="fact[content]" value="<%= factoid.content %>" />
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
