@@ -38,14 +38,15 @@ router.get('/fact', (req, res) => {
 router.post('/fact', (req, res) => {
     const { content, note, userId } = req.body;
 
-    const submitter_id = userId || 'zzz3737';
+    //const submitter_id = userId || 'zzz3737';
 
     if (!content) {
         res.status(400).json({ error: 'Content field is required' });
         return;
     }
 
-    const success = addFact({ submitter_id, content, note });
+    //const success = addFact({ submitter_id, content, note });
+    const success = addFact({ content, note });
 
     if (success) {
         res.status(201).json({ message: 'Fact added successfully' });
