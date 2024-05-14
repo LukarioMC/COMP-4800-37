@@ -11,22 +11,7 @@ const { getTags } = require('../handlers/tag')
 const PAGE_SIZE = 5
 
 router.get('/', (req, res) => {
-    let factoids = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, PAGE_SIZE).map((fact) => {
-        let { is_approved, approval_date, ...publicFields } = fact;
-        return publicFields;
-    });
-
-    maxPages = Math.ceil(getFacts(req.query.tag, req.query.searchText).length / PAGE_SIZE)
-
-    let pageContext = {
-        factoids: factoids, 
-        tags: getTags(), 
-        activeTags: req.query.tag || [],
-        isAdmin: req.user ? req.user.isAdmin : false,
-        factoid: getRandomFact(),
-        pageNum: req.query.pageNum || 1,
-        maxPages: maxPages
-    }
+    pageContext = prepForFactList(req)
     res.render('pages/landing-page', pageContext);
 });
 
@@ -69,22 +54,7 @@ router.get('/submit', (req, res) => {
 
 // This route is for the factoids listings page where users can view and search for factoids.
 router.get('/facts', async (req, res) => {
-    let factoids = getFacts(req.query.tag, req.query.searchText, req.query.pageNum || 1, PAGE_SIZE).map((fact) => {
-        let { is_approved, approval_date, ...publicFields } = fact;
-        return publicFields;
-    });
-
-    maxPages = Math.ceil(getFacts(req.query.tag, req.query.searchText).length / PAGE_SIZE)
-
-    let pageContext = {
-        factoids: factoids, 
-        tags: getTags(), 
-        activeTags: req.query.tag || [],
-        isAdmin: req.user ? req.user.isAdmin : false,
-        pageSize: req.query.pageSize || 3,
-        pageNum: req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1,
-        maxPages: maxPages
-    }
+    pageContext = prepForFactList(req)
     res.render('pages/factoid-listings', pageContext);
 });
 
@@ -97,5 +67,32 @@ router.get('/about', async (_, res) => {
 router.get('/contact', (_, res) => {
     res.render('pages/contact');
 });
+
+/**
+ * Returns an object with properties necessary to render factList.ejs. Can modify an existing object via the pageContext arg or return a new one if pageContext is undefined.
+ * @param {*} req Request
+ * @param {*} pageContext Optional pageContext object to be modified with necessary properties.
+ * @returns object with necessary properties to render factList.ejs.
+ */
+function prepForFactList(req, pageContext = {}) {
+    pageNum = req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1
+
+    let factoids = getFacts(req.query.tag, req.query.searchText, pageNum, PAGE_SIZE).map((fact) => {
+        let { is_approved, approval_date, ...publicFields } = fact;
+        return publicFields;
+    });
+
+    maxPages = Math.ceil(getFacts(req.query.tag, req.query.searchText).length / PAGE_SIZE)
+    
+    pageContext.factoids = factoids, 
+    pageContext.tags = getTags(), 
+    pageContext.activeTags = req.query.tag || [],
+    pageContext.isAdmin = req.user ? req.user.isAdmin : false,
+    pageContext.factoid = getRandomFact(),
+    pageContext.pageNum = pageNum,
+    pageContext.maxPages = maxPages
+    
+    return pageContext
+}
 
 module.exports = router;
