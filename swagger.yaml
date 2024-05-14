@@ -49,6 +49,20 @@ components:
           type: string
         type:
           type: string
+    FactReport:
+      type: object
+      properties:
+        fact:
+          $ref: '#/components/schemas/FactJSON'
+        issue:
+          type: string
+    FactJSON:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
     Category:
       type: object
       properties:
@@ -141,6 +155,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
+  /api/report:
+    post:
+      summary: Sends an email report to the admin with information about the selected fact. The email functionality is configured with host, port, and sender email/password.
+      description: Sends an email report to the admin with information about the selected fact. Consists of from (sender), to (receiver), subject, and text (report content). 
+      requestBody:
+        description: Consists of from (sender), to (receiver), subject, and text (report content). Text contains submitter ID, fact ID, fact content, the content the user has typed into the report, and a link to the dashboard.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FactReport'
+        required: true
+      responses:
+        '200':
+          description: Email successfully sent with all the required information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FactReport'
+        '500':
+          description: Server error.
   /api/tags:
     get:
       summary: Returns a list of all categories.
@@ -196,8 +230,6 @@ paths:
                 properties:
                   message: 
                     type: string
-
-
 
 
 

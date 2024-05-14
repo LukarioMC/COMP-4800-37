@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID } = require('../handlers/factoid');
-const { getTags, defineTag } = require('../handlers/tag')
+const { getTags, defineTag } = require('../handlers/tag');
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -64,13 +64,13 @@ router.get('/fact/:id', (req, res) => {
 
 // Route to get all categories.
 router.get('/tags', (req, res) => {
-    try { 
-        res.status(200).json(getTags())
+    try {
+        res.status(200).json(getTags());
     } catch (err) {
-        console.log(err)
-        res.status(500).json({message: "Server error."})
+        console.log(err);
+        res.status(500).json({ message: 'Server error.' });
     }
-})
+});
 
 // Route to add a new tag.
 router.put('/tag', (req, res) => {
@@ -79,35 +79,44 @@ router.put('/tag', (req, res) => {
         return res.status(403).json({message: 'Must have admin access to create tags'})
     }
     if (req.body.tagName) {
-        let queryRes = defineTag(req.body.tagName, req.body.isPrimary)
+        let queryRes = defineTag(req.body.tagName, req.body.isPrimary);
         if (queryRes.successful) {
-            return res.status(201).json({message: `Successfully added tag ${req.body.tagName}.`})
+            return res.status(201).json({
+                message: `Successfully added tag ${req.body.tagName}.`,
+            });
         } else {
-            return res.status(500).json({message: queryRes.message})
+            return res.status(500).json({ message: queryRes.message });
         }
     } else {
-        return res.status(400).json({message: 'Invalid args.'})
+        return res.status(400).json({ message: 'Invalid args.' });
     }
-})
+});
 
 router.post('/report', (req, res) => {
-    const reporter = res.locals.user?.id || 'Anonymous User';
+    if (!req.body.issue || !req.body.fact?.id) {
+        req.flash(
+            'error',
+            'There was an error submitting your report. Please try again.'
+        );
+        return res.status(500).redirect('back');
+    }
+    const reporter = res.locals.user?.id || 'zzz3737';
+    const factID = req.body.fact.id;
+    const factContent = req.body.fact?.content || 'Unknown';
+    const reportContent = req.body.issue;
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_RECEIVER,
-        subject:
-            'thirty-seven.org - Fact #' +
-            req.body.fact.id +
-            ' Has Been Reported',
+        subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
         text:
             'Reported by: ' +
-                reporter +
-                '\nFact #' +
-                req.body.fact.id +
-                '\nFact: ' +
-                req.body.fact.content +
-                '\n\n' +
-                req.body.report.issue || 'No issues!',
+            reporter +
+            '\nFact #' +
+            factID +
+            '\nFact: ' +
+            factContent +
+            '\n\n' +
+            reportContent,
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -116,6 +125,7 @@ router.post('/report', (req, res) => {
             console.log('Email sent: ', info.response);
         }
     });
+    req.flash('success', 'Report successfully sent!');
     res.redirect('back');
 });
 

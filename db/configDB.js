@@ -19,8 +19,8 @@ addUserStmt.run('zzz3737', ANON_EMAIL, anonPwd, null, null, 0, anonSalt);
 let tomSalt = crypto.randomBytes(16);
 let tomPwd = crypto.pbkdf2Sync(TOMS_PWD, tomSalt, 310000, 32, 'sha256');
 addUserStmt.run(
-    'tom3737',
-    'tom@magliery.com',
+    'mag3737',
+    'tom@thirty-seven.org',
     tomPwd,
     'Thomas',
     'Magliery',
