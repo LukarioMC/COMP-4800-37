@@ -86,7 +86,10 @@ router.put('/tag', (req, res) => {
 
 router.post('/report', (req, res) => {
     if (!req.body.issue || !req.body.fact?.id) {
-        req.flash('error', 'There is no issue submitted.');
+        req.flash(
+            'error',
+            'There was an error submitting your report. Please try again.'
+        );
         return res.status(500).redirect('back');
     }
     const reporter = res.locals.user?.id || 'zzz3737';
