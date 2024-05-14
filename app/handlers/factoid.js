@@ -42,11 +42,12 @@ function getFactByID(factID, isApproved = true) {
 }
 
 /**
- * Given a list of tags, returns facts filtering out those who do not have all the given tags.
- * @param {*} tags a list of tag strings
- * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags. Returns empty list if error occurs.
+ * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
+ * @param {Array} tags a list of tag strings
+ * @param {string} searchText search text
+ * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(tags = undefined, searchText = undefined) {
+function getFacts(tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
     try {
         let getFactsStmt = db.prepare(`
 				SELECT 
@@ -82,6 +83,11 @@ function getFacts(tags = undefined, searchText = undefined) {
                 if (fact.note && fact.note.toLowerCase().includes(searchText)) return true
                 else return fact.content.toLowerCase().includes(searchText)
             })
+        }
+
+        if (pageNum && pageSize && pageNum >= 0 && pageSize >= 0) {
+            let offset = pageNum * pageSize
+            fetchedFacts = offset + pageSize > fetchedFacts.length ? fetchedFacts.splice(pageNum * pageSize, pageSize) : fetchedFacts.splice(pageNum * pageSize)
         }
 
         return fetchedFacts
