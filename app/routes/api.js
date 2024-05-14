@@ -37,6 +37,7 @@ router.get('/fact', (req, res) => {
 
 // API endpoint to add a new fact to the database.
 router.post('/fact', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
     const { content, note, userId } = req.body;
 
     //const submitter_id = userId || 'zzz3737';
@@ -58,6 +59,7 @@ router.post('/fact', (req, res) => {
 
 // API endpoint to update an existing fact in the database.
 router.put('/fact', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
     const factID = req.params.factID;
     const { content, note, discovery_date } = req.body;
 
