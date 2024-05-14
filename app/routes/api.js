@@ -19,11 +19,15 @@ const transporter = nodemailer.createTransport({
 });
 
 // API endpoint to get all facts that fulfill the given condition(s).
-// Accepts query param 'tag' for filtering by tag. Can be given multiple tag arguments for finer filtering.
+// Supports optional tag filtering, text searching and pagination.
 router.get('/fact', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
+    if ((req.query.pageNum && req.query.pageNum < 1) || 
+        (req.query.pageSize && req.query.pageSize < 0)) {
+            return res.status(400).json({message: 'Page number and size must be greater than 0.'})
+        }
     try {
-        let facts = getFacts(req.query.tag);
+        let facts = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
         let publicFieldFacts = facts.map((fact) => {
             let { is_approved, approval_date, ...publicFields } = fact;
             return publicFields;
@@ -70,6 +74,10 @@ router.get('/tags', (req, res) => {
 
 // Route to add a new tag.
 router.put('/tag', (req, res) => {
+    // TODO: Change with middleware once merged/pushed
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({message: 'Must have admin access to create tags'})
+    }
     if (req.body.tagName) {
         let queryRes = defineTag(req.body.tagName, req.body.isPrimary);
         if (queryRes.successful) {

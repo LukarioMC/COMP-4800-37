@@ -42,11 +42,12 @@ function getFactByID(factID, isApproved = true) {
 }
 
 /**
- * Given a list of tags, returns facts filtering out those who do not have all the given tags.
- * @param {*} tags a list of tag strings
- * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags. Returns empty list if error occurs.
+ * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
+ * @param {Array} tags a list of tag strings
+ * @param {string} searchText search text
+ * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(tags = undefined) {
+function getFacts(tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
     try {
         let getFactsStmt = db.prepare(`
 				SELECT 
@@ -72,9 +73,24 @@ function getFacts(tags = undefined) {
 
         let filteredFacts = filterFacts(unfilteredFacts, tags);
 
-        return filteredFacts.map((fact) => {
+        let fetchedFacts = filteredFacts.map((fact) => {
             return getFactByID(fact.id);
         });
+
+        if (searchText) {
+            searchText = searchText.toLowerCase()
+            fetchedFacts = fetchedFacts.filter(fact => {
+                if (fact.note && fact.note.toLowerCase().includes(searchText)) return true
+                else return fact.content.toLowerCase().includes(searchText)
+            })
+        }
+
+        if (pageNum && pageSize && pageNum > 0 && pageSize > 0) {
+            let offset = (pageNum - 1) * pageSize
+            fetchedFacts = fetchedFacts.slice(offset, offset + pageSize)
+        }
+
+        return fetchedFacts
     } catch (e) {
         console.log(e);
         return [];
@@ -97,7 +113,22 @@ function filterFacts(facts, tags = []) {
     });
 }
 
+/**
+ * Returns a random approveed fact.
+ * @returns A random approved fact.
+ */
+function getRandomFact() {
+    try {
+        let randomID = db.prepare(`SELECT id FROM factoid WHERE is_approved ORDER BY RANDOM() LIMIT 1`).get().id
+        return getFactByID(randomID)     
+    } catch (err) {
+        console.log(err)
+        return null
+    }
+}
+
 module.exports = {
     getFactByID,
     getFacts,
+    getRandomFact
 };
