@@ -6,6 +6,7 @@ const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
 const flash = require('connect-flash');
 const { getFacts } = require('../handlers/factoid');
+const { getTags } = require('../handlers/tag')
 
 router.get('/', (_, res) => {
     const pageContext = {
@@ -62,7 +63,7 @@ router.get('/facts', async (_, res) => {
         let { is_approved, approval_date, ...publicFields } = fact;
         return publicFields;
     });
-    res.render('pages/factoid-listings', {factoids: factoids});
+    res.render('pages/factoid-listings', {factoids: factoids, tags: getTags()});
 });
 
 // This route is for the about/why 37? page.
