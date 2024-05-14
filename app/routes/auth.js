@@ -185,7 +185,7 @@ router.post('/api/logout', function (req, res, next) {
         if (err) {
             return next(err);
         }
-        let url = req.header('Referer') || '/';
+        let url = '/';
         res.redirect(url);
     });
 });

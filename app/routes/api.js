@@ -101,14 +101,10 @@ router.post('/report', (req, res) => {
         to: process.env.EMAIL_RECEIVER,
         subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
         text:
-            'Reported by: ' +
-            reporter +
-            '\nFact #' +
-            factID +
-            '\nFact: ' +
-            factContent +
-            '\n\n' +
-            reportContent,
+            'Reported by: ' + reporter +
+            '\nFact #' + factID +
+            '\nFact: ' + factContent +
+            '\n\nIssue:' + reportContent,
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
