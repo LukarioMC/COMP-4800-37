@@ -8,6 +8,11 @@ Contents of .env:
  - `SESSION_SECRET=` - String used to encrypt express-session.
  - `HTTPS_ENABLED=` - Boolean that specifies whether cookies are secure or not (if not defined, cookies default to secure.)
  - `BEHIND_PROXY=` - Configures the server to allow HTTPS/secure cookies when behind a reverse proxy.
+ - `EMAIL_HOST=` - Name of the outgoing mail server
+ - `EMAIL_PORT=` - The port number used by the outgoing mail server
+ - `EMAIL_USER=` - Email that sends the report
+ - `EMAIL_PASS=` - Password of the email that sends the report
+ - `EMAIL_RECEIVER` - Email that receives the report
 
 Scripts:
 Run the following using 'npm run [cmd]'
