@@ -1,5 +1,10 @@
 const searchTags = []
 
+/**
+ * Adds a tag name to the searchTags array and creates a corresponding HTML element.
+ * @param {string} name Tag name.
+ * @returns undefined
+ */
 function createSearchTag(name) {
     if (searchTags.indexOf(name) > -1) return
 
@@ -20,6 +25,9 @@ function createSearchTag(name) {
     }
 }
 
+/**
+ * Reads tags and search text to redirect client to a queried /fact page.
+ */
 function search() {
     let url = "/facts?"
     searchTags.forEach(tagname => {
@@ -34,12 +42,15 @@ function search() {
     window.location.href = url
 }
 
+/**
+ * Configures /fact by adding onclick functionality to dropdown menu items, the search button and by creating HTML elements for tags already in use.
+ */
 function configPage() {
     let ddtags = document.getElementsByClassName('ddtag')
     for (let i = 0; i < ddtags.length; i++) {
         ddtags[i].onclick = () => createSearchTag(ddtags[i].id)
     }
-    
+
     if (activeTagsString) {
         activeTagsJS = activeTagsString.split(',')
         activeTagsJS.forEach((tagname) => createSearchTag(tagname))
