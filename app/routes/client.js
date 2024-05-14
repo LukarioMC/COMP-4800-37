@@ -5,17 +5,12 @@ const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
 const flash = require('connect-flash');
-const { getFacts } = require('../handlers/factoid');
+const { getFacts, getRandomFact } = require('../handlers/factoid');
 const { getTags } = require('../handlers/tag')
 
 router.get('/', (_, res) => {
     const pageContext = {
-        // Fake Fact data to mock landing page fact of the day, may be replaced with random fact?
-        factoid: {
-            id: 123,
-            content: 'A super cool 37 fact',
-            // note: 'Something extra about the fact',
-        },
+        factoid: getRandomFact()
     };
     res.render('pages/landing-page', pageContext);
 });

@@ -1,6 +1,6 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
 
-<% if (activeTags) { %>
+<% if (typeof activeTags !== 'undefined') { %>
   <script>
     activeTagsString = "<%= activeTags %>"
   </script>
@@ -41,7 +41,7 @@
 
   <!-- Factoids Section -->
   <div id="factoids" class="container accordion ps-0">
-    <% if (factoids) { %>
+    <% if (typeof factoids !== 'undefined') { %>
       <% factoids.forEach((factoid) => { %>
       <%- include('../partials/fact', { factoid, accordionParent: '#factoids' }) %>
     <% }) %>

@@ -107,7 +107,22 @@ function filterFacts(facts, tags = []) {
     });
 }
 
+/**
+ * Returns a random approveed fact.
+ * @returns A random approved fact.
+ */
+function getRandomFact() {
+    try {
+        let randomID = db.prepare(`SELECT id FROM factoid WHERE is_approved ORDER BY RANDOM() LIMIT 1`).get().id
+        return getFactByID(randomID)     
+    } catch (err) {
+        console.log(err)
+        return null
+    }
+}
+
 module.exports = {
     getFactByID,
     getFacts,
+    getRandomFact
 };
