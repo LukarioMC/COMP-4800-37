@@ -58,23 +58,26 @@ router.get('/fact/:id', (req, res) => {
 });
 
 router.post('/report', (req, res) => {
-    const reporter = res.locals.user?.id || 'Anonymous User';
+    const reporter = res.locals.user?.id || 'zzz3737';
+    const factID = req.body.fact?.id || 'Unknown';
+    const factContent = req.body.fact?.content || 'Unknown';
+    const reportContent = req.body.report?.issue || 'No issues!';
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_RECEIVER,
         subject:
             'thirty-seven.org - Fact #' +
-            req.body.fact.id +
+            factID +
             ' Has Been Reported',
         text:
             'Reported by: ' +
                 reporter +
                 '\nFact #' +
-                req.body.fact.id +
+                factID +
                 '\nFact: ' +
-                req.body.fact.content +
+                factContent +
                 '\n\n' +
-                req.body.report.issue || 'No issues!',
+                reportContent
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {

@@ -49,18 +49,25 @@ components:
           type: string
         type:
           type: string
-    Report:
+    FactReport:
       type: object
       properties:
-        from:
+        fact:
+          $ref: '#/components/schemas/FactJSON'
+        report:
+          $ref: '#/components/schemas/ReportJSON'
+    FactJSON:
+      type: object
+      properties:
+        id:
           type: string
-        to:
+        content:
           type: string
-        subject:
+    ReportJSON:
+      type: object
+      properties:
+        issue:
           type: string
-        text:
-          type: string
-
 
 paths:
   /api/fact:
@@ -129,7 +136,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Report'
+              $ref: '#/components/schemas/FactReport'
         required: true
       responses:
         '200':
@@ -137,7 +144,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Report'
+                $ref: '#/components/schemas/FactReport'
         '500':
           description: Server error.
 
