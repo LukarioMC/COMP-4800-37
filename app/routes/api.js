@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // API endpoint to get all facts that fulfill the given condition(s).
-// Accepts query param 'tag' for filtering by tag. Can be given multiple tag arguments for finer filtering.
+// Supports optional tag filtering, text searching and pagination.
 router.get('/fact', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     if ((req.query.pageNum && req.query.pageNum < 1) || 

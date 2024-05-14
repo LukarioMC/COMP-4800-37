@@ -1,3 +1,7 @@
+/**
+ * Script to configure the fact list and search HTML elements.
+ */
+
 const searchTags = []
 
 /**
