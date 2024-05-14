@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 router.get('/fact', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     try {
-        let facts = getFacts(req.query.tag, req.query.searchText);
+        let facts = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
         let publicFieldFacts = facts.map((fact) => {
             let { is_approved, approval_date, ...publicFields } = fact;
             return publicFields;
