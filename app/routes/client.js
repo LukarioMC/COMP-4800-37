@@ -4,9 +4,8 @@
 const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
-const flash = require('connect-flash');
 
-router.get('/', (req, res) => {
+router.get('/', (_, res) => {
     const pageContext = {
         // Fake Fact data to mock landing page fact of the day, may be replaced with random fact?
         factoid: {
@@ -20,7 +19,6 @@ router.get('/', (req, res) => {
 
 // This route is for the admin dashboard where the admin can routerroved, edit, and delete fact submissions.
 router.get('/admin', (req, res) => {
-    console.log(req.user);
     const testData = [
         {
             dateSubmitted: '05 / 04 / 2024',
@@ -57,7 +55,7 @@ router.get('/submit', (req, res) => {
 });
 
 // This route is for the factoids listings page where users can view and search for factoids.
-router.get('/facts', async (req, res) => {
+router.get('/facts', async (_, res) => {
     const pageContext = {
         // Fake Fact data to mock factoid, may be replaced with actual data from the database
         factoid: {
@@ -70,13 +68,12 @@ router.get('/facts', async (req, res) => {
 });
 
 // This route is for the about/why 37? page.
-router.get('/about', async (req, res) => {
+router.get('/about', async (_, res) => {
     res.render('pages/about');
 });
 
 // This route displays contact information
-router.get('/contact', (req, res) => {
-    console.log(req.user);
+router.get('/contact', (_, res) => {
     res.render('pages/contact');
 });
 
