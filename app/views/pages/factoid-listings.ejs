@@ -1,5 +1,10 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
 
+<% if (activeTags) { %>
+  <script>
+    let activeTagsString = "<%= activeTags %>"
+  </script>
+<% } %>
 <script src="factoids.js" defer></script>
 
 <main class="container-xl">
@@ -28,7 +33,6 @@
     </button>
     <ul class="dropdown-menu">
       <% tags.forEach((tag) => { %>
-        <% console.log(`${tag.name}`) %>
         <li class="ddtag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
       <% })%>
     </ul>

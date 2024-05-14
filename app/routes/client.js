@@ -58,12 +58,12 @@ router.get('/submit', (req, res) => {
 });
 
 // This route is for the factoids listings page where users can view and search for factoids.
-router.get('/facts', async (_, res) => {
-    let factoids = getFacts().map((fact) => {
+router.get('/facts', async (req, res) => {
+    let factoids = getFacts(req.query.tag).map((fact) => {
         let { is_approved, approval_date, ...publicFields } = fact;
         return publicFields;
     });
-    res.render('pages/factoid-listings', {factoids: factoids, tags: getTags()});
+    res.render('pages/factoid-listings', {factoids: factoids, tags: getTags(), activeTags: req.query.tag});
 });
 
 // This route is for the about/why 37? page.
