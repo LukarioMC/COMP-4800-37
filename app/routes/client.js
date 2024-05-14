@@ -12,6 +12,7 @@ const PAGE_SIZE = 5
 
 router.get('/', (req, res) => {
     pageContext = prepForFactList(req)
+    pageContext.factoid = getRandomFact()
     res.render('pages/landing-page', pageContext);
 });
 
@@ -88,7 +89,6 @@ function prepForFactList(req, pageContext = {}) {
     pageContext.tags = getTags(), 
     pageContext.activeTags = req.query.tag || [],
     pageContext.isAdmin = req.user ? req.user.isAdmin : false,
-    pageContext.factoid = getRandomFact(),
     pageContext.pageNum = pageNum,
     pageContext.maxPages = maxPages
     
