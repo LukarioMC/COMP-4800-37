@@ -9,7 +9,7 @@
         <div class="accordion-body">
             <div style="white-space: pre-wrap"><%= factoid.note || "Nothing is here..." %></div>
             <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
-            <div><b>By:</b> <%= factoid.submitter_id %></div>
+            <div><b>By:</b> <%= factoid.submitter_id === 'zzz3737' ? `${factoid.submitter_id} (Anonymous)` : factoid.submitter_id %></div>
             <div>
                 <% factoid.tags.forEach((tag) => { %>
                     <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
