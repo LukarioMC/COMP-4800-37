@@ -38,7 +38,7 @@ router.get('/fact', (req, res) => {
 // API endpoint to add a new fact to the database.
 router.post('/fact', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    const { content, note, userId } = req.body;
+    const { content, note, userId, discovery_date } = req.body;
 
     //const submitter_id = userId || 'zzz3737';
 
@@ -47,8 +47,8 @@ router.post('/fact', (req, res) => {
         return;
     }
 
-    //const success = addFact({ submitter_id, content, note });
-    const success = addFact({ content, note });
+    //const success = addFact({ submitter_id, content, note, discovery_date });
+    const success = addFact({ content, note, discovery_date });
 
     if (success) {
         res.status(201).json({ message: 'Fact added successfully' });
