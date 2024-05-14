@@ -128,12 +128,27 @@ function updateFact(factID, updatedData) {
     try {
         const { content, note, discovery_date } = updatedData;
 
+        // Retrieve the current fact data
+        const currentFactStmt = db.prepare('SELECT content, note, discovery_date FROM Factoid WHERE id = ?');
+        const currentFact = currentFactStmt.get(factID);
+
+        if (!currentFact) {
+            console.log(`Fact with ID ${factID} not found`);
+            return false;
+        }
+
+        // Use existing values if the new values are not provided
+        const newContent = content || currentFact.content;
+        const newNote = note || currentFact.note;
+        const newDiscoveryDate = discovery_date || currentFact.discovery_date;
+
         const stmt = db.prepare(`
             UPDATE Factoid 
             SET content = ?, note = ?, discovery_date = ?
             WHERE id = ?
         `);
-        stmt.run(content, note, discovery_date, factID);
+        stmt.run(newContent, newNote, newDiscoveryDate, factID);
+
         return true;
     } catch (e) {
         console.log(e);
