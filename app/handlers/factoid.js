@@ -108,8 +108,20 @@ function deleteFactByID(factoidID) {
     }
 }
 
+function approveFactByID(factoidID) {
+    try {
+        let id = parseInt(factoidID)
+        let approveFactStmt = db.prepare('UPDATE factoid SET is_approved = 1 WHERE id = ?')
+        let result = approveFactStmt.run(id)
+        return result.changes > 0
+    } catch (e) {
+        return false
+    }
+}
+
 module.exports = {
     getFactByID,
     getFacts,
-    deleteFactByID
+    deleteFactByID,
+    approveFactByID
 };
