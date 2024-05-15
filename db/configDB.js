@@ -36,3 +36,4 @@ let updateAnonFactsStmt = db.prepare(`
 updateAnonFactsStmt.run();
 
 db.close();
+console.log('SQLite database (app.db) has been initialized and seeded.');
