@@ -1,5 +1,10 @@
 const db = require('better-sqlite3')('app.db');
 
+/**
+ * Deletes the attachment with the specified attachment ID from the database.
+ * @param {number} attachmentID The ID of the attachment to delete.
+ * @returns {boolean} True if the attachment is deleted successfully, false otherwise.
+ */
 function deleteAttachmentforFactoid(attachmentID){
     try {
         const deleteAttachmentStatement = db.prepare('DELETE FROM Attachment WHERE id = ?');
@@ -11,6 +16,11 @@ function deleteAttachmentforFactoid(attachmentID){
     }
 }
 
+/**
+ * Deletes all attachments associated with a specific factoid
+ * @param {number} factoidID The ID of the factoid whose attachments are to be deleted
+ * @returns {boolean} True if all attachments are deleted successfully or if no attachments are found, false otherwise.
+ */
 function deleteAllAttachmentsforFactoid(factoidID) {
     try {
         const getAllAttachmentsStatement = db.prepare('SELECT * FROM Attachment WHERE factoid_id = ?')
@@ -35,7 +45,6 @@ function deleteAllAttachmentsforFactoid(factoidID) {
         return false; 
     }
 }
-
 
 module.exports = {
     deleteAttachmentforFactoid,
