@@ -120,13 +120,36 @@ function filterFacts(facts, tags = []) {
  */
 function addFact(factData) {
     try {
-        const { submitter_id, content, discovery_date, note } = factData;
+        let { submitter_id, content, discovery_date, note, tags} = factData;
+        tags = tags || []
+        discovery_date = discovery_date || new Date().toUTCString()
 
         const stmt = db.prepare(`
             INSERT INTO Factoid (submitter_id, content, posting_date, discovery_date, note, is_approved, approval_date)
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
+            RETURNING id
         `);
-        stmt.run(submitter_id, content, discovery_date, note);
+        const id = stmt.get(submitter_id, content, discovery_date, note).id;
+
+        const addTagStmt = db.prepare(`
+            INSERT INTO tag
+            VALUES (?, (SELECT id FROM category WHERE name = ?))
+        `)
+        const insertTags = db.transaction((tags) => {
+            tags.forEach((tag) => {
+                try { 
+                    addTagStmt.run(id, tag) 
+                } catch (err) {
+                    if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
+                        console.log(`Category ${tag} does not exist`)
+                    } else {
+                        console.log(err)
+                    }
+                }
+            })
+        })
+        insertTags(tags)
+
         return true;
     } catch (e) {
         console.log(e);
