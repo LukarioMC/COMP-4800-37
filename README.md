@@ -11,7 +11,7 @@ Contents of .env:
  - `BACKUP_INTERVAL=` - How often in milliseconds to backup the database. 
  - `MAX_BACKUPS=` - Max number of backup version stored concurrently. If exceeded, oldest backups will be trimed.
  - `BACKUP_DIR_NAME=` - Name of the directory where database backups will be stored.
- - `MAX_DIR_SIZE=` - Max cumulative file size of the backup directory. If exceeded, oldest backups will be trimed.
+ - `MAX_DIR_SIZE=` - Max cumulative file size of the backup directory in MB. If exceeded, oldest backups will be trimed.
 
 Scripts:
 Run the following using 'npm run [cmd]'
