@@ -17,8 +17,7 @@ router.get('/', (req, res) => {
 });
 
 // This route is for the admin dashboard where the admin can routerroved, edit, and delete fact submissions.
-router.get('/admin', (req, res) => {
-    if (adminUtils.isAdmin(req.user)) {
+router.get('/admin', adminUtils.isAdmin, (req, res) => {
         const testData = [
             {
                 dateSubmitted: '05 / 04 / 2024',
@@ -37,9 +36,6 @@ router.get('/admin', (req, res) => {
         ];
         const adminName = req.user?.id;
         res.render('pages/admin-dashboard', { submissions: testData, adminName });
-    } else {
-        res.redirect('/');
-    }
 
 });
 
