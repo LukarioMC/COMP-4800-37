@@ -73,7 +73,7 @@ function deleteTagforFactoid(factoidID, categoryID){
       const result = deleteTagStatement.run(factoidID, categoryID);
       return result.changes > 0;
   } catch (e) {
-      console.error('Error deleting tag:', e);
+      console.log('Error deleting tag:', e);
       return false;
   }
 }
@@ -101,7 +101,7 @@ function deleteAllTagsforFactoid(factoidID) {
 
       return true; 
   } catch (e) {
-      console.error('Error deleting all tags for factoid:', e);
+      console.log('Error deleting all tags for factoid:', e);
       return false;
   }
 }

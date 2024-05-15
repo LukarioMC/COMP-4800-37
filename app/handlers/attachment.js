@@ -11,7 +11,7 @@ function deleteAttachmentforFactoid(attachmentID){
         const result = deleteAttachmentStatement.run(attachmentID);
         return result.changes > 0;
     } catch (e) {
-        console.error('Error deleting attachment:', e);
+        console.log('Error deleting attachment:', e);
         return false;
     }
 }
@@ -40,7 +40,7 @@ function deleteAllAttachmentsforFactoid(factoidID) {
 
         return true;
     } catch (error) {
-        console.error('Error deleting attachments for the factoid:', error.message);
+        console.log('Error deleting attachments for the factoid:', error);
         return false; 
     }
 }
