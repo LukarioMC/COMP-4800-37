@@ -4,8 +4,8 @@
  */
 const express = require('express');
 const router = express.Router();
-const { getFacts, getFactByID } = require('../handlers/factoid');
-const { getTags, defineTag } = require('../handlers/tag');
+const { getFacts, getFactByID, addFact, updateFact } = require('../handlers/factoid');
+const { getTags, defineTag } = require('../handlers/tag')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -17,6 +17,8 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS,
     },
 });
+
+const ANON_USER_ID = 'zzz3737'
 
 // API endpoint to get all facts that fulfill the given condition(s).
 // Supports optional tag filtering, text searching and pagination.
@@ -36,6 +38,45 @@ router.get('/fact', (req, res) => {
     } catch (e) {
         console.log(e);
         return res.status(500).send({ message: 'Server error.' });
+    }
+});
+
+// API endpoint to add a new fact to the database.
+router.post('/fact', (req, res) => {
+    const { userId, content, discovery_date, note } = req.body;
+
+    // v no longer fails foreign key constraint
+    const submitter_id = userId || ANON_USER_ID;
+    //const submitter_id = null;
+
+    if (!content) {
+        res.status(400).json({ error: 'Content field is required' });
+        return;
+    }
+
+    //const success = addFact({ submitter_id, content, note, discovery_date });
+    const success = addFact({ submitter_id, content, discovery_date, note });
+
+    if (success) {
+        res.status(201).json({ message: 'Fact added successfully' });
+    } else {
+        res.status(500).json({ error: 'Failed to add fact' });
+    }
+});
+
+// API endpoint to update an existing fact in the database.
+router.put('/fact/:id', (req, res) => {
+    const factID = req.params.id;
+    const { content, note, discovery_date } = req.body;
+
+    const result = updateFact(factID, { content, note, discovery_date });
+
+    if (result.success) {
+        res.status(200).json({ message: 'Fact updated successfully' });
+    } else if (result.message === 'Fact not found') {
+        res.status(404).json({ error: 'Fact not found' });
+    } else {
+        res.status(500).json({ error: 'Failed to update fact' });
     }
 });
 
