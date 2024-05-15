@@ -237,7 +237,7 @@ paths:
                     type: string
         '500':
           description: Server error.
-  /api/tag/{factoidID}/{categoryID}: // this route is not working, but has been validated
+  /api/tag/{factoidID}/{categoryID}:
     delete:
       summary: Deletes a tag for a given factoid ID and category ID.
       parameters:
