@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag } = require('../handlers/tag')
-const upload = require('../modules/upload')
+const { upload, isUploadDirFull }= require('../modules/upload')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
