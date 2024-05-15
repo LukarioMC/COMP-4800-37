@@ -1,15 +1,29 @@
 <div class="fact accordion-item mb-3">
-    <h2 class="accordion-header" id="heading-<%- factoid.id %>">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%- factoid.id %>" aria-expanded="true" aria-controls="collapse-<%- factoid.id %>">
+    <h2 class="accordion-header" id="heading-<%= typeof rand !== 'undefined' ? rand: factoid.id %>">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" aria-expanded="true" aria-controls="collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>">
             <%- factoid.content %>
         </button>
     </h2>
 
-    <div id="collapse-<%- factoid.id %>" class="accordion-collapse collapse" aria-labelledby="heading-<%- factoid.id %>" <% if(typeof accordionParent !== 'undefined') { %> data-bs-parent="<%= accordionParent %>" <% } %>>
+    <div id="collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" class="accordion-collapse collapse" aria-labelledby="heading-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" <% if(typeof accordionParent !== 'undefined') { %> data-bs-parent="<%= accordionParent %>" <% } %>>
         <div class="accordion-body">
-            <%- factoid.note || "Nothing is here..." %>
+            <div style="white-space: pre-wrap"><%= factoid.note || "Nothing is here..." %></div>
+            <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
+            <div><b>By:</b> <%= factoid.submitter_id === 'zzz3737' ? `${factoid.submitter_id} (Anonymous)` : factoid.submitter_id %></div>
+            <div>
+                <% factoid.tags.forEach((tag) => { %>
+                    <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
+                <% }) %>
+            </div>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary mb-3 ms-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
+            <br/>
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
+            <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                <!-- TODO: Link edit fact page here -->
+                <% console.log(typeof isAdmin) %>
+                <a class="btn btn-primary mb-3" id=<%= factoid.id %> href="#">Edit</a>
+            <% } %>
+             
         </div>
     </div>
 

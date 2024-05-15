@@ -6,3 +6,8 @@ nav,
 nav > .offcanvas {
     background-color: #d0d0d0;
 }
+
+.alert {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
