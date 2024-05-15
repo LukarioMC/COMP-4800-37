@@ -9,9 +9,11 @@ Contents of .env:
  - `HTTPS_ENABLED=` - Boolean that specifies whether cookies are secure or not (if not defined, cookies default to secure.)
  - `BEHIND_PROXY=` - Configures the server to allow HTTPS/secure cookies when behind a reverse proxy.
  - `BACKUP_INTERVAL=` - How often in milliseconds to backup the database. 
-- `MAX_BACKUPS=` - Max number of backup version stored concurrently.
-- `BACKUP_DIR_NAME=` - Name of the directory where database backups will be stored.
+ - `MAX_BACKUPS=` - Max number of backup version stored concurrently. If exceeded, oldest backups will be trimed.
+ - `BACKUP_DIR_NAME=` - Name of the directory where database backups will be stored.
+ - `MAX_DIR_SIZE=` - Max cumulative file size of the backup directory. If exceeded, oldest backups will be trimed.
 
 Scripts:
 Run the following using 'npm run [cmd]'
  - `resetdb` - Creates all database entitities (e.g. tables, indices) in app.db. Will drop pre-existing entities.
+ - `dev` - Run the app using nodemon serving to the localhost at the specified port (default of 8000).

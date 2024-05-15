@@ -2,9 +2,10 @@ const db = require('better-sqlite3')('app.db');
 const fs = require('fs')
 require('dotenv').config
 
-const BACKUP_INTERVAL = process.env.BACKUP_INTERVAL || 1000 * 60 * 60 * 24
+const BACKUP_INTERVAL = process.env.BACKUP_INTERVAL || 1000 // * 60 * 60 * 24
 const MAX_BACKUPS = process.env.MAX_BACKUPS || 100
 const BACKUP_DIR_NAME = process.env.BACKUP_DIR_NAME || 'db_backups'
+const MAX_DIR_SIZE = (process.env.MAX_DIR_SIZE || 1) * Math.pow(1024, 3) 
 
 /**
  * Create the backup directory if it does not exist.
@@ -19,14 +20,11 @@ function init() {
  * Save a back up of the database in the backup directory.
  */
 function backupDB() {
-    db.backup(`${BACKUP_DIR_NAME}/backup-${Date.now()}.db`)
-  .then(() => {
-    console.log('backup complete!');
-    trimBackups()
-  })
-  .catch((err) => {
-    console.log('backup failed:', err);
-  });
+    return db.backup(`${BACKUP_DIR_NAME}/backup-${Date.now()}.db`)
+    .then(() => {
+        console.log('Backup File Saved.');
+        trimBackups()
+    })
 }
 
 /**
@@ -34,11 +32,22 @@ function backupDB() {
  */
 function trimBackups() {
     let backupDir = fs.readdirSync(`./${BACKUP_DIR_NAME}`) 
-    while (backupDir.length > MAX_BACKUPS) { 
+    while (backupDir.length > MAX_BACKUPS || getDirSize(backupDir) > MAX_DIR_SIZE) { 
         let oldestBackup = backupDir.sort()[0]
         fs.unlinkSync(`${BACKUP_DIR_NAME}/${oldestBackup}`)
         backupDir = fs.readdirSync(`./${BACKUP_DIR_NAME}`)
     }
+}
+
+/**
+ * Measures the cumulative size of all the files provided.
+ * @param {*} dirFiles A list of file names in the backup directory.
+ * @returns total size in bytes.
+ */
+function getDirSize(dirFiles) {
+    return dirFiles.reduce((acc, file) => {
+        return acc + fs.statSync(`${BACKUP_DIR_NAME}/${file}`).size
+    }, 0)
 }
 
 /** Class that controls the backup interval. */
@@ -55,14 +64,20 @@ class BackupTimer {
      */
     start() {
         this.timer = setInterval(() => {
-            backupDB()
+            backupDB().catch(err => {
+                console.log(`Backup Trim Failed: ${err}`)
+                this.stop()
+            })
         }, BACKUP_INTERVAL) 
     }
 
     /**
      * Stop the backup timer.
      */
-    stop() { clearInterval(timer) }
+    stop() { 
+        console.log('Stopping backup timer.')
+        clearInterval(this.timer) 
+    }
 }
 
 module.exports = new BackupTimer()
