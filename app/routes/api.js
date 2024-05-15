@@ -35,7 +35,7 @@ const upload = multer({
     limits: {fileSize: maxSize}
 })
 
-if (!fs.existsSync(UPLOAD_DIR)){ fs.mkdirSync(UPLOAD_DIR) }
+if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR)
 
 // API endpoint to get all facts that fulfill the given condition(s).
 // Supports optional tag filtering, text searching and pagination.
