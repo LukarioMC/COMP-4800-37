@@ -138,7 +138,7 @@ function addFact(factData) {
  * Updates an existing fact in the database.
  * @param {number} factID The ID of the fact to be updated.
  * @param {Object} updatedData An object containing updated data for the fact.
- * @returns {boolean} True if the fact was successfully updated, false otherwise.
+ * @returns {Object} An object containing the result of the update operation and a message.
  */
 function updateFact(factID, updatedData) {
     try {

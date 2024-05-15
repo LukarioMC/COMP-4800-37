@@ -18,6 +18,8 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+const ANON_USER_ID = 'zzz3737'
+
 // API endpoint to get all facts that fulfill the given condition(s).
 // Supports optional tag filtering, text searching and pagination.
 router.get('/fact', (req, res) => {
@@ -41,11 +43,10 @@ router.get('/fact', (req, res) => {
 
 // API endpoint to add a new fact to the database.
 router.post('/fact', (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
     const { userId, content, discovery_date, note } = req.body;
 
     // v no longer fails foreign key constraint
-    const submitter_id = userId || 'zzz3737';
+    const submitter_id = userId || ANON_USER_ID;
     //const submitter_id = null;
 
     if (!content) {
@@ -65,7 +66,6 @@ router.post('/fact', (req, res) => {
 
 // API endpoint to update an existing fact in the database.
 router.put('/fact/:id', (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
     const factID = req.params.id;
     const { content, note, discovery_date } = req.body;
 
