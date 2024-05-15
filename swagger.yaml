@@ -126,6 +126,21 @@ paths:
                 $ref: '#/components/schemas/ErrorMessage'
         '500':
           description: Server error.
+
+    post:
+      summary: 
+      requestBody:
+        description: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  description: A list of tag names.
+                  type: array
+                  items:
+                    type: string
   /api/fact/{factID}:
     get:
       summary: Returns a fact by ID.
@@ -155,6 +170,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
+    put:
+      summary: 
+      requestBody:
+        description: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  description: A list of tag names.
+                  type: array
+                  items:
+                    type: string
+
   /api/report:
     post:
       summary: Sends an email report to the admin with information about the selected fact. The email functionality is configured with host, port, and sender email/password.
