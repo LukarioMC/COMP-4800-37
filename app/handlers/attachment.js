@@ -11,7 +11,7 @@ function deleteAttachmentforFactoid(attachmentID){
         const result = deleteAttachmentStatement.run(attachmentID);
         return result.changes > 0;
     } catch (e) {
-        console.log('Error deleting attachment:', e);
+        console.error('Error deleting attachment:', e);
         return false;
     }
 }
@@ -28,18 +28,17 @@ function deleteAllAttachmentsforFactoid(factoidID) {
         const allAttachmentsForFact = getAllAttachmentsStatement.all(factoidID);
      
         if (allAttachmentsForFact.length === 0) {
-            console.log("No attachments found for the factoid.");
-            return true; // Return true as there are no attachments to delete
+            return true;
         }
         
         allAttachmentsForFact.forEach(attachment => {
-            const result = deleteAttachmentforFactoid(attachment.id);
+            let result = deleteAttachmentforFactoid(attachment.id);
             if (!result) {
                 throw new Error(`Error deleting attachment with ID ${attachment.id}`);
             }
         });
 
-        return true; // Return true if all attachments are deleted successfully
+        return true;
     } catch (error) {
         console.error('Error deleting attachments for the factoid:', error.message);
         return false; 

@@ -4,7 +4,7 @@
  */
 const express = require('express');
 const router = express.Router();
-const { getFacts, getFactByID, deleteFactByID } = require('../handlers/factoid');
+const { getFacts, getFactByID, deleteFactByID, approveFactByID } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid } = require('../handlers/attachment');
 
@@ -123,8 +123,8 @@ router.post('/report', (req, res) => {
     res.redirect('back');
 });
 
-// API endpoint to delete an attachment for a given attachemnt ID
-router.delete('/api/delete/attachment/:attachmentID', (req, res, next) => {
+// API endpoint to delete an attachment for a given attachment ID
+router.delete('/attachment/:attachmentID', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         const attachmentID = req.params.attachmentID;
@@ -136,18 +136,18 @@ router.delete('/api/delete/attachment/:attachmentID', (req, res, next) => {
         } else {
             return res.status(404).send({ message: 'Attachment not found.' });
         }
-    } catch (error) {
-        console.error('Error deleting attachment:', error);
+    } catch (e) {
+        console.log(e);
         return res.status(500).send({ message: 'Server error.' });
     }
 });
 
 // API endpoint to delete a tag for a given factoid ID and category ID
-router.delete('/api/delete/fact/:factoidID/tag/:categoryID', (req, res) => {
+router.delete('/fact/:factoidID/tag/:categoryID', (req, res) => {
     try {
         const { factoidID, categoryID } = req.params;
         
-        const result = deleteTagForFactoid(parseInt(factoidID), parseInt(categoryID));
+        const result = deleteTagforFactoid(parseInt(factoidID), parseInt(categoryID));
 
         if (result) {
             return res.status(200).send({ message: 'Tag deleted successfully.' });
@@ -160,36 +160,43 @@ router.delete('/api/delete/fact/:factoidID/tag/:categoryID', (req, res) => {
     }
 });
 
-// API endpoint to delete a fact, given the factoid ID
-router.delete('/api/delete/fact/:factoidID', (req, res) => {
-    const { factoidID } = req.params;
+// API endpoint to delete a fact and associated tags and attachments
+router.delete('/fact/:factoidID', (req, res) => {
+    const factoidID = req.params.factoidID;
 
     try {
+        // Delete all attachments associated with the factoid
+        const attachmentsDeleted = deleteAllAttachmentsforFactoid(factoidID);
+        if (!attachmentsDeleted) {
+            return res.status(500).send({ message: 'Error deleting attachments for the factoid.' });
+        }
 
-        deleteAllAttachmentsforFactoid(factoidID);
+        // Delete all tags associated with the factoid
+        const tagsDeleted = deleteAllTagsforFactoid(factoidID);
+        if (!tagsDeleted) {
+            return res.status(500).send({ message: 'Error deleting tags for the factoid.' });
+        }
 
-        deleteAllTagsforFactoid(factoidID);
-
+        // Delete the factoid itself
         const factDeleted = deleteFactByID(factoidID);
-
         if (factDeleted) {
             return res.status(200).send({ message: 'Fact and associated attachments/tags deleted successfully.' });
         } else {
-            return res.status(404).send({ message: 'Fact not found.' });
+            return res.status(404).send({ message: 'Error deleting Factoid.' });
         }
-        
     } catch (e) {
-        console.error('Error deleting fact:', e);
+        console.log(e);
         return res.status(500).send({ message: 'Server error.' });
     }
-})
+});
 
 // API endpoint to approve a fact with the given id.
-router.put('/api/fact/approve/:id', (req, res, next) => {
+router.put('/approve/:factoidID', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
-        let id = parseInt(req.params.id)
-        let approved = approveFactByID(id)
+        let factoidID = req.params.factoidID
+
+        const approved = approveFactByID(factoidID)
         if (approved) {
             return res.status(200).send({ message: "Fact approved successfully." })
         } else {

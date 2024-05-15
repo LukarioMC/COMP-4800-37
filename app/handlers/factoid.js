@@ -103,7 +103,7 @@ function deleteFactByID(factoidID) {
 
         return result.changes > 0;
     } catch (e) {
-        console.error('Error deleting fact:', e);
+        console.log(e);
         return false;
     }
 }
@@ -115,6 +115,7 @@ function approveFactByID(factoidID) {
         let result = approveFactStmt.run(id)
         return result.changes > 0
     } catch (e) {
+        console.log(e);
         return false
     }
 }
