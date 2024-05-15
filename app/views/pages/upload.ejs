@@ -1,0 +1,10 @@
+<%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
+
+<main class="container-xl">
+    <form action="/api/attachment" method="post" enctype="multipart/form-data">
+        <input type="file" name="photo"/>
+        <input type="submit"/>
+      </form>
+</main>
+
+<%- include('../partials/footer'); %>
