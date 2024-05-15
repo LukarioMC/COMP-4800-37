@@ -66,6 +66,9 @@ router.post('/fact', (req, res) => {
 
 // API endpoint to update an existing fact in the database.
 router.put('/fact/:id', (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({error: 'Only admin can update facts.'})
+    }
     const factID = req.params.id;
     const { content, note, discovery_date, tags } = req.body;
 
