@@ -93,7 +93,10 @@ function deleteAllTagsforFactoid(factoidID) {
       }
 
       tags.forEach(tag => {
-          deleteTagforFactoid(tag.factoid_id, tag.category_id);
+        let result = deleteTagforFactoid(tag.factoid_id, tag.category_id);
+          if (!result) {
+            throw new Error(`Error deleting ${tag.category_id} tag for ${tag.factoid_id}`);
+        }
       });
 
       return true; 
