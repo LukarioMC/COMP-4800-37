@@ -227,7 +227,11 @@ function updateTags(factID, tags) {
                 try { 
                     addTagStmt.run(factID, tag)
                 } catch (err) {
-                    console.log(err)
+                    if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
+                        console.log(`Category ${tag} does not exist`)
+                    } else {
+                        console.log(err)
+                    }
                 }
             }
         })
