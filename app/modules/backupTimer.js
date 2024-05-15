@@ -1,9 +1,10 @@
 const db = require('better-sqlite3')('app.db');
 const fs = require('fs')
+require('dotenv').config
 
-const BACKUP_INTERVAL = 1000 * 60 * 60 * 24
-const MAX_BACKUPS = 100
-const BACKUP_DIR_NAME = 'db_backups'
+const BACKUP_INTERVAL = process.env.BACKUP_INTERVAL || 1000 * 60 * 60 * 24
+const MAX_BACKUPS = process.env.MAX_BACKUPS || 100
+const BACKUP_DIR_NAME = process.env.BACKUP_DIR_NAME || 'db_backups'
 
 /**
  * Create the backup directory if it does not exist.

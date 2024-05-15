@@ -8,6 +8,9 @@ Contents of .env:
  - `SESSION_SECRET=` - String used to encrypt express-session.
  - `HTTPS_ENABLED=` - Boolean that specifies whether cookies are secure or not (if not defined, cookies default to secure.)
  - `BEHIND_PROXY=` - Configures the server to allow HTTPS/secure cookies when behind a reverse proxy.
+ - `BACKUP_INTERVAL=` - How often in milliseconds to backup the database. 
+- `MAX_BACKUPS=` - Max number of backup version stored concurrently.
+- `BACKUP_DIR_NAME=` - Name of the directory where database backups will be stored.
 
 Scripts:
 Run the following using 'npm run [cmd]'
