@@ -61,7 +61,12 @@ function isValidTagName(str) {
   return true;
 }
 
-
+/**
+ * Deletes a tag associated with a factoid based on the factoid ID and category ID.
+ * @param {number} factoidID The ID of the factoid from which to delete the tag.
+ * @param {number} categoryID The ID of the category of the tag to be deleted.
+ * @returns {boolean} True if the tag is deleted successfully, false otherwise.
+ */
 function deleteTagforFactoid(factoidID, categoryID){
   try {
       const deleteTagStatement = db.prepare('DELETE FROM Tag WHERE factoid_id = ? AND category_id = ?');
@@ -73,6 +78,11 @@ function deleteTagforFactoid(factoidID, categoryID){
   }
 }
 
+/**
+ * Deletes all tags associated with a factoid.
+ * @param {number} factoidID The ID of the factoid from which to delete all tags.
+ * @returns {boolean} True if all tags are deleted successfully, true if no tags are found, false otherwise.
+ */
 function deleteAllTagsforFactoid(factoidID) {
   try {
       const getAllTagsStatement = db.prepare('SELECT * FROM Tag WHERE factoid_id = ?');
