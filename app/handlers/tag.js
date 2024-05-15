@@ -61,36 +61,41 @@ function isValidTagName(str) {
   return true;
 }
 
+
+function deleteTagforFactoid(factoidID, categoryID){
+  try {
+      const deleteTagStatement = db.prepare('DELETE FROM Tag WHERE factoid_id = ? AND category_id = ?');
+      const result = deleteTagStatement.run(factoidID, categoryID);
+      return result.changes > 0;
+  } catch (e) {
+      console.error('Error deleting tag:', e);
+      return false;
+  }
+}
+
+function deleteAllTagsforFactoid(factoidID) {
+  try {
+      const getAllTagsStatement = db.prepare('SELECT * FROM Tag WHERE factoid_id = ?');
+      const tags = getAllTagsStatement.all(factoidID);
+
+      if (tags.length === 0) {
+          return true;
+      }
+
+      tags.forEach(tag => {
+          deleteTagforFactoid(tag.factoid_id, tag.category_id);
+      });
+
+      return true; 
+  } catch (e) {
+      console.error('Error deleting all tags for factoid:', e);
+      return false;
+  }
+}
+
 module.exports = {
   getTags,
   defineTag,
-};
-
-
-function deleteTagforFactoid(factoidID, categoryID){
-    try {
-        const result = db.run('DELETE FROM Tag WHERE factoid_id = ? AND category_id = ?', [factoidID, categoryID]);
-        return result.changes > 0;
-    } catch (e) {
-        console.error('Error deleting tag:', e);
-        return false;
-    }
-}
-
-function deleteAllTagsforFactoid(factoidID){
-    try {
-        const tags = db.prepare('SELECT * FROM Tag WHERE factoid_id = ?').all(factoidID)
-    
-        tags.forEach(tag => {
-            deleteTagforFactoid(tag.factoidID, tag.categoryID);
-        });
-
-    } catch (e) {
-
-    }
-}
-
-module.exports = {
-    deleteTagforFactoid,
-    deleteAllTagsforFactoid
+  deleteTagforFactoid,
+  deleteAllTagsforFactoid
 }
