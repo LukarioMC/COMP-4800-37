@@ -1,4 +1,5 @@
 const db = require('better-sqlite3')('app.db');
+const { getTags } = require('./tag')
 
 /**
  * Given an id, returns the associated fact.
@@ -165,7 +166,7 @@ function addFact(factData) {
  */
 function updateFact(factID, updatedData) {
     try {
-        const { content, note, discovery_date } = updatedData;
+        const { content, note, discovery_date, tags } = updatedData;
 
         // Retrieve the current fact data
         const currentFactStmt = db.prepare('SELECT content, note, discovery_date FROM Factoid WHERE id = ?');
@@ -188,6 +189,10 @@ function updateFact(factID, updatedData) {
         `);
         stmt.run(newContent, newNote, newDiscoveryDate, factID);
 
+        if (!updateTags(factID, tags || [])) {
+            return {success: false, message: 'Failed to update tags.'}
+        }
+
         return { success: true };
     } catch (e) {
         console.log(e);
@@ -196,7 +201,63 @@ function updateFact(factID, updatedData) {
 }
 
 /**
- * Returns a random approveed fact.
+ * Updates the tags of a fact so that the only tags in the database will be those in the given tags.
+ * @param {*} factID ID of the fact whose tags will be updated.
+ * @param {*} tags Names of the given fact's tags.
+ * @returns true if query was successful, false otherwise.
+ */
+function updateTags(factID, tags) {
+    let update = db.transaction(() => {
+        let currTags = db.prepare(`
+            SELECT id, name
+            FROM tag 
+                JOIN category 
+                ON tag.category_id = category.id
+            WHERE factoid_id = ?
+        `).all(factID)
+
+        let currTagNames = currTags.map(tag => {return tag.name})
+        tags.forEach((tag) => {
+            if (!currTagNames.includes(tag)) {
+                const addTagStmt = db.prepare(`
+                    INSERT INTO tag
+                    VALUES (?, (SELECT id FROM category WHERE name = ?))
+                `)
+
+                try { 
+                    addTagStmt.run(factID, tag)
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        })
+
+        currTags.forEach(currTag => {
+            if (!tags.includes(currTag.name)) {
+                const deleteTagStmt = db.prepare(`
+                    DELETE FROM tag
+                    WHERE category_id = ? AND factoid_id = ?
+                `)
+                try {
+                    deleteTagStmt.run(currTag.id, factID)
+                } catch (err) {
+                    console.log(err)
+                }
+                
+            }
+        })
+    })
+
+    try {
+        update()
+        return true
+    } catch (e) {
+        return false
+    }
+}
+
+/**
+ * Returns a random approved fact.
  * @returns A random approved fact.
  */
 function getRandomFact() {

@@ -67,9 +67,9 @@ router.post('/fact', (req, res) => {
 // API endpoint to update an existing fact in the database.
 router.put('/fact/:id', (req, res) => {
     const factID = req.params.id;
-    const { content, note, discovery_date } = req.body;
+    const { content, note, discovery_date, tags } = req.body;
 
-    const result = updateFact(factID, { content, note, discovery_date });
+    const result = updateFact(factID, { content, note, discovery_date, tags });
 
     if (result.success) {
         res.status(200).json({ message: 'Fact updated successfully' });
