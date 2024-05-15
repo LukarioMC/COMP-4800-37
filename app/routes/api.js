@@ -143,10 +143,11 @@ router.delete('/attachment/:attachmentID', (req, res, next) => {
 });
 
 // API endpoint to delete a tag for a given factoid ID and category ID
-router.delete('/fact/:factoidID/tag/:categoryID', (req, res) => {
+router.delete('/tag/:factoidID/:categoryID', (req, res) => {
     try {
-        const { factoidID, categoryID } = req.params;
-        
+        const factoidID = req.params.factoidID;
+        const categoryID = req.params.categoryID;
+
         const result = deleteTagforFactoid(parseInt(factoidID), parseInt(categoryID));
 
         if (result) {
