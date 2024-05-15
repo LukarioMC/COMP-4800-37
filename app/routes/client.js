@@ -4,6 +4,7 @@
 const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
+const { isAdmin } = require('../utils/adminUtils');
 const { getFacts, getRandomFact } = require('../handlers/factoid');
 const { getTags } = require('../handlers/tag')
 
@@ -16,25 +17,26 @@ router.get('/', (req, res) => {
 });
 
 // This route is for the admin dashboard where the admin can routerroved, edit, and delete fact submissions.
-router.get('/admin', (req, res) => {
-    const testData = [
-        {
-            dateSubmitted: '05 / 04 / 2024',
-            user: 'abc0185',
-            fact: 'The number of pages in this book is a multiple of 37!',
-            note: 'Name of the book: "All things 37" by Greg Jones',
-            tags: 'media, books',
-        },
-        {
-            dateSubmitted: '05 / 06 / 2024',
-            user: 'mag3737',
-            fact: 'Another super cool 37 fact',
-            note: 'Found in Vancouver, BC',
-            tags: 'nature',
-        },
-    ];
-    const adminName = 'mag3737';
-    res.render('pages/admin-dashboard', { submissions: testData, adminName });
+router.get('/admin', isAdmin, (req, res) => {
+        const testData = [
+            {
+                dateSubmitted: '05 / 04 / 2024',
+                user: 'abc0185',
+                fact: 'The number of pages in this book is a multiple of 37!',
+                note: 'Name of the book: "All things 37" by Greg Jones',
+                tags: 'media, books',
+            },
+            {
+                dateSubmitted: '05 / 06 / 2024',
+                user: 'mag3737',
+                fact: 'Another super cool 37 fact',
+                note: 'Found in Vancouver, BC',
+                tags: 'nature',
+            },
+        ];
+        const adminName = req.user?.id;
+        res.render('pages/admin-dashboard', { submissions: testData, adminName });
+
 });
 
 // route for submitting facts
