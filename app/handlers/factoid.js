@@ -5,13 +5,16 @@ const db = require('better-sqlite3')('app.db');
  * @param {number} factID An integer representing a fact ID.
  * @returns Fact with the corresponding id and associated tags and attachments. Undefined if the id is not associated with any fact or is invalid.
  */
-function getFactByID(factID) {
+function getFactByID(factID, isApproved = true) {
     try {
         let id = parseInt(factID);
         let fact, tags, attachments;
 
         let fetch = db.transaction((id) => {
-            let getFactStmt = db.prepare(`SELECT * FROM factoid WHERE id = ?`);
+            const statement = isApproved
+                ? 'SELECT * FROM factoid WHERE id = ? AND is_approved'
+                : 'SELECT * FROM factoid WHERE id = ?';
+            let getFactStmt = db.prepare(statement);
             fact = getFactStmt.get(id);
 
             let getTagsStmt = db.prepare(
@@ -26,6 +29,9 @@ function getFactByID(factID) {
         });
         fetch(id);
 
+        // Return undefined if there was no fact retrieved
+        if (!fact) return undefined;
+
         fact.tags = tags;
         fact.attachments = attachments;
         return fact;
@@ -36,11 +42,12 @@ function getFactByID(factID) {
 }
 
 /**
- * Given a list of tags, returns facts filtering out those who do not have all the given tags.
- * @param {*} tags a list of tag strings
- * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags. Returns empty list if error occurs.
+ * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
+ * @param {Array} tags a list of tag strings
+ * @param {string} searchText search text
+ * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(tags = undefined) {
+function getFacts(tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
     try {
         let getFactsStmt = db.prepare(`
 				SELECT 
@@ -66,9 +73,24 @@ function getFacts(tags = undefined) {
 
         let filteredFacts = filterFacts(unfilteredFacts, tags);
 
-        return filteredFacts.map((fact) => {
+        let fetchedFacts = filteredFacts.map((fact) => {
             return getFactByID(fact.id);
         });
+
+        if (searchText) {
+            searchText = searchText.toLowerCase()
+            fetchedFacts = fetchedFacts.filter(fact => {
+                if (fact.note && fact.note.toLowerCase().includes(searchText)) return true
+                else return fact.content.toLowerCase().includes(searchText)
+            })
+        }
+
+        if (pageNum && pageSize && pageNum > 0 && pageSize > 0) {
+            let offset = (pageNum - 1) * pageSize
+            fetchedFacts = fetchedFacts.slice(offset, offset + pageSize)
+        }
+
+        return fetchedFacts
     } catch (e) {
         console.log(e);
         return [];
@@ -91,7 +113,83 @@ function filterFacts(facts, tags = []) {
     });
 }
 
+/**
+ * Adds a new fact to the database.
+ * @param {Object} factData An object containing data for the new fact.
+ * @returns {boolean} True if the fact was successfully added, false otherwise.
+ */
+function addFact(factData) {
+    try {
+        const { submitter_id, content, discovery_date, note } = factData;
+
+        const stmt = db.prepare(`
+            INSERT INTO Factoid (submitter_id, content, posting_date, discovery_date, note, is_approved, approval_date)
+            VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
+        `);
+        stmt.run(submitter_id, content, discovery_date, note);
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+/**
+ * Updates an existing fact in the database.
+ * @param {number} factID The ID of the fact to be updated.
+ * @param {Object} updatedData An object containing updated data for the fact.
+ * @returns {Object} An object containing the result of the update operation and a message.
+ */
+function updateFact(factID, updatedData) {
+    try {
+        const { content, note, discovery_date } = updatedData;
+
+        // Retrieve the current fact data
+        const currentFactStmt = db.prepare('SELECT content, note, discovery_date FROM Factoid WHERE id = ?');
+        const currentFact = currentFactStmt.get(factID);
+
+        if (!currentFact) {
+            console.log(`Fact with ID ${factID} not found`);
+            return { success: false, message: 'Fact not found' };
+        }
+
+        // Use existing values if the new values are not provided
+        const newContent = content || currentFact.content;
+        const newNote = note || currentFact.note;
+        const newDiscoveryDate = discovery_date || currentFact.discovery_date;
+
+        const stmt = db.prepare(`
+            UPDATE Factoid 
+            SET content = ?, note = ?, discovery_date = ?
+            WHERE id = ?
+        `);
+        stmt.run(newContent, newNote, newDiscoveryDate, factID);
+
+        return { success: true };
+    } catch (e) {
+        console.log(e);
+        return { success: false, message: 'Server error' };
+    }
+}
+
+/**
+ * Returns a random approveed fact.
+ * @returns A random approved fact.
+ */
+function getRandomFact() {
+    try {
+        let randomID = db.prepare(`SELECT id FROM factoid WHERE is_approved ORDER BY RANDOM() LIMIT 1`).get().id
+        return getFactByID(randomID)     
+    } catch (err) {
+        console.log(err)
+        return null
+    }
+}
+
 module.exports = {
     getFactByID,
     getFacts,
+    addFact,
+    updateFact,
+    getRandomFact
 };

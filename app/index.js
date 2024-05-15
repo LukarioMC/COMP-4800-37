@@ -20,6 +20,7 @@ const clientRouter = require('./routes/client');
 const apiRouter = require('./routes/api');
 const passport = require('passport');
 const session = require('express-session');
+const flash = require('connect-flash');
 
 const SQLiteStore = require('connect-sqlite3')(session);
 
@@ -39,6 +40,11 @@ if (process.env.BEHIND_PROXY) {
     app.set('trust proxy', 1);
 }
 
+// Initialize the SQLite database if INIT_DATABASE is set.
+if (process.env.INIT_DATABASE) {
+    require('../db/configDB');
+}
+
 app.use(
     session({
         cookie: {
@@ -52,7 +58,9 @@ app.use(
     })
 );
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(passport.authenticate('session'));
+app.use(flash());
 
 // Middleware to make user data available to EJS on all pages.
 app.use(function (req, res, next) {
@@ -64,6 +72,8 @@ app.use(function (req, res, next) {
               lname: req.user.lname,
           }
         : undefined;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
 });
 
