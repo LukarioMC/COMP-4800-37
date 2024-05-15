@@ -1,8 +1,9 @@
 const multer = require('multer')
 const fs = require('fs')
+require('dotenv').config()
 
-const UPLOAD_DIR = 'uploads'
-const MAX_UPLOAD_DIR_SIZE = 1024 * Math.pow(1024, 3)
+const UPLOAD_DIR = process.env.UPLOAD_DIR || 'uploads'
+const MAX_UPLOAD_DIR_SIZE = process.env.MAX_UPLOAD_DIR_SIZE || 1024 * Math.pow(1024, 3)
 
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR)
 
