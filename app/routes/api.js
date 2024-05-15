@@ -184,4 +184,21 @@ router.delete('/api/delete/fact/:factoidID', (req, res) => {
     }
 })
 
+// API endpoint to approve a fact with the given id.
+router.put('/api/fact/approve/:id', (req, res, next) => {
+    res.setHeader('Content-Type', 'application/json')
+    try {
+        let id = parseInt(req.params.id)
+        let approved = approveFactByID(id)
+        if (approved) {
+            return res.status(200).send({ message: "Fact approved successfully." })
+        } else {
+            return res.status(404).send({ message: "Fact not found." })
+        }
+    } catch (e) {
+        console.log(e)
+        return res.status(500).send({ message: "Server error." })
+    }
+})
+
 module.exports = router;
