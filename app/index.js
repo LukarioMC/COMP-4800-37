@@ -37,6 +37,11 @@ if (process.env.BEHIND_PROXY) {
     app.set('trust proxy', 1);
 }
 
+// Initialize the SQLite database if INIT_DATABASE is set.
+if (process.env.INIT_DATABASE) {
+    require('../db/configDB');
+}
+
 app.use(
     session({
         cookie: {

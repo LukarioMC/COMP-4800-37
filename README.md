@@ -16,6 +16,7 @@ Contents of .env:
  - `ANON_EMAIL=` - Placeholder email for the anonymous user.
  - `ANON_PWD=` - Placeholder password for the anonymous user. Best made very complex.
  - `TOMS_PWD` - Password for Tom to use as a site administrator.
+ - `INIT_DATABASE` - Controls whether to initialize/reset the database on application start. (Useful for deployment with non-persistent storage)
 
 Scripts:
 Run the following using 'npm run [cmd]'
