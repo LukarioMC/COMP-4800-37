@@ -6,8 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag } = require('../handlers/tag')
-const multer = require('multer')
-const fs = require('fs')
+const upload = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -21,21 +20,6 @@ const transporter = nodemailer.createTransport({
 });
 
 const ANON_USER_ID = 'zzz3737'
-
-const UPLOAD_DIR = 'uploads'
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {cb(null, UPLOAD_DIR)},
-    filename: (req, file, cb) => {
-        cb(null, file.filename + '-' + Date.now() + '.jpg')
-    }
-})
-const maxSize = 1 * 1024 * 1024
-const upload = multer({
-    storage: storage,
-    limits: {fileSize: maxSize}
-})
-
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR)
 
 // API endpoint to get all facts that fulfill the given condition(s).
 // Supports optional tag filtering, text searching and pagination.
