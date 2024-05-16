@@ -128,19 +128,48 @@ paths:
           description: Server error.
 
     post:
-      summary: 
-      requestBody:
-        description: 
+    summary: Adds a new fact to the database.
+    requestBody:
+      description: Fact data to be added.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              content:
+                description: The fact content.
+                type: string
+              note:
+                description: Additional notes about the fact.
+                type: string
+              discovery_date:
+                description: The date when the fact was discovered.
+                type: string
+                format: date-time
+    responses:
+      '201':
+        description: Fact added successfully.
         content:
           application/json:
             schema:
               type: object
               properties:
-                tags:
-                  description: A list of tag names.
-                  type: array
-                  items:
-                    type: string
+                message:
+                  type: string
+      '400':
+        description: Error if the content field is missing.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorMessage'
+      '500':
+        description: Server error.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorMessage'
+              
   /api/fact/{factID}:
     get:
       summary: Returns a fact by ID.
