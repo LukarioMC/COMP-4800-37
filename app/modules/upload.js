@@ -28,6 +28,11 @@ const upload = multer({
     fileFilter: filterFiles
 })
 
+const parser = multer({
+    dest: '/tmp',
+    fileFilter: (req, file, cb) => {cb(null, false)} 
+})
+
 /**
  * Returns whether the designated upload directory is above the max permissible size.
  * @returns Whether the designated upload directory is above the max permissible size
@@ -47,18 +52,12 @@ function isUploadDirFull() {
  * @param {*} cb callback
  */
 function filterFiles(req, file, cb) {
-    if (isUploadDirFull()) return cb(new Error('Upload directory is full.'))
+    if (!req.res.locals.attIDs) req.res.locals.attIDs = []
 
-    let approvedFiles = req.res.locals.passedFiles
-    if (!approvedFiles) approvedFiles = []
-    if (!approvedFiles.includes(file)) {
-        approvedFiles.push(file)
-        return cb(null, false)
-    }
+    if (isUploadDirFull()) return cb(new Error('Upload directory is full.'))
 
     let validMimetype = VALID_FILE_TYPES.test(file.mimetype)
     let validExtname = VALID_FILE_TYPES.test(path.extname(file.originalname).toLowerCase())
-    console.log(file.mimetype, file.originalname)
 
     if (!validMimetype || !validExtname) { 
         return cb(new Error(`Only the following filetypes are supported - ${VALID_FILE_TYPES}`))
@@ -68,19 +67,21 @@ function filterFiles(req, file, cb) {
     let newName = prefix + path.extname(file.originalname)
     req.res.locals.newName = newName
     try {
-        insertAttachment(req.res.locals.factID, newName, inferType(newName))
+        let id = insertAttachment(newName, inferType(newName))
+        req.res.locals.attIDs.push(id)
         return cb(null, true)
     } catch (err) {
         cb(new Error(`Unable to upload attachment info to database due to error: ${err}`))
     }
 }
 
-function insertAttachment(factID, route, type) {
+function insertAttachment(route, type) {
     let insertAttachmentStmt = db.prepare(`
-        INSERT INTO attachment (factoid_id, link, type) 
-        VALUES (?, ?, ?) 
+        INSERT INTO attachment (link, type) 
+        VALUES (?, ?)
+        RETURNING id
     `)
-    insertAttachmentStmt.run(factID, route, type)
+    return insertAttachmentStmt.get(route, type).id
 }
 
 function inferType(name) {
@@ -91,5 +92,6 @@ function inferType(name) {
 }
 
 module.exports = { 
-    upload
+    upload,
+    parser
 }

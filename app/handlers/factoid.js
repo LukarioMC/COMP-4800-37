@@ -119,13 +119,9 @@ function filterFacts(facts, tags = []) {
  * @param {Object} factData An object containing data for the new fact.
  * @returns {boolean} True if the fact was successfully added, false otherwise.
  */
-function addFact(factData, res = undefined) {
+function addFact(factData, res = undefined, attIDs = []) {
     try {
         let { submitter_id, content, discovery_date, note, tags, links} = factData;
-        tags = tags || []
-        if ((typeof tags) === 'string') tags = [tags]
-        links = links || []
-        if ((typeof links) === 'string') links = [JSON.parse(links)]
 
         discovery_date = discovery_date || new Date().toUTCString()
 
@@ -156,6 +152,10 @@ function addFact(factData, res = undefined) {
         })
         insertTags(tags)
         insertLinkAttachments(links, id)
+
+        attIDs.forEach(attID => {
+            connectAttachment(id, attID)
+        })
 
         return true;
     } catch (e) {
@@ -278,6 +278,14 @@ function insertLinkAttachments(attachments, factID) {
             console.log(err)
         }
     })
+}
+
+function connectAttachment(factID, attID) {
+    db.prepare(`
+        UPDATE attachment
+        SET factoid_id = ?
+        WHERE id = ?
+    `).run(factID, attID)
 }
 
 /**
