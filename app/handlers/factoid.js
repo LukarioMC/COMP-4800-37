@@ -170,9 +170,8 @@ function addFact(factData) {
 
 function approveFactByID(factoidID) {
     try {
-        let id = parseInt(factoidID)
         let approveFactStmt = db.prepare('UPDATE factoid SET is_approved = 1 WHERE id = ?')
-        let result = approveFactStmt.run(id)
+        let result = approveFactStmt.run(factoidID)
         return result.changes > 0
     } catch (e) {
         console.log(e);
