@@ -174,8 +174,11 @@ router.post('/report', (req, res) => {
 router.delete('/attachment/:attachmentID', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
-        const attachmentID = req.params.attachmentID;
+        const attachmentID = parseInt(req.params.attachmentID);
 
+		if (isNaN(attachmentID)) {
+			return res.status(404).send({ message: 'Invalid attachment ID in request.' });
+		}
         const result = deleteAttachmentforFactoid(attachmentID)
 
         if (result) {
