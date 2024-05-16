@@ -191,6 +191,7 @@ router.delete('/attachment/:attachmentID', (req, res, next) => {
 
 // API endpoint to delete a tag for a given factoid ID and category ID
 router.delete('/tag/:factoidID/:categoryID', (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
     try {
         const factoidID = req.params.factoidID;
         const categoryID = req.params.categoryID;
@@ -210,9 +211,10 @@ router.delete('/tag/:factoidID/:categoryID', (req, res) => {
 
 // API endpoint to delete a fact and associated tags and attachments
 router.delete('/fact/:factoidID', (req, res) => {
-    const factoidID = req.params.factoidID;
-
+    res.setHeader('Content-Type', 'application/json')
     try {
+        const factoidID = req.params.factoidID;
+        
         // Delete all attachments associated with the factoid
         const attachmentsDeleted = deleteAllAttachmentsforFactoid(factoidID);
         if (!attachmentsDeleted) {
