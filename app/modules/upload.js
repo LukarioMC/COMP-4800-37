@@ -15,7 +15,13 @@ const storage = multer.diskStorage({
         cb(null, UPLOAD_DIR)
     },
     filename: (req, file, cb) => {
-        cb(null, req.res.locals.newName)
+        let prefix = `${Math.random()}-${Date.now()}`
+        let newName = prefix + path.extname(file.originalname)
+
+        if (!req.res.locals.filenames) req.res.locals.filenames = []
+        req.res.locals.filenames.push(newName)
+
+        cb(null, newName)
     }
 })
 
@@ -58,32 +64,7 @@ function filterFiles(req, file, cb) {
         return cb(new Error(`Only the following filetypes are supported - ${VALID_FILE_TYPES}`))
     }
 
-    let prefix = `${Math.random()}-${Date.now()}`
-    let newName = prefix + path.extname(file.originalname)
-    req.res.locals.newName = newName
-    try {
-        let id = insertAttachment(newName, inferType(newName))
-        req.res.locals.attIDs.push(id)
-        return cb(null, true)
-    } catch (err) {
-        cb(new Error(`Unable to upload attachment info to database due to error: ${err}`))
-    }
-}
-
-function insertAttachment(route, type) {
-    let insertAttachmentStmt = db.prepare(`
-        INSERT INTO attachment (link, type) 
-        VALUES (?, ?)
-        RETURNING id
-    `)
-    return insertAttachmentStmt.get(route, type).id
-}
-
-function inferType(name) {
-    if (/(jpg|jpeg|png|svg)$/.test(name)) return 'image'
-    if (/(gif)$/.test(name)) return 'gif'
-    if (/(mp3|mpeg)$/.test(name)) return 'audio'
-    else return 'other'
+    return cb(null, true)
 }
 
 module.exports = { 

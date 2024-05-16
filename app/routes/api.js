@@ -43,24 +43,23 @@ router.get('/fact', (req, res) => {
 });
 
 // API endpoint to add a new fact to the database.
-router.post('/fact', upload.array('files', 5), (req, res) => {
-    let { userId, content, discovery_date, note, tags, links } = req.body.data ? JSON.parse(req.body.data) : req.body
-    // v no longer fails foreign key constraint
-    const submitter_id = userId || ANON_USER_ID;
-    //const submitter_id = null;
+router.post('/fact', upload.array('attachment', 5), (req, res) => {
+    let { userId, content, discovery_date, note, tag, attachment } = req.body.data ? JSON.parse(req.body.data) : req.body
 
-    if (!content) {
-        res.status(400).json({ error: 'Content field is required' });
-        return;
-    }
+    if (!content) return res.status(400).json({ error: 'Content field is required' });
+    
+    let submitter_id = userId || ANON_USER_ID;
+    if (typeof attachment === 'string') attachment = [attachment]
+    let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
+    let tags = tag
+    
+    const addFactRes = addFact({ submitter_id, content, discovery_date, note, tags, attachments});
 
-    //const success = addFact({ submitter_id, content, note, discovery_date });
-    const success = addFact({ submitter_id, content, discovery_date, note, tags, links}, res, res.locals.attIDs);
-
-    if (success) {
-        res.status(201).json({ message: 'Fact added successfully' });
+    if (addFactRes.success) {
+        console.log(addFactRes.messages)
+        res.status(201).json({ message: 'Fact added successfully.' });
     } else {
-        res.status(500).json({ error: 'Failed to add fact' });
+        res.status(400).json({ messages: addFactRes.messages});
     }
 });
 

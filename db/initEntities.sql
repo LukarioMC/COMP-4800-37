@@ -49,7 +49,7 @@ CREATE TABLE "Tag" (
 DROP TABLE IF EXISTS attachment;
 CREATE TABLE "Attachment" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "factoid_id" INTEGER,
+    "factoid_id" INTEGER NOT NULL,
     "link" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     CONSTRAINT "Attachment_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,

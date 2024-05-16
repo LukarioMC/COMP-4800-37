@@ -1,5 +1,4 @@
 const db = require('better-sqlite3')('app.db');
-const { getTags } = require('./tag')
 
 /**
  * Given an id, returns the associated fact.
@@ -119,10 +118,17 @@ function filterFacts(facts, tags = []) {
  * @param {Object} factData An object containing data for the new fact.
  * @returns {boolean} True if the fact was successfully added, false otherwise.
  */
-function addFact(factData, res = undefined, attIDs = []) {
-    try {
-        let { submitter_id, content, discovery_date, note, tags, links} = factData;
+function addFact(factData) {
+    let res = {
+        success: true,
+        messages: []
+    }
 
+    try {
+        let { submitter_id, content, discovery_date, note, tags, attachments} = factData;
+        
+        tags = tags || []
+        attachments = attachments || []
         discovery_date = discovery_date || new Date().toUTCString()
 
         const stmt = db.prepare(`
@@ -130,38 +136,82 @@ function addFact(factData, res = undefined, attIDs = []) {
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
             RETURNING id
         `);
-        const id = stmt.get(submitter_id, content, discovery_date, note).id;
-        if (res) res.locals.factID = id
+        const factID = stmt.get(submitter_id, content, discovery_date, note).id
 
-        const addTagStmt = db.prepare(`
-            INSERT INTO tag
-            VALUES (?, (SELECT id FROM category WHERE name = ?))
-        `)
-        const insertTags = db.transaction((tags) => {
-            tags.forEach((tag) => {
-                try { 
-                    addTagStmt.run(id, tag) 
-                } catch (err) {
-                    if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
-                        console.log(`Category ${tag} does not exist`)
-                    } else {
-                        console.log(err)
-                    }
-                }
-            })
-        })
-        insertTags(tags)
-        insertLinkAttachments(links, id)
 
-        attIDs.forEach(attID => {
-            connectAttachment(id, attID)
-        })
 
-        return true;
-    } catch (e) {
-        console.log(e);
-        return false;
+        let insertTagRes = insertTags(tags, factID)
+        let insertAtchRes = insertAttachments(attachments, factID)
+
+        res.success = insertAtchRes.success && insertTagRes.success
+        res.messages = res.messages.concat(insertAtchRes.messages, insertTagRes.messages)
+    } catch (err) {
+        console.log(err)
+        res.success = false
+        res.messages.push(`Error inserting fact into database`)
     }
+
+    return res
+}
+
+function insertAttachments(paths, factID) {
+    let res = {
+        success: true,
+        messages: []
+    }
+
+    let insertAttachmentStmt = db.prepare(`
+        INSERT INTO attachment (factoid_id, link, type) 
+        VALUES (?, ?, ?)
+    `)
+    
+    paths.forEach((path) => {
+        try {
+            insertAttachmentStmt.run(factID, path, inferType(path))
+        } catch (err) {
+            res.success = false
+            res.messages.push(`Could not insert attachment for file ${path} into the database.`)
+        }
+    })
+
+    return res
+}
+
+function inferType(name) {
+    if (/(jpg|jpeg|png|svg)$/.test(name)) return 'image'
+    if (/(gif)$/.test(name)) return 'gif'
+    if (/(mp3|mpeg)$/.test(name)) return 'audio'
+    return 'website'
+}
+
+
+function insertTags(tags, id) {
+    let res = {
+        success: true,
+        messages: []
+    }
+
+    const addTagStmt = db.prepare(`
+        INSERT INTO tag
+        VALUES (?, (SELECT id FROM category WHERE name = ?))
+    `)
+
+    db.transaction(() => {
+        tags.forEach((tag) => {
+            try { 
+                addTagStmt.run(id, tag) 
+            } catch (err) {
+                if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
+                    res.messages.push(`The category ${tag} does not exist.`)
+                } else {
+                    res.success = false
+                    res.messages.push(`Error: ${err.message}`)
+                }
+            }
+        })
+    })()
+
+    return res
 }
 
 /**
@@ -264,28 +314,6 @@ function updateTags(factID, tags) {
     } catch (e) {
         return false
     }
-}
-
-function insertLinkAttachments(attachments, factID) {
-    const insertAttStmt = db.prepare(`
-        INSERT INTO attachment (factoid_id, link, type)
-        VALUES (?, ?, ?)
-    `)
-    attachments.forEach((att) => {
-        try {
-            insertAttStmt.run(factID, att.link, att.type)
-        } catch (err) {
-            console.log(err)
-        }
-    })
-}
-
-function connectAttachment(factID, attID) {
-    db.prepare(`
-        UPDATE attachment
-        SET factoid_id = ?
-        WHERE id = ?
-    `).run(factID, attID)
 }
 
 /**
