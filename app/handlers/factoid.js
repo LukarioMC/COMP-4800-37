@@ -117,14 +117,14 @@ function filterFacts(facts, tags = []) {
  * Adds a new fact to the database.
  * @param {Object} factData An object containing data for the new fact.
  */
-function addFact(factData) {
+function addFact({ 
+    submitter_id, 
+    content, 
+    discovery_date = new Date().toUTCString(), 
+    note, tags = [], 
+    attachments = []}) 
+    {
     try {
-        let { submitter_id, content, discovery_date, note, tags, attachments} = factData;
-        
-        tags = tags || []
-        attachments = attachments || []
-        discovery_date = discovery_date || new Date().toUTCString()
-
         const stmt = db.prepare(`
             INSERT INTO Factoid (submitter_id, content, posting_date, discovery_date, note, is_approved, approval_date)
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
@@ -148,7 +148,7 @@ function addFact(factData) {
  * @param {string} paths string containing filename
  * @param {integer} factID fact ID
  */
-function insertAttachments(paths, factID) {
+function insertAttachments(paths = [], factID) {
 
     let insertAttachmentStmt = db.prepare(`
         INSERT INTO attachment (factoid_id, link, type) 
@@ -181,7 +181,7 @@ function inferType(name) {
  * @param {Array<string>} tags Name of the tag category. Must be a pre-existing category in the database.
  * @param {integer} id Fact ID
  */
-function insertTags(tags, id) {
+function insertTags(tags = [], id) {
     const addTagStmt = db.prepare(`
         INSERT INTO tag
         VALUES (?, (SELECT id FROM category WHERE name = ?))

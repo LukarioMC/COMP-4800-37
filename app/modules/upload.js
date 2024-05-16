@@ -72,7 +72,6 @@ function filterFiles(req, file, cb) {
  * @param {Array<string>} filenames names of the files in the uploads dir to be deleted.
  */
 function deleteUploads(filenames = []) {
-    console.log(`deleting ${filenames}`)
     filenames.forEach((filename) => {
         try {
             fs.unlinkSync(`./${UPLOAD_DIR}/${filename}`)
