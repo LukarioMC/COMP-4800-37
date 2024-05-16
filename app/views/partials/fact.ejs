@@ -17,7 +17,7 @@
             </div>
             <!-- Button trigger modal -->
             <br/>
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
                 <!-- TODO: Link edit fact page here -->
                 <% console.log(typeof isAdmin) %>
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="reportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal fade" id="reportModal-<%= factoid.id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
