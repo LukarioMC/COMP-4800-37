@@ -254,8 +254,11 @@ router.delete('/fact/:factoidID', (req, res) => {
 router.put('/approve/:factoidID', (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
-        let factoidID = req.params.factoidID
-
+        const factoidID = parseInt(req.params.factoidID);
+        
+		if (isNaN(factoidID)) {
+			return res.status(404).send({ message: 'Invalid factoid ID in request.' });
+		}
         const approved = approveFactByID(factoidID)
         if (approved) {
             return res.status(200).send({ message: "Fact approved successfully." })
