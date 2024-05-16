@@ -118,15 +118,17 @@ function filterFacts(facts, tags = []) {
  * @param {Object} factData An object containing data for the new fact.
  * @returns {boolean} True if the fact was successfully added, false otherwise.
  */
-function addFact(factData) {
+function addFact(factData, res = undefined) {
     try {
         const { submitter_id, content, discovery_date, note } = factData;
 
         const stmt = db.prepare(`
             INSERT INTO Factoid (submitter_id, content, posting_date, discovery_date, note, is_approved, approval_date)
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
+            RETURNING id
         `);
-        stmt.run(submitter_id, content, discovery_date, note);
+        let id = stmt.get(submitter_id, content, discovery_date, note).id
+        if (res) res.locals.factID = id
         return true;
     } catch (e) {
         console.log(e);

@@ -1,11 +1,12 @@
 const multer = require('multer')
 const fs = require('fs')
 const path = require('path')
+const db = require('better-sqlite3')('app.db');
 require('dotenv').config()
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || 'uploads'
 const MAX_UPLOAD_DIR_SIZE = process.env.MAX_UPLOAD_DIR_SIZE || 1024 * Math.pow(1024, 3)
-const VALID_FILE_TYPES = /(jpg|jpeg|png|svg|webp|gif|mp3)$/
+const VALID_FILE_TYPES = /(jpg|jpeg|png|svg|webp|gif|mp3|mpeg)$/
 
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR)
 
@@ -14,10 +15,7 @@ const storage = multer.diskStorage({
         cb(null, UPLOAD_DIR)
     },
     filename: (req, file, cb) => {
-        let prefix = `${Math.random()}-${Date.now()}`
-        let name = prefix + path.extname(file.originalname)
-        insertAttachment(req.params.factID, name, inferType())
-        cb(null, name)
+        cb(null, req.res.locals.newName)
     }
 })
 
@@ -53,10 +51,21 @@ function filterFiles(req, file, cb) {
 
     let validMimetype = VALID_FILE_TYPES.test(file.mimetype)
     let validExtname = VALID_FILE_TYPES.test(path.extname(file.originalname).toLowerCase())
+    console.log(file.mimetype, file.originalname)
 
-    if (validMimetype && validExtname) return cb(null, true)
+    if (!validMimetype || !validExtname) { 
+        return cb(new Error(`Only the following filetypes are supported - ${VALID_FILE_TYPES}`))
+    }
 
-    return cb(new Error(`Only the following filetypes are supported - ${VALID_FILE_TYPES}`))
+    let prefix = `${Math.random()}-${Date.now()}`
+    let newName = prefix + path.extname(file.originalname)
+    req.res.locals.newName = newName
+    try {
+        insertAttachment(req.res.locals.factID, newName, inferType(newName))
+        return cb(null, true)
+    } catch (err) {
+        cb(new Error(`Unable to upload attachment info to database due to error: ${err}`))
+    }
 }
 
 function insertAttachment(factID, route, type) {
@@ -70,7 +79,7 @@ function insertAttachment(factID, route, type) {
 function inferType(name) {
     if (/(jpg|jpeg|png|svg)$/.test(name)) return 'image'
     if (/(gif)$/.test(name)) return 'gif'
-    if (/(mp3)$/.test(name)) return 'audio'
+    if (/(mp3|mpeg)$/.test(name)) return 'audio'
     else return 'other'
 }
 

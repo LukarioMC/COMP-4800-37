@@ -56,7 +56,7 @@ router.post('/fact', (req, res) => {
     }
 
     //const success = addFact({ submitter_id, content, note, discovery_date });
-    const success = addFact({ submitter_id, content, discovery_date, note });
+    const success = addFact({ submitter_id, content, discovery_date, note }, res);
 
     if (success) {
         res.status(201).json({ message: 'Fact added successfully' });
@@ -167,9 +167,10 @@ router.post('/report', (req, res) => {
     res.redirect('back');
 });
 
-router.post('/attachment', upload.single('photo'), (req, res) => {
-    console.log(req)
+router.post('/attachment', (req, res, next) => {
     res.status(200).json({message: 'Success!'})
-})
+    res.locals.factID = 1
+    next()
+}, upload.array('file', 3))
 
 module.exports = router;
