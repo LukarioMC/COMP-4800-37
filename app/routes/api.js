@@ -217,8 +217,11 @@ router.delete('/tag/:factoidID/:categoryID', (req, res) => {
 router.delete('/fact/:factoidID', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     try {
-        const factoidID = req.params.factoidID;
+        const factoidID = parseInt(req.params.factoidID);
         
+		if (isNaN(factoidID)) {
+			return res.status(404).send({ message: 'Invalid factoid ID in request.' });
+		}
         // Delete all attachments associated with the factoid
         const attachmentsDeleted = deleteAllAttachmentsforFactoid(factoidID);
         if (!attachmentsDeleted) {
