@@ -43,8 +43,8 @@ router.get('/fact', (req, res) => {
 });
 
 // API endpoint to add a new fact to the database.
-router.post('/fact', (req, res) => {
-    const { userId, content, discovery_date, note, tags } = req.body;
+router.post('/fact', upload.array('files'), (req, res) => {
+    const { userId, content, discovery_date, note, tags, links } = req.body;
 
     // v no longer fails foreign key constraint
     const submitter_id = userId || ANON_USER_ID;
@@ -56,14 +56,14 @@ router.post('/fact', (req, res) => {
     }
 
     //const success = addFact({ submitter_id, content, note, discovery_date });
-    const success = addFact({ submitter_id, content, discovery_date, note, tags }, res);
+    const success = addFact({ submitter_id, content, discovery_date, note, tags, links }, res);
 
     if (success) {
         res.status(201).json({ message: 'Fact added successfully' });
     } else {
         res.status(500).json({ error: 'Failed to add fact' });
     }
-});
+}, upload.array('files', 5));
 
 // API endpoint to update an existing fact in the database.
 router.put('/fact/:id', (req, res) => {

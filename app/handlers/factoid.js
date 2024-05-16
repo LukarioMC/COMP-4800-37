@@ -121,8 +121,12 @@ function filterFacts(facts, tags = []) {
  */
 function addFact(factData, res = undefined) {
     try {
-        let { submitter_id, content, discovery_date, note, tags} = factData;
+        let { submitter_id, content, discovery_date, note, tags, links} = factData;
         tags = tags || []
+        if ((typeof tags) === 'string') tags = [tags]
+        links = links || []
+        if ((typeof links) === 'string') links = [JSON.parse(links)]
+
         discovery_date = discovery_date || new Date().toUTCString()
 
         const stmt = db.prepare(`
@@ -151,6 +155,7 @@ function addFact(factData, res = undefined) {
             })
         })
         insertTags(tags)
+        insertLinkAttachments(links, id)
 
         return true;
     } catch (e) {
@@ -259,6 +264,20 @@ function updateTags(factID, tags) {
     } catch (e) {
         return false
     }
+}
+
+function insertLinkAttachments(attachments, factID) {
+    const insertAttStmt = db.prepare(`
+        INSERT INTO attachment (factoid_id, link, type)
+        VALUES (?, ?, ?)
+    `)
+    attachments.forEach((att) => {
+        try {
+            insertAttStmt.run(factID, att.link, att.type)
+        } catch (err) {
+            console.log(err)
+        }
+    })
 }
 
 /**

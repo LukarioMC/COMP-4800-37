@@ -49,6 +49,13 @@ function isUploadDirFull() {
 function filterFiles(req, file, cb) {
     if (isUploadDirFull()) return cb(new Error('Upload directory is full.'))
 
+    let approvedFiles = req.res.locals.passedFiles
+    if (!approvedFiles) approvedFiles = []
+    if (!approvedFiles.includes(file)) {
+        approvedFiles.push(file)
+        return cb(null, false)
+    }
+
     let validMimetype = VALID_FILE_TYPES.test(file.mimetype)
     let validExtname = VALID_FILE_TYPES.test(path.extname(file.originalname).toLowerCase())
     console.log(file.mimetype, file.originalname)

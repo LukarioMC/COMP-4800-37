@@ -6,6 +6,31 @@
         <input type="file" class="form-control" name="file">
         <input type="submit" value="Submit">
     </form>
+
+    <form action="/api/fact" method="POST" enctype="multipart/form-data">
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" name="userId"><br>
+    
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" required></textarea><br>
+    
+        <label for="discovery_date">Discovery Date:</label>
+        <input type="date" id="discovery_date" name="discovery_date"><br>
+    
+        <label for="note">Note:</label>
+        <textarea id="note" name="note"></textarea><br>
+    
+        <label for="tags">Tags:</label>
+        <input type="text" id="tags" name="tags"><br>
+
+        <label for="links">Links:</label>
+        <input type="text" id="links" name="links"><br>
+    
+        <label for="attachments">Attachments:</label>
+        <input type="file" id="attachments" name="attachments[]" multiple><br>
+    
+        <button type="submit">Submit</button>
+    </form>
 </main>
 
 <%- include('../partials/footer'); %>
