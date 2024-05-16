@@ -1,5 +1,4 @@
 const db = require('better-sqlite3')('app.db');
-const { getTags } = require('./tag')
 
 /**
  * Given an id, returns the associated fact.
