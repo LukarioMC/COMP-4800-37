@@ -193,10 +193,14 @@ router.delete('/attachment/:attachmentID', (req, res, next) => {
 router.delete('/tag/:factoidID/:categoryID', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     try {
-        const factoidID = req.params.factoidID;
-        const categoryID = req.params.categoryID;
+        const factoidID = parseInt(req.params.factoidID);
+        const categoryID = parseInt(req.params.categoryID);
 
-        const result = deleteTagforFactoid(parseInt(factoidID), parseInt(categoryID));
+		if (isNaN(factoidID) || isNaN(categoryID)) {
+			return res.status(404).send({ message: 'Invalid fact or category in request.' });
+		}
+
+        const result = deleteTagforFactoid(factoidID, categoryID);
 
         if (result) {
             return res.status(200).send({ message: 'Tag deleted successfully.' });
