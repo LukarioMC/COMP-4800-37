@@ -7,6 +7,7 @@ const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid } = require('../handlers/attachment');
+const { rejectUnauthorizedRequest } = require('../middleware');
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -66,10 +67,7 @@ router.post('/fact', (req, res) => {
 });
 
 // API endpoint to update an existing fact in the database.
-router.put('/fact/:id', (req, res) => {
-    if (!req.user || !req.user.isAdmin) {
-        return res.status(403).json({error: 'Only admin can update facts.'})
-    }
+router.put('/fact/:id', rejectUnauthorizedRequest, (req, res) => {
     const factID = req.params.id;
     const { content, note, discovery_date, tags } = req.body;
 
@@ -118,11 +116,7 @@ router.get('/tags', (req, res) => {
 });
 
 // Route to add a new tag.
-router.put('/tag', (req, res) => {
-    // TODO: Change with middleware once merged/pushed
-    if (!req.user || !req.user.isAdmin) {
-        return res.status(403).json({message: 'Must have admin access to create tags'})
-    }
+router.put('/tag', rejectUnauthorizedRequest, (req, res) => {
     if (req.body.tagName) {
         let queryRes = defineTag(req.body.tagName, req.body.isPrimary);
         if (queryRes.successful) {
@@ -171,7 +165,7 @@ router.post('/report', (req, res) => {
 });
 
 // API endpoint to delete an attachment for a given attachment ID
-router.delete('/attachment/:attachmentID', (req, res, next) => {
+router.delete('/attachment/:attachmentID', rejectUnauthorizedRequest, (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         const attachmentID = parseInt(req.params.attachmentID);
@@ -193,7 +187,7 @@ router.delete('/attachment/:attachmentID', (req, res, next) => {
 });
 
 // API endpoint to delete a tag for a given factoid ID and category ID
-router.delete('/tag/:factoidID/:categoryID', (req, res) => {
+router.delete('/tag/:factoidID/:categoryID', rejectUnauthorizedRequest, (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         const factoidID = parseInt(req.params.factoidID);
@@ -217,7 +211,7 @@ router.delete('/tag/:factoidID/:categoryID', (req, res) => {
 });
 
 // API endpoint to delete a fact and associated tags and attachments
-router.delete('/fact/:factoidID', (req, res) => {
+router.delete('/fact/:factoidID', rejectUnauthorizedRequest, (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         const factoidID = parseInt(req.params.factoidID);
@@ -251,7 +245,7 @@ router.delete('/fact/:factoidID', (req, res) => {
 });
 
 // API endpoint to approve a fact with the given id.
-router.put('/approve/:factoidID', (req, res, next) => {
+router.put('/approve/:factoidID', rejectUnauthorizedRequest, (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     try {
         const factoidID = parseInt(req.params.factoidID);
