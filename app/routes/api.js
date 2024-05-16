@@ -4,7 +4,7 @@
  */
 const express = require('express');
 const router = express.Router();
-const { getFacts, getFactByID, deleteFactByID, approveFactByID } = require('../handlers/factoid');
+const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid } = require('../handlers/attachment');
 
@@ -19,13 +19,18 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+const ANON_USER_ID = 'zzz3737'
 
 // API endpoint to get all facts that fulfill the given condition(s).
-// Accepts query param 'tag' for filtering by tag. Can be given multiple tag arguments for finer filtering.
+// Supports optional tag filtering, text searching and pagination.
 router.get('/fact', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
+    if ((req.query.pageNum && req.query.pageNum < 1) || 
+        (req.query.pageSize && req.query.pageSize < 0)) {
+            return res.status(400).json({message: 'Page number and size must be greater than 0.'})
+        }
     try {
-        let facts = getFacts(req.query.tag);
+        let facts = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
         let publicFieldFacts = facts.map((fact) => {
             let { is_approved, approval_date, ...publicFields } = fact;
             return publicFields;
@@ -34,6 +39,48 @@ router.get('/fact', (req, res) => {
     } catch (e) {
         console.log(e);
         return res.status(500).send({ message: 'Server error.' });
+    }
+});
+
+// API endpoint to add a new fact to the database.
+router.post('/fact', (req, res) => {
+    const { userId, content, discovery_date, note, tags } = req.body;
+
+    // v no longer fails foreign key constraint
+    const submitter_id = userId || ANON_USER_ID;
+    //const submitter_id = null;
+
+    if (!content) {
+        res.status(400).json({ error: 'Content field is required' });
+        return;
+    }
+
+    //const success = addFact({ submitter_id, content, note, discovery_date });
+    const success = addFact({ submitter_id, content, discovery_date, note, tags });
+
+    if (success) {
+        res.status(201).json({ message: 'Fact added successfully' });
+    } else {
+        res.status(500).json({ error: 'Failed to add fact' });
+    }
+});
+
+// API endpoint to update an existing fact in the database.
+router.put('/fact/:id', (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({error: 'Only admin can update facts.'})
+    }
+    const factID = req.params.id;
+    const { content, note, discovery_date, tags } = req.body;
+
+    const result = updateFact(factID, { content, note, discovery_date, tags });
+
+    if (result.success) {
+        res.status(200).json({ message: 'Fact updated successfully' });
+    } else if (result.message === 'Fact not found') {
+        res.status(404).json({ error: 'Fact not found' });
+    } else {
+        res.status(500).json({ error: 'Failed to update fact' });
     }
 });
 
@@ -72,6 +119,10 @@ router.get('/tags', (req, res) => {
 
 // Route to add a new tag.
 router.put('/tag', (req, res) => {
+    // TODO: Change with middleware once merged/pushed
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({message: 'Must have admin access to create tags'})
+    }
     if (req.body.tagName) {
         let queryRes = defineTag(req.body.tagName, req.body.isPrimary);
         if (queryRes.successful) {
@@ -103,14 +154,10 @@ router.post('/report', (req, res) => {
         to: process.env.EMAIL_RECEIVER,
         subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
         text:
-            'Reported by: ' +
-            reporter +
-            '\nFact #' +
-            factID +
-            '\nFact: ' +
-            factContent +
-            '\n\n' +
-            reportContent,
+            'Reported by: ' + reporter +
+            '\nFact #' + factID +
+            '\nFact: ' + factContent +
+            '\n\nIssue: ' + reportContent,
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {

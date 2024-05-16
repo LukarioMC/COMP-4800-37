@@ -72,11 +72,18 @@ components:
           type: string
         is_primary:
           type: boolean
+    ErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'An error message.'
+          
 
 paths:
   /api/fact:
     get:
-      summary: Returns a list of facts that have been optionally filtered by tags.
+      summary: Returns a list of facts that have been optionally filtered by tags and text content. Optionally paginated.
       parameters:
         - name: tag
           in: query
@@ -84,6 +91,24 @@ paths:
           description: A category to filter facts by.
           schema:
             type: string
+        - name: searchText
+          in: query
+          required: false
+          description: Text to look for in facts.
+          schema:
+            type: string
+        - name: pageNum
+          in: query
+          required: false
+          description: Requested fact page number. Must be > 0.
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          required: false
+          description: Number of facts to be returned. Must be > 0.
+          schema:
+            type: integer
       responses:
         '200':
           description: A list of facts.
@@ -93,8 +118,29 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Fact'
+        '400':
+          description: 'Error if page number and size are less than 0.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         '500':
           description: Server error.
+
+    post:
+      summary: 
+      requestBody:
+        description: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  description: A list of tag names.
+                  type: array
+                  items:
+                    type: string
   /api/fact/{factID}:
     get:
       summary: Returns a fact by ID.
@@ -110,27 +156,35 @@ paths:
           description: A fact with the corresponding ID.
           content:
             application/json:
-              $ref: '#/components/schemas/Fact'
+              schema:
+                $ref: '#/components/schemas/Fact'
         '404':
           description: Fact not found.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: An error message.
+                $ref: '#/components/schemas/ErrorMessage'
         '500':
           description: Server error.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
+                $ref: '#/components/schemas/ErrorMessage'
+    put:
+      summary: 
+      requestBody:
+        description: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  description: A list of tag names.
+                  type: array
+                  items:
                     type: string
-                    description: An error message.
+
   /api/report:
     post:
       summary: Sends an email report to the admin with information about the selected fact. The email functionality is configured with host, port, and sender email/password.

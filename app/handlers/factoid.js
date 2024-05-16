@@ -1,4 +1,5 @@
 const db = require('better-sqlite3')('app.db');
+const { getTags } = require('./tag')
 
 /**
  * Given an id, returns the associated fact.
@@ -42,11 +43,12 @@ function getFactByID(factID, isApproved = true) {
 }
 
 /**
- * Given a list of tags, returns facts filtering out those who do not have all the given tags.
- * @param {*} tags a list of tag strings
- * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags. Returns empty list if error occurs.
+ * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
+ * @param {Array} tags a list of tag strings
+ * @param {string} searchText search text
+ * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(tags = undefined) {
+function getFacts(tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
     try {
         let getFactsStmt = db.prepare(`
 				SELECT 
@@ -72,9 +74,24 @@ function getFacts(tags = undefined) {
 
         let filteredFacts = filterFacts(unfilteredFacts, tags);
 
-        return filteredFacts.map((fact) => {
+        let fetchedFacts = filteredFacts.map((fact) => {
             return getFactByID(fact.id);
         });
+
+        if (searchText) {
+            searchText = searchText.toLowerCase()
+            fetchedFacts = fetchedFacts.filter(fact => {
+                if (fact.note && fact.note.toLowerCase().includes(searchText)) return true
+                else return fact.content.toLowerCase().includes(searchText)
+            })
+        }
+
+        if (pageNum && pageSize && pageNum > 0 && pageSize > 0) {
+            let offset = (pageNum - 1) * pageSize
+            fetchedFacts = fetchedFacts.slice(offset, offset + pageSize)
+        }
+
+        return fetchedFacts
     } catch (e) {
         console.log(e);
         return [];
@@ -108,6 +125,50 @@ function deleteFactByID(factoidID) {
     }
 }
 
+/**
+ * Adds a new fact to the database.
+ * @param {Object} factData An object containing data for the new fact.
+ * @returns {boolean} True if the fact was successfully added, false otherwise.
+ */
+function addFact(factData) {
+    try {
+        let { submitter_id, content, discovery_date, note, tags} = factData;
+        tags = tags || []
+        discovery_date = discovery_date || new Date().toUTCString()
+
+        const stmt = db.prepare(`
+            INSERT INTO Factoid (submitter_id, content, posting_date, discovery_date, note, is_approved, approval_date)
+            VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
+            RETURNING id
+        `);
+        const id = stmt.get(submitter_id, content, discovery_date, note).id;
+
+        const addTagStmt = db.prepare(`
+            INSERT INTO tag
+            VALUES (?, (SELECT id FROM category WHERE name = ?))
+        `)
+        const insertTags = db.transaction((tags) => {
+            tags.forEach((tag) => {
+                try { 
+                    addTagStmt.run(id, tag) 
+                } catch (err) {
+                    if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
+                        console.log(`Category ${tag} does not exist`)
+                    } else {
+                        console.log(err)
+                    }
+                }
+            })
+        })
+        insertTags(tags)
+
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
 function approveFactByID(factoidID) {
     try {
         let id = parseInt(factoidID)
@@ -120,9 +181,128 @@ function approveFactByID(factoidID) {
     }
 }
 
+/**
+ * Updates an existing fact in the database.
+ * @param {number} factID The ID of the fact to be updated.
+ * @param {Object} updatedData An object containing updated data for the fact.
+ * @returns {Object} An object containing the result of the update operation and a message.
+ */
+function updateFact(factID, updatedData) {
+    try {
+        const { content, note, discovery_date, tags } = updatedData;
+
+        // Retrieve the current fact data
+        const currentFactStmt = db.prepare('SELECT content, note, discovery_date FROM Factoid WHERE id = ?');
+        const currentFact = currentFactStmt.get(factID);
+
+        if (!currentFact) {
+            console.log(`Fact with ID ${factID} not found`);
+            return { success: false, message: 'Fact not found' };
+        }
+
+        // Use existing values if the new values are not provided
+        const newContent = content || currentFact.content;
+        const newNote = note || currentFact.note;
+        const newDiscoveryDate = discovery_date || currentFact.discovery_date;
+
+        const stmt = db.prepare(`
+            UPDATE Factoid 
+            SET content = ?, note = ?, discovery_date = ?
+            WHERE id = ?
+        `);
+        stmt.run(newContent, newNote, newDiscoveryDate, factID);
+
+        if (!updateTags(factID, tags || [])) {
+            return {success: false, message: 'Failed to update tags.'}
+        }
+
+        return { success: true };
+    } catch (e) {
+        console.log(e);
+        return { success: false, message: 'Server error' };
+    }
+}
+
+/**
+ * Updates the tags of a fact so that the only tags in the database will be those in the given tags.
+ * @param {*} factID ID of the fact whose tags will be updated.
+ * @param {*} tags Names of the given fact's tags.
+ * @returns true if query was successful, false otherwise.
+ */
+function updateTags(factID, tags) {
+    let update = db.transaction(() => {
+        let currTags = db.prepare(`
+            SELECT id, name
+            FROM tag 
+                JOIN category 
+                ON tag.category_id = category.id
+            WHERE factoid_id = ?
+        `).all(factID)
+
+        let currTagNames = currTags.map(tag => {return tag.name})
+        tags.forEach((tag) => {
+            if (!currTagNames.includes(tag)) {
+                const addTagStmt = db.prepare(`
+                    INSERT INTO tag
+                    VALUES (?, (SELECT id FROM category WHERE name = ?))
+                `)
+
+                try { 
+                    addTagStmt.run(factID, tag)
+                } catch (err) {
+                    if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
+                        console.log(`Category ${tag} does not exist`)
+                    } else {
+                        console.log(err)
+                    }
+                }
+            }
+        })
+
+        currTags.forEach(currTag => {
+            if (!tags.includes(currTag.name)) {
+                const deleteTagStmt = db.prepare(`
+                    DELETE FROM tag
+                    WHERE category_id = ? AND factoid_id = ?
+                `)
+                try {
+                    deleteTagStmt.run(currTag.id, factID)
+                } catch (err) {
+                    console.log(err)
+                }
+                
+            }
+        })
+    })
+
+    try {
+        update()
+        return true
+    } catch (e) {
+        return false
+    }
+}
+
+/**
+ * Returns a random approved fact.
+ * @returns A random approved fact.
+ */
+function getRandomFact() {
+    try {
+        let randomID = db.prepare(`SELECT id FROM factoid WHERE is_approved ORDER BY RANDOM() LIMIT 1`).get().id
+        return getFactByID(randomID)     
+    } catch (err) {
+        console.log(err)
+        return null
+    }
+}
+
 module.exports = {
     getFactByID,
     getFacts,
+    addFact,
+    updateFact,
+    getRandomFact,
     deleteFactByID,
     approveFactByID
 };

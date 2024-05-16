@@ -4,7 +4,7 @@
   "description": "Recreation of the historical 37 website which contains facts about the number.",
   "main": "app/index.js",
   "scripts": {
-    "start": "node app/index.js",
+    "start": "nodemon --no-watch app/index.js",
     "dev": "nodemon app/index.js",
     "resetdb": "node db/configDB.js"
   },
@@ -28,14 +28,12 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "nodemailer": "^6.9.13",
+    "nodemon": "^3.1.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "password-validator": "^5.3.0",
     "path": "^0.12.7",
     "swagger-ui-express": "^5.0.0",
     "yaml": "^2.4.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.0"
   }
 }
