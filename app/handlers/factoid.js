@@ -274,10 +274,26 @@ function getRandomFact() {
     }
 }
 
+/**
+ * Returns all unapproved facts
+ * @returns All unapproved facts
+ */
+function getUnapprovedFacts() {
+    try {
+        const unapprovedFactsStmt = db.prepare(`SELECT * FROM factoid WHERE NOT is_approved ORDER BY posting_date`);
+        const unapprovedFacts = unapprovedFactsStmt.all();
+        return unapprovedFacts;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+
 module.exports = {
     getFactByID,
     getFacts,
     addFact,
     updateFact,
-    getRandomFact
+    getRandomFact,
+    getUnapprovedFacts
 };

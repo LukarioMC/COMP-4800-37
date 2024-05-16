@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
 const { isAdmin } = require('../utils/adminUtils');
-const { getFacts, getRandomFact } = require('../handlers/factoid');
+const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
 const { getTags } = require('../handlers/tag')
 
 const PAGE_SIZE = 5
@@ -34,8 +34,11 @@ router.get('/admin', isAdmin, (req, res) => {
                 tags: 'nature',
             },
         ];
+
+        const unapprovedFacts = getUnapprovedFacts();
+        console.log(unapprovedFacts);
         const adminName = req.user?.id;
-        res.render('pages/admin-dashboard', { submissions: testData, adminName });
+        res.render('pages/admin-dashboard', { submissions: unapprovedFacts, adminName });
 
 });
 

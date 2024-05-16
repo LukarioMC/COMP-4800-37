@@ -33,9 +33,9 @@
         <% if (submissions.length > 0) { %>
             <% submissions.forEach(function (submission) { %>
                 <div class="row text-start text-wrap pb-4">
-                    <div class="col"><%= submission.dateSubmitted %></div>
-                    <div class="col"><%= submission.user %></div>
-                    <div class="col"><%= submission.fact %></div>
+                    <div class="col"><%= submission.posting_date %></div>
+                    <div class="col"><%= submission.submitter_id %></div>
+                    <div class="col"><%= submission.content %></div>
                     <div class="col"><%= submission.note %></div>
                     <div class="col"><%= submission.tags %></div>
                     <div class="col">
