@@ -53,13 +53,11 @@ router.post('/fact', upload.array('attachment', 5), (req, res) => {
     let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
     let tags = typeof tag === 'string' ? [tag] : tag
 
-    const addFactRes = addFact({ submitter_id, content, discovery_date, note, tags, attachments});
-
-    if (addFactRes.success) {
-        console.log(addFactRes.messages)
-        res.status(201).json({ message: 'Fact added successfully.' });
-    } else {
-        res.status(400).json({ messages: addFactRes.messages});
+    try {
+        addFact({ submitter_id, content, discovery_date, note, tags, attachments});
+        return res.status(201).json({message: 'Successfully added fact.'})
+    } catch (err) {
+        return res.status(400).json({message: err.message})
     }
 });
 

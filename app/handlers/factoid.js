@@ -116,14 +116,8 @@ function filterFacts(facts, tags = []) {
 /**
  * Adds a new fact to the database.
  * @param {Object} factData An object containing data for the new fact.
- * @returns {boolean} True if the fact was successfully added, false otherwise.
  */
 function addFact(factData) {
-    let res = {
-        success: true,
-        messages: []
-    }
-
     try {
         let { submitter_id, content, discovery_date, note, tags, attachments} = factData;
         
@@ -136,29 +130,25 @@ function addFact(factData) {
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
             RETURNING id
         `);
-        const factID = stmt.get(submitter_id, content, discovery_date, note).id
 
+        db.transaction(() => {
+            const factID = stmt.get(submitter_id, content, discovery_date, note).id
 
+            insertTags(tags, factID)
+            insertAttachments(attachments, factID)
+        })()
 
-        let insertTagRes = insertTags(tags, factID)
-        let insertAtchRes = insertAttachments(attachments, factID)
-
-        res.success = insertAtchRes.success && insertTagRes.success
-        res.messages = res.messages.concat(insertAtchRes.messages, insertTagRes.messages)
     } catch (err) {
-        console.log(err)
-        res.success = false
-        res.messages.push(`Error inserting fact into database`)
+        throw new Error(`Failed to add fact because -> ${err.message}`)
     }
-
-    return res
 }
 
+/**
+ * Creates attachments in the database with the given path and fact ID.
+ * @param {string} paths string containing filename
+ * @param {integer} factID fact ID
+ */
 function insertAttachments(paths, factID) {
-    let res = {
-        success: true,
-        messages: []
-    }
 
     let insertAttachmentStmt = db.prepare(`
         INSERT INTO attachment (factoid_id, link, type) 
@@ -169,14 +159,16 @@ function insertAttachments(paths, factID) {
         try {
             insertAttachmentStmt.run(factID, path, inferType(path))
         } catch (err) {
-            res.success = false
-            res.messages.push(`Could not insert attachment for file ${path} into the database.`)
+            throw new Error(`Failed to insert attachment ${path} because -> ${err.message}`)
         }
     })
-
-    return res
 }
 
+/**
+ * Infers the type of the attachment based on the extension name.
+ * @param {string} name file/path name.
+ * @returns attachment type as a string.
+ */
 function inferType(name) {
     if (/(jpg|jpeg|png|svg)$/.test(name)) return 'image'
     if (/(gif)$/.test(name)) return 'gif'
@@ -184,34 +176,29 @@ function inferType(name) {
     return 'website'
 }
 
-
+/**
+ * Inserts tags associated with the fact with the given id.
+ * @param {Array<string>} tags Name of the tag category. Must be a pre-existing category in the database.
+ * @param {integer} id Fact ID
+ */
 function insertTags(tags, id) {
-    let res = {
-        success: true,
-        messages: []
-    }
-
     const addTagStmt = db.prepare(`
         INSERT INTO tag
         VALUES (?, (SELECT id FROM category WHERE name = ?))
     `)
 
-    db.transaction(() => {
-        tags.forEach((tag) => {
-            try { 
-                addTagStmt.run(id, tag) 
-            } catch (err) {
-                if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
-                    res.messages.push(`The category ${tag} does not exist.`)
-                } else {
-                    res.success = false
-                    res.messages.push(`Error: ${err.message}`)
-                }
+    tags.forEach((tag) => {
+        try { 
+            addTagStmt.run(id, tag) 
+        } catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
+                throw new Error(`Failed to add tag ${tag} because -> Category ${tag} does not exist.`)
+            } else {
+                throw new Error(`Failed to add tag ${tag} because -> ${err.message}.`)
             }
-        })
-    })()
+        }
+    })
 
-    return res
 }
 
 /**

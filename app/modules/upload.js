@@ -5,7 +5,7 @@ const db = require('better-sqlite3')('app.db');
 require('dotenv').config()
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || 'uploads'
-const MAX_UPLOAD_DIR_SIZE = process.env.MAX_UPLOAD_DIR_SIZE || 1024 * Math.pow(1024, 3)
+const MAX_UPLOAD_DIR_SIZE = process.env.MAX_UPLOAD_DIR_SIZE || 1 * Math.pow(1024, 3)
 const VALID_FILE_TYPES = /(jpg|jpeg|png|svg|webp|gif|mp3|mpeg)$/
 
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR)
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const maxFileSize = 1 * 1024 * 1024
+const maxFileSize = 10 * 1024 * 1024
 const upload = multer({
     storage: storage,
     limits: {
