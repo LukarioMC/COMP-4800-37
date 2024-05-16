@@ -156,7 +156,7 @@ router.post('/report', (req, res) => {
             'Reported by: ' + reporter +
             '\nFact #' + factID +
             '\nFact: ' + factContent +
-            '\n\nIssue:' + reportContent,
+            '\n\nIssue: ' + reportContent,
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
