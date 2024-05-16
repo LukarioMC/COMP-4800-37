@@ -146,6 +146,11 @@ paths:
                 description: The date when the fact was discovered.
                 type: string
                 format: date-time
+              tags:
+                description: A list of tag names.
+                type: array
+                items:
+                  type: string
     responses:
       '201':
         description: Fact added successfully.
