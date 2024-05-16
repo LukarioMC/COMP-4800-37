@@ -70,6 +70,7 @@ app.use(function (req, res, next) {
               email: req.user.email,
               fname: req.user.fname,
               lname: req.user.lname,
+              isAdmin: req.user.isAdmin
           }
         : undefined;
     res.locals.success = req.flash('success');
