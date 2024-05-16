@@ -28,11 +28,6 @@ const upload = multer({
     fileFilter: filterFiles
 })
 
-const parser = multer({
-    dest: '/tmp',
-    fileFilter: (req, file, cb) => {cb(null, false)} 
-})
-
 /**
  * Returns whether the designated upload directory is above the max permissible size.
  * @returns Whether the designated upload directory is above the max permissible size
@@ -92,6 +87,5 @@ function inferType(name) {
 }
 
 module.exports = { 
-    upload,
-    parser
+    upload
 }

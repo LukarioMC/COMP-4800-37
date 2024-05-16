@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag } = require('../handlers/tag')
-const { upload, parser } = require('../modules/upload')
+const { upload } = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -44,7 +44,7 @@ router.get('/fact', (req, res) => {
 
 // API endpoint to add a new fact to the database.
 router.post('/fact', upload.array('files', 5), (req, res) => {
-    let { userId, content, discovery_date, note, tags, links } = JSON.parse(req.body.data) || req.body
+    let { userId, content, discovery_date, note, tags, links } = req.body.data ? JSON.parse(req.body.data) : req.body
     // v no longer fails foreign key constraint
     const submitter_id = userId || ANON_USER_ID;
     //const submitter_id = null;
@@ -53,8 +53,6 @@ router.post('/fact', upload.array('files', 5), (req, res) => {
         res.status(400).json({ error: 'Content field is required' });
         return;
     }
-
-    console.log(res.locals.attIDs)
 
     //const success = addFact({ submitter_id, content, note, discovery_date });
     const success = addFact({ submitter_id, content, discovery_date, note, tags, links}, res, res.locals.attIDs);
