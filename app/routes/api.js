@@ -51,8 +51,8 @@ router.post('/fact', upload.array('attachment', 5), (req, res) => {
     let submitter_id = userId || ANON_USER_ID;
     if (typeof attachment === 'string') attachment = [attachment]
     let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
-    let tags = tag
-    
+    let tags = typeof tag === 'string' ? [tag] : tag
+
     const addFactRes = addFact({ submitter_id, content, discovery_date, note, tags, attachments});
 
     if (addFactRes.success) {
