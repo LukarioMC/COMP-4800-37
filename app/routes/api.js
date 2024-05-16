@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag } = require('../handlers/tag')
-const { upload } = require('../modules/upload')
+const { upload, deleteUploads } = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -57,6 +57,7 @@ router.post('/fact', upload.array('attachment', 5), (req, res) => {
         addFact({ submitter_id, content, discovery_date, note, tags, attachments});
         return res.status(201).json({message: 'Successfully added fact.'})
     } catch (err) {
+        deleteUploads(res.locals.filenames)
         return res.status(400).json({message: err.message})
     }
 });
