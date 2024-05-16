@@ -43,7 +43,7 @@ router.get('/fact', (req, res) => {
 
 // API endpoint to add a new fact to the database.
 router.post('/fact', (req, res) => {
-    const { userId, content, discovery_date, note } = req.body;
+    const { userId, content, discovery_date, note, tags } = req.body;
 
     // v no longer fails foreign key constraint
     const submitter_id = userId || ANON_USER_ID;
@@ -55,7 +55,7 @@ router.post('/fact', (req, res) => {
     }
 
     //const success = addFact({ submitter_id, content, note, discovery_date });
-    const success = addFact({ submitter_id, content, discovery_date, note });
+    const success = addFact({ submitter_id, content, discovery_date, note, tags });
 
     if (success) {
         res.status(201).json({ message: 'Fact added successfully' });
@@ -66,10 +66,13 @@ router.post('/fact', (req, res) => {
 
 // API endpoint to update an existing fact in the database.
 router.put('/fact/:id', (req, res) => {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(403).json({error: 'Only admin can update facts.'})
+    }
     const factID = req.params.id;
-    const { content, note, discovery_date } = req.body;
+    const { content, note, discovery_date, tags } = req.body;
 
-    const result = updateFact(factID, { content, note, discovery_date });
+    const result = updateFact(factID, { content, note, discovery_date, tags });
 
     if (result.success) {
         res.status(200).json({ message: 'Fact updated successfully' });
