@@ -5,9 +5,11 @@ const db = require('better-sqlite3')('app.db');
  * @param {number} attachmentID The ID of the attachment to delete.
  * @returns {boolean} True if the attachment is deleted successfully, false otherwise.
  */
-function deleteAttachmentforFactoid(attachmentID){
+function deleteAttachmentforFactoid(attachmentID) {
     try {
-        const deleteAttachmentStatement = db.prepare('DELETE FROM Attachment WHERE id = ?');
+        const deleteAttachmentStatement = db.prepare(
+            'DELETE FROM Attachment WHERE id = ?'
+        );
         const result = deleteAttachmentStatement.run(attachmentID);
         return result.changes > 0;
     } catch (e) {
@@ -23,29 +25,32 @@ function deleteAttachmentforFactoid(attachmentID){
  */
 function deleteAllAttachmentsforFactoid(factoidID) {
     try {
-        const getAllAttachmentsStatement = db.prepare('SELECT * FROM Attachment WHERE factoid_id = ?')
-            
+        const getAllAttachmentsStatement = db.prepare(
+            'SELECT * FROM Attachment WHERE factoid_id = ?'
+        );
         const allAttachmentsForFact = getAllAttachmentsStatement.all(factoidID);
-     
+
         if (allAttachmentsForFact.length === 0) {
             return true;
         }
-        
-        allAttachmentsForFact.forEach(attachment => {
+
+        allAttachmentsForFact.forEach((attachment) => {
             let result = deleteAttachmentforFactoid(attachment.id);
             if (!result) {
-                throw new Error(`Error deleting attachment with ID ${attachment.id}`);
+                throw new Error(
+                    `Error deleting attachment with ID ${attachment.id}`
+                );
             }
         });
 
         return true;
     } catch (error) {
         console.log('Error deleting attachments for the factoid:', error);
-        return false; 
+        return false;
     }
 }
 
 module.exports = {
     deleteAttachmentforFactoid,
-    deleteAllAttachmentsforFactoid
-}
+    deleteAllAttachmentsforFactoid,
+};
