@@ -168,6 +168,7 @@ router.post('/report', (req, res) => {
 });
 
 router.post('/attachment', upload.single('photo'), (req, res) => {
+    console.log(req)
     res.status(200).json({message: 'Success!'})
 })
 
