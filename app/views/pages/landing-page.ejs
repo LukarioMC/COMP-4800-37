@@ -2,10 +2,11 @@
 
 <main class="container-xl">
     <%- include("../partials/flash") %>
-    <div class="jumbotron text-center mb-5">
-        <h1 class="p-5">Welcome to 37 Heaven!</h1>
+    <h1 class="text-center p-5">Welcome to 37 Heaven!</h1>
+    <div class="jumbotron mb-5">
         <div class="accordion" id="fact-of-the-day">
         <% if (typeof factoid !== 'undefined') { %>
+            <% console.log(user) %>
             <%- include('../partials/fact.ejs', { factoid, accordionParent:
             '#fact-of-the-day', rand: "rand" }); %>
         <% } %>

@@ -11,8 +11,9 @@ const { getTags } = require('../handlers/tag')
 const PAGE_SIZE = 5
 
 router.get('/', (req, res) => {
-    pageContext = prepForFactList(req)
-    pageContext.factoid = getRandomFact()
+    pageContext = prepForFactList(req);
+    pageContext.factoid = getRandomFact();
+    pageContext.user = req.user;
     res.render('pages/landing-page', pageContext);
 });
 

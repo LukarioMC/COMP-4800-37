@@ -1,7 +1,11 @@
 <div class="fact accordion-item mb-3">
     <h2 class="accordion-header" id="heading-<%= typeof rand !== 'undefined' ? rand: factoid.id %>">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" aria-expanded="true" aria-controls="collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>">
-            <%- factoid.content %>
+            <%- factoid.content %> 
+            <% if (user?.isAdmin) { %>
+            <span class="text-success text-right" style="margin-left: 50px;">Approved</span>
+            <span class="text-warning text-right" style="margin-left: 50px;">Pending</span>
+            <% } %>
         </button>
     </h2>
 
