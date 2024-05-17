@@ -6,7 +6,6 @@
     <div class="jumbotron mb-5">
         <div class="accordion" id="fact-of-the-day">
         <% if (typeof factoid !== 'undefined') { %>
-            <% console.log(user) %>
             <%- include('../partials/fact.ejs', { factoid, accordionParent:
             '#fact-of-the-day', rand: "rand" }); %>
         <% } %>

@@ -116,6 +116,8 @@ router.get('/tags', (req, res) => {
     }
 });
 
+
+// Can change back to PUT, but need to handle create tag input
 // Route to add a new tag.
 router.put('/tag', (req, res) => {
     // TODO: Change with middleware once merged/pushed
@@ -125,14 +127,20 @@ router.put('/tag', (req, res) => {
     if (req.body.tagName) {
         let queryRes = defineTag(req.body.tagName, req.body.isPrimary);
         if (queryRes.successful) {
-            return res.status(201).json({
-                message: `Successfully added tag ${req.body.tagName}.`,
-            });
+            req.flash('success', `Successfully added tag ${req.body.tagName}.`);
+            return res.status(201).redirect('back');
+            // return res.status(201).json({
+            //     message: `Successfully added tag ${req.body.tagName}.`,
+            // });
         } else {
-            return res.status(500).json({ message: queryRes.message });
+            req.flash('error', 'Error: ' + queryRes.message);
+            return res.status(500).redirect('back');
+            // return res.status(500).json({ message: queryRes.message });
         }
     } else {
-        return res.status(400).json({ message: 'Invalid args.' });
+        req.flash('error', 'Error: Invalid input');
+        return res.status(400).redirect('back');
+        // return res.status(400).json({ message: 'Invalid args.' });
     }
 });
 

@@ -21,6 +21,7 @@ const apiRouter = require('./routes/api');
 const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
+const methodOverride = require('method-override');
 
 const SQLiteStore = require('connect-sqlite3')(session);
 
@@ -61,6 +62,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(passport.authenticate('session'));
 app.use(flash());
+app.use(methodOverride('_method'));
 
 // Middleware to make user data available to EJS on all pages.
 app.use(function (req, res, next) {

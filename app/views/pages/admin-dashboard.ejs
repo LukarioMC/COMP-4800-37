@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="/admin-dashboard.css" />
 
 <main>
+    <%- include("../partials/flash") %>
     <h1 class="text-center my-5">Welcome back, <%= adminName %></h1>
 
     <div class="container mb-3 ps-0">
@@ -59,21 +60,23 @@
     </div>
 
     <div class="container mb-3 ps-0">
-        <div class="row text-start">
-            <div class="col-3">
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Tag name"
-                    aria-label="Tag name"
-                />
+        <!-- Change here for tag creation -->
+        <form action="/api/tag?_method=PUT" method="POST">
+            <div class="row text-start">
+                <div class="col-3">
+                    <input type="text" class="form-control" placeholder="Tag name" name="tagName" aria-label="Tag name"/>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-success btn">
+                        Create Tag
+                    </button>
+                </div>
             </div>
-            <div class="col">
-                <button type="button" class="btn btn-success btn">
-                    Create Tag
-                </button>
+            <div>
+                <input type="checkbox" id="isPrimary" class="form-check-input" name="isPrimary"/>
+                <label for="isPrimary">Is it a primary tag?</label>
             </div>
-        </div>
+        </form>
     </div>
 </main>
 
