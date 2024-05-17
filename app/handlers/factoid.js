@@ -280,7 +280,11 @@ function getRandomFact() {
  */
 function getUnapprovedFacts() {
     try {
-        const unapprovedFactsStmt = db.prepare(`SELECT * FROM factoid WHERE NOT is_approved ORDER BY posting_date`);
+        const unapprovedFactsStmt = db.prepare(
+            `SELECT * FROM factoid
+            LEFT JOIN tag ON factoid.id=tag.factoid_id
+            WHERE NOT is_approved
+            ORDER BY posting_date`);
         const unapprovedFacts = unapprovedFactsStmt.all();
         return unapprovedFacts;
     } catch (err) {
