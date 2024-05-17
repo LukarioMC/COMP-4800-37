@@ -114,6 +114,22 @@ function filterFacts(facts, tags = []) {
 }
 
 /**
+ * Deletes a fact from the database by its ID.
+ * @param {number} factoidID The ID of the fact to delete.
+ * @returns {boolean} True if the fact was successfully deleted, false otherwise.
+ */
+function deleteFactByID(factoidID) {
+    try {
+        const result = db.prepare('DELETE FROM Factoid WHERE id = ?').run(factoidID);
+
+        return result.changes > 0;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+/**
  * Adds a new fact to the database.
  * @param {Object} factData An object containing data for the new fact.
  */
@@ -199,6 +215,38 @@ function insertTags(tags = [], id) {
         }
     })
 
+}
+
+/**
+ * Approves a fact in the database by setting its approval status to true.
+ * @param {number} factoidID The ID of the fact to approve.
+ * @returns {boolean} True if the fact was successfully approved, false otherwise.
+ */
+function approveFactByID(factoidID) {
+    try {
+        let approveFactStmt = db.prepare('UPDATE factoid SET is_approved = 1 WHERE id = ?')
+        let result = approveFactStmt.run(factoidID)
+        return result.changes > 0
+    } catch (e) {
+        console.log(e);
+        return false
+    }
+}
+
+/**
+ * Approves a fact in the database by setting its approval status to true.
+ * @param {number} factoidID The ID of the fact to approve.
+ * @returns {boolean} True if the fact was successfully approved, false otherwise.
+ */
+function approveFactByID(factoidID) {
+    try {
+        let approveFactStmt = db.prepare('UPDATE factoid SET is_approved = 1 WHERE id = ?')
+        let result = approveFactStmt.run(factoidID)
+        return result.changes > 0
+    } catch (e) {
+        console.log(e);
+        return false
+    }
 }
 
 /**
@@ -322,5 +370,7 @@ module.exports = {
     getFacts,
     addFact,
     updateFact,
-    getRandomFact
+    getRandomFact,
+    deleteFactByID,
+    approveFactByID
 };
