@@ -245,6 +245,24 @@ paths:
                 properties:
                   message:
                     type: string
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '404':
+          description: Fact not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
   /api/fact/{factoidID}:
     delete:
       summary: Deletes a fact by its ID.
