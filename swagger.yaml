@@ -204,6 +204,12 @@ paths:
                 properties:
                   message:
                     type: string
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Fact not found.
           content:
@@ -235,6 +241,12 @@ paths:
                 properties:
                   message:
                     type: string
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Fact not found.
           content:
@@ -303,6 +315,12 @@ paths:
                 properties:
                   message: 
                     type: string
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         '400':
           description: Invalid arguments.
           content:
@@ -347,6 +365,12 @@ paths:
                 properties:
                   message:
                     type: string
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Tag not found.
           content:
@@ -378,6 +402,12 @@ paths:
                 properties:
                   message:
                     type: string
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Attachment not found.
           content:
