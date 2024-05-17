@@ -3,7 +3,7 @@ const fs = require('fs');
 function readCountryData(callback) {
     fs.readFile('./app/data/country-names.json', 'utf-8', (err, data) => {
         if (err) {
-            console.error('Error reading country data file: ', err);
+            console.log('Error reading country data file: ', err);
             return callback(err);
         }
 
