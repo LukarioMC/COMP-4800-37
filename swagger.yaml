@@ -127,52 +127,52 @@ paths:
         '500':
           description: Server error.
     post:
-    summary: Adds a new fact to the database.
-    requestBody:
-      description: Fact data to be added.
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              content:
-                description: The fact content.
-                type: string
-              note:
-                description: Additional notes about the fact.
-                type: string
-              discovery_date:
-                description: The date when the fact was discovered.
-                type: string
-                format: date-time
-              tags:
-                description: A list of tag names.
-                type: array
-                items:
-                  type: string
-    responses:
-      '201':
-        description: Fact added successfully.
+      summary: Adds a new fact to the database.
+      requestBody:
+        description: Fact data to be added.
+        required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                message:
+                content:
+                  description: The fact content.
                   type: string
-      '400':
-        description: Error if the content field is missing.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorMessage'
-      '500':
-        description: Server error.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorMessage'
+                note:
+                  description: Additional notes about the fact.
+                  type: string
+                discovery_date:
+                  description: The date when the fact was discovered.
+                  type: string
+                  format: date-time
+                tags:
+                  description: A list of tag names.
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Fact added successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error if the content field is missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
 
   /api/fact/{factID}:
     get:
@@ -204,47 +204,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
     put:
-    summary: Updates an existing fact in the database.
-    parameters:
-      - name: factID
-        in: path
-        description: An ID for a fact.
-        required: true
-        schema:
-          type: integer
-    requestBody:
-      description: Fact data to be updated.
-      required: true
-      content:
-        application/json:
+      summary: Updates an existing fact in the database.
+      parameters:
+        - name: factID
+          in: path
+          description: An ID for a fact.
+          required: true
           schema:
-            type: object
-            properties:
-              content:
-                description: The fact content.
-                type: string
-              note:
-                description: Additional notes about the fact.
-                type: string
-              discovery_date:
-                description: The date when the fact was discovered.
-                type: string
-                format: date-time
-              tags:
-                description: A list of tag names.
-                type: array
-                items:
-                  type: string
-    responses:
-      '200':
-        description: Fact updated successfully.
+            type: integer
+      requestBody:
+        description: Fact data to be updated.
+        required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                message:
+                content:
+                  description: The fact content.
                   type: string
+                note:
+                  description: Additional notes about the fact.
+                  type: string
+                discovery_date:
+                  description: The date when the fact was discovered.
+                  type: string
+                  format: date-time
+                tags:
+                  description: A list of tag names.
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Fact updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   /api/fact/{factoidID}:
     delete:
       summary: Deletes a fact by its ID.
