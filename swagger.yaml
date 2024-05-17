@@ -72,13 +72,12 @@ components:
           type: string
         is_primary:
           type: boolean
-    ErrorMessage:
+    ResponseMessage:
       type: object
       properties:
         message:
           type: string
           description: 'An error message.'
-          
 
 paths:
   /api/fact:
@@ -120,10 +119,6 @@ paths:
                   $ref: '#/components/schemas/Fact'
         '400':
           description: 'Error if page number and size are less than 0.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '500':
           description: Server error.
     post:
@@ -157,22 +152,11 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: '#/components/schemas/ResponseMessage'
         '400':
           description: Error if the content field is missing.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '500':
           description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
 
   /api/fact/{factID}:
     get:
@@ -193,16 +177,8 @@ paths:
                 $ref: '#/components/schemas/Fact'
         '404':
           description: Fact not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '500':
           description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
     put:
       summary: Updates an existing fact in the database.
       parameters:
@@ -241,28 +217,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: '#/components/schemas/ResponseMessage'
         '403':
           description: 'Unauthorized request; user must be administrator.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Fact not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '500':
           description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
+
   /api/fact/{factoidID}:
     delete:
       summary: Deletes a fact by its ID.
@@ -276,30 +238,13 @@ paths:
       responses:
         '200':
           description: Fact and associated attachments/tags deleted successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
         '403':
           description: 'Unauthorized request; user must be administrator.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Fact not found.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
         '500':
           description: Server error.
+
   /api/approve/{id}:
     put:
       summary: Approve a fact by ID.
@@ -316,31 +261,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: '#/components/schemas/ResponseMessage'
         '403':
           description: 'Unauthorized request; user must be administrator.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Fact not found.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
         '500':
           description: Server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
 
   /api/report:
     post:
@@ -362,6 +289,7 @@ paths:
                 $ref: '#/components/schemas/FactReport'
         '500':
           description: Server error.
+
   /api/tags:
     get:
       summary: Returns a list of all categories.
@@ -374,6 +302,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Category'
+
   /api/tag:
     put:
       summary: Add a new category for tags in the database.
@@ -401,28 +330,11 @@ paths:
                     type: string
         '403':
           description: 'Unauthorized request; user must be administrator.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '400':
           description: Invalid arguments.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message: 
-                    type: string
         '500':
           description: Server error.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message: 
-                    type: string
+
   /api/tag/{factoidID}/{categoryID}:
     delete:
       summary: Deletes a tag for a given factoid ID and category ID.
@@ -445,27 +357,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: '#/components/schemas/ResponseMessage'
         '403':
           description: 'Unauthorized request; user must be administrator.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Tag not found.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
         '500':
           description: Server error.
+
   /api/attachment/{attachmentID}:
     delete:
       summary: Deletes an attachment by its ID.
@@ -482,24 +381,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                $ref: '#/components/schemas/ResponseMessage'
         '403':
           description: 'Unauthorized request; user must be administrator.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorMessage'
         '404':
           description: Attachment not found.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
         '500':
           description: Server error.
