@@ -76,4 +76,6 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 DROP INDEX IF EXISTS Category_name_key;
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 
+DROP TABLE IF EXISTS sessions;
+
 PRAGMA foreign_keys=ON;
