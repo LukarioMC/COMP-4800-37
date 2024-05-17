@@ -319,10 +319,10 @@ paths:
                     type: string
         '500':
           description: Server error.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorMessage'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
 
   /api/report:
     post:
