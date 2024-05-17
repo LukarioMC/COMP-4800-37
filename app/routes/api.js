@@ -42,8 +42,15 @@ router.get('/fact', (req, res) => {
     }
 });
 
+const uploadErrorHandler = (err, _req, res, next) => {
+    if (err) return res.status(400).json({message: err.message})
+    next()
+}
+
 // API endpoint to add a new fact to the database.
-router.post('/fact', upload.array('attachment', 5), (req, res) => {
+router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, res) => {
+    //
+
     let { userId, content, discovery_date, note, tag, attachment } = req.body.data ? JSON.parse(req.body.data) : req.body
 
     if (!content) return res.status(400).json({ error: 'Content field is required' });

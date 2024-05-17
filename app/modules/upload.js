@@ -15,8 +15,15 @@ const storage = multer.diskStorage({
         cb(null, UPLOAD_DIR)
     },
     filename: (req, file, cb) => {
-        let prefix = `${Math.random()}-${Date.now()}`
-        let newName = prefix + path.extname(file.originalname)
+        let newName
+        
+        while (true) {
+            let prefix = `${Math.random()}-${Date.now()}`
+            newName = prefix + path.extname(file.originalname)
+
+            if (fs.existsSync(`./${UPLOAD_DIR}/${newName}`)) continue
+            break
+        }
 
         if (!req.res.locals.filenames) req.res.locals.filenames = []
         req.res.locals.filenames.push(newName)
@@ -25,7 +32,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const maxFileSize = 10 * 1024 * 1024
+const maxFileSize = 10 * Math.pow(1024, 2)
 const upload = multer({
     storage: storage,
     limits: {
@@ -55,13 +62,13 @@ function isUploadDirFull() {
 function filterFiles(req, file, cb) {
     if (!req.res.locals.attIDs) req.res.locals.attIDs = []
 
-    if (isUploadDirFull()) return cb(new Error('Upload directory is full.'))
+    if (isUploadDirFull()) return cb(new Error('No space for further uploads.'))
 
     let validMimetype = VALID_FILE_TYPES.test(file.mimetype)
     let validExtname = VALID_FILE_TYPES.test(path.extname(file.originalname).toLowerCase())
 
     if (!validMimetype || !validExtname) { 
-        return cb(new Error(`Only the following filetypes are supported - ${VALID_FILE_TYPES}`))
+        return cb(new Error(`File ${file.originalname} is not of valid type. Only the following filetypes are supported - ${VALID_FILE_TYPES}`))
     }
 
     return cb(null, true)
