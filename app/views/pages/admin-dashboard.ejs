@@ -78,6 +78,43 @@
             </div>
         </form>
     </div>
+
+    <div class="container mt-5 mb-3 ps-0">
+      <h3>Existing Tags</h3>
+    
+      <div id="tags-dashboard" class="container text-center">
+        <div class="row text-start fw-bold text-wrap bg-light">
+          <div class="col mt-3">
+            <p>Tag Name</p>
+          </div>
+          <div class="col mt-3">
+            <p>Primary Tag (Category)</p>
+          </div>
+          <div class="col mt-3"></div>
+        </div>
+    
+        <hr />
+    
+        <div id="tags-list">
+          <% if (tags.length> 0) { %>
+            <% tags.forEach(function (tag) { %>
+              <div class="row text-start text-wrap pb-4 bg-light">
+                <div class="col">
+                  <%= tag.name %>
+                </div>
+                <div class="col">
+                  <%= tag.is_primary %>
+                </div>
+                <div class="col">
+                  <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                  <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                </div>
+              </div>
+              <% }); %>
+                <% } %>
+        </div>
+      </div>
+    </div>
 </main>
 
 <%- include('../partials/footer'); %>

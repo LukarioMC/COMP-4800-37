@@ -37,8 +37,9 @@ router.get('/admin', isAdmin, (req, res) => {
         ];
 
         const unapprovedFacts = getUnapprovedFacts();
+        const tags = getTags();
         const adminName = req.user?.id;
-        res.render('pages/admin-dashboard', { submissions: unapprovedFacts, adminName });
+        res.render('pages/admin-dashboard', { submissions: unapprovedFacts, tags: tags, adminName });
 
 });
 
