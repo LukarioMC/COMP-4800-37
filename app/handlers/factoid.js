@@ -274,22 +274,56 @@ function getRandomFact() {
     }
 }
 
+// /**
+//  * Returns all unapproved facts
+//  * @returns All unapproved facts
+//  */
+// function getUnapprovedFacts() {
+//     try {
+//         const unapprovedFactsStmt = db.prepare(
+//             `SELECT * FROM factoid
+//             LEFT JOIN tag ON factoid.id=tag.factoid_id
+//             WHERE NOT is_approved
+//             ORDER BY posting_date`);
+//         const unapprovedFacts = unapprovedFactsStmt.all();
+//         return unapprovedFacts;
+//     } catch (err) {
+//         console.log(err);
+//         return null;
+//     }
+// }
+
 /**
- * Returns all unapproved facts
- * @returns All unapproved facts
+ * Returns all unapproved facts with their associated tags.
+ * @returns a list of unapproved facts with associated tags.
  */
 function getUnapprovedFacts() {
     try {
-        const unapprovedFactsStmt = db.prepare(
-            `SELECT * FROM factoid
-            LEFT JOIN tag ON factoid.id=tag.factoid_id
-            WHERE NOT is_approved
-            ORDER BY posting_date`);
-        const unapprovedFacts = unapprovedFactsStmt.all();
+        let getUnapprovedFactsStmt = db.prepare(`
+            SELECT 
+                factoid.id, 
+                factoid.submitter_id, 
+                factoid.content, 
+                factoid.posting_date, 
+                factoid.note, 
+                group_concat(category.name) as taglist
+            FROM factoid
+            LEFT JOIN tag ON factoid.id = tag.factoid_id
+            LEFT JOIN category ON tag.category_id = category.id
+            WHERE NOT factoid.is_approved
+            GROUP BY factoid.id
+            ORDER BY factoid.posting_date
+        `);
+
+        let unapprovedFacts = getUnapprovedFactsStmt.all();
+        unapprovedFacts.forEach(fact => {
+            fact.taglist = fact.taglist ? fact.taglist.split(',').sort() : [];
+        });
+
         return unapprovedFacts;
     } catch (err) {
         console.log(err);
-        return null;
+        return [];
     }
 }
 
