@@ -4,8 +4,8 @@
   "description": "Recreation of the historical 37 website which contains facts about the number.",
   "main": "app/index.js",
   "scripts": {
-    "start": "nodemon --no-watch app/index.js",
-    "dev": "nodemon app/index.js",
+    "start": "nodemon app/index.js",
+    "dev": "nodemon --watch 'swagger.yaml' app/index.js",
     "resetdb": "node db/configDB.js"
   },
   "repository": {

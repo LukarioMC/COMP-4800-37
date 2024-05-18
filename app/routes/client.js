@@ -6,6 +6,7 @@ const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
 const { isAdmin } = require('../utils/adminUtils');
 const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
+const { redirectUnauthorizedRequestHome } = require('../middleware');
 const { getTags } = require('../handlers/tag')
 
 const PAGE_SIZE = 5
@@ -18,7 +19,7 @@ router.get('/', (req, res) => {
 });
 
 // This route is for the admin dashboard where the admin can routerroved, edit, and delete fact submissions.
-router.get('/admin', isAdmin, (req, res) => {
+router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
         const testData = [
             {
                 dateSubmitted: '05 / 04 / 2024',

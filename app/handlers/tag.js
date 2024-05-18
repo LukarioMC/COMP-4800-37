@@ -61,7 +61,54 @@ function isValidTagName(str) {
   return true;
 }
 
+/**
+ * Deletes a tag associated with a factoid based on the factoid ID and category ID.
+ * @param {number} factoidID The ID of the factoid from which to delete the tag.
+ * @param {number} categoryID The ID of the category of the tag to be deleted.
+ * @returns {boolean} True if the tag is deleted successfully, false otherwise.
+ */
+function deleteTagforFactoid(factoidID, categoryID){
+  try {
+      const deleteTagStatement = db.prepare('DELETE FROM Tag WHERE factoid_id = ? AND category_id = ?');
+      const result = deleteTagStatement.run(factoidID, categoryID);
+      return result.changes > 0;
+  } catch (e) {
+      console.log('Error deleting tag:', e);
+      return false;
+  }
+}
+
+/**
+ * Deletes all tags associated with a factoid.
+ * @param {number} factoidID The ID of the factoid from which to delete all tags.
+ * @returns {boolean} True if all tags are deleted successfully, true if no tags are found, false otherwise.
+ */
+function deleteAllTagsforFactoid(factoidID) {
+  try {
+      const getAllTagsStatement = db.prepare('SELECT * FROM Tag WHERE factoid_id = ?');
+      const tags = getAllTagsStatement.all(factoidID);
+
+      if (tags.length === 0) {
+          return true;
+      }
+
+      tags.forEach(tag => {
+        let result = deleteTagforFactoid(tag.factoid_id, tag.category_id);
+          if (!result) {
+            throw new Error(`Error deleting ${tag.category_id} tag for ${tag.factoid_id}`);
+        }
+      });
+
+      return true; 
+  } catch (e) {
+      console.log('Error deleting all tags for factoid:', e);
+      return false;
+  }
+}
+
 module.exports = {
   getTags,
   defineTag,
-};
+  deleteTagforFactoid,
+  deleteAllTagsforFactoid
+}
