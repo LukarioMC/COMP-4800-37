@@ -142,10 +142,43 @@ paths:
                   type: string
                   format: date-time
                 tags:
-                  description: A list of tag names.
+                  description: A tag or tags.
                   type: array
                   items:
                     type: string
+                attachments:
+                  description: URL link(s) or file(s) associated with the fact. 
+                  oneOf:
+                    - type: string
+                      description: File(s) to upload.
+                      format: binary
+                    - type: string
+                      description: URL(s)
+                data:
+                  description: JSON that contains all the other mentioned fields with the
+                    exception of attachment files (URLs still permissible). If present, all 
+                    fields within will take precedence over others at the top level of the
+                    form.
+                  type: object
+                  properties:
+                    content:
+                      description: The fact content.
+                      type: string
+                    note:
+                      description: Additional notes about the fact.
+                      type: string
+                    discovery_date:
+                      description: The date when the fact was discovered.
+                      type: string
+                      format: date-time
+                    tags:
+                      description: A tag or tags.
+                      type: array
+                      items:
+                        type: string
+                    attachments:
+                      description: URL link(s) associated with the fact. 
+                      type: string
       responses:
         '201':
           description: Fact added successfully.
@@ -154,9 +187,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseMessage'
         '400':
-          description: Error if the content field is missing.
-        '500':
-          description: Server error.
+          description: Invalid submission.
 
   /api/fact/{factID}:
     get:
