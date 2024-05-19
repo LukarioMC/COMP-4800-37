@@ -20,10 +20,14 @@
                     <label for="date" class="form-label">Discovery Date:</label>
                     <input type="date" class="form-control" id="discovery-date" name="discovery_date" value="<%= fact.discovery_date.split(' ')[0] %>">
                 </div>
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags:</label>
+                    <div id="tags-container">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Fact</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Update Fact</button>
-        </form>
-    </div>
     </div>
 </main>
 
