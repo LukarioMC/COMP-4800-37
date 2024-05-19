@@ -8,7 +8,10 @@
 
             <!-- submission form -->
             <form id="submission-form" method="POST">
-
+                <div class="mb-3">
+                    <label for="text-line" class="form-label">Fact:</label>
+                    <input type="text" class="form-control" id="text-line" name="content" value="<%= fact.content %>" required>
+                </div>
                 <button type="submit" class="btn btn-primary">Update Fact</button>
             </form>
         </div>
