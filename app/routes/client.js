@@ -19,23 +19,6 @@ router.get('/', (req, res) => {
 
 // This route is for the admin dashboard where the admin can routerroved, edit, and delete fact submissions.
 router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
-        const testData = [
-            {
-                dateSubmitted: '05 / 04 / 2024',
-                user: 'abc0185',
-                fact: 'The number of pages in this book is a multiple of 37!',
-                note: 'Name of the book: "All things 37" by Greg Jones',
-                tags: 'media, books',
-            },
-            {
-                dateSubmitted: '05 / 06 / 2024',
-                user: 'mag3737',
-                fact: 'Another super cool 37 fact',
-                note: 'Found in Vancouver, BC',
-                tags: 'nature',
-            },
-        ];
-
         const unapprovedFacts = getUnapprovedFacts();
         const tags = getTags();
         const adminName = req.user?.id;
