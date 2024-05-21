@@ -116,7 +116,6 @@ router.get('/tags', (req, res) => {
 });
 
 
-// Can change back to PUT, but need to handle create tag input
 // Route to add a new tag.
 router.put('/tag', rejectUnauthorizedRequest, (req, res) => {
     if (req.body.tagName) {
@@ -124,18 +123,13 @@ router.put('/tag', rejectUnauthorizedRequest, (req, res) => {
         if (queryRes.successful) {
             req.flash('success', `Successfully added tag ${req.body.tagName}.`);
             return res.status(201).redirect('back');
-            // return res.status(201).json({
-            //     message: `Successfully added tag ${req.body.tagName}.`,
-            // });
         } else {
             req.flash('error', 'Error: ' + queryRes.message);
             return res.status(500).redirect('back');
-            // return res.status(500).json({ message: queryRes.message });
         }
     } else {
         req.flash('error', 'Error: Invalid input');
         return res.status(400).redirect('back');
-        // return res.status(400).json({ message: 'Invalid args.' });
     }
 });
 
