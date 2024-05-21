@@ -3,6 +3,7 @@ const db = require('better-sqlite3')('app.db');
 /**
  * Given an id, returns the associated fact.
  * @param {number} factID An integer representing a fact ID.
+ * @param {boolean} isApproved Retrieves only an approved fact, set false to retrieve non-approved (Default: true)
  * @returns Fact with the corresponding id and associated tags and attachments. Undefined if the id is not associated with any fact or is invalid.
  */
 function getFactByID(factID, isApproved = true) {
@@ -45,9 +46,12 @@ function getFactByID(factID, isApproved = true) {
  * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
  * @param {Array} tags a list of tag strings
  * @param {string} searchText search text
+ * @param {number} pageNum current page number
+ * @param {number} pageSize size of each page
+ * @param {boolean} isApproved Retrieves only approved facts, set false to retrieve all (Default: true)
  * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
+function getFacts(tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined, isApproved = true) {
     try {
         let getFactsStmt = db.prepare(`
 				SELECT 
@@ -74,7 +78,7 @@ function getFacts(tags = undefined, searchText = undefined, pageNum = undefined,
         let filteredFacts = filterFacts(unfilteredFacts, tags);
 
         let fetchedFacts = filteredFacts.map((fact) => {
-            return getFactByID(fact.id);
+            return getFactByID(fact.id, isApproved);
         });
 
         if (searchText) {
