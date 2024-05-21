@@ -4,7 +4,6 @@
 const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
-const { isAdmin } = require('../utils/adminUtils');
 const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
 const { redirectUnauthorizedRequestHome } = require('../middleware');
 const { getTags } = require('../handlers/tag')
