@@ -31,28 +31,28 @@
 
         <hr />
 
-        <% if (submissions.length > 0) { %>
-            <% submissions.forEach(function (submission) { %>
-                <div class="row text-start text-wrap pb-4">
-                    <div class="col"><%= submission.posting_date %></div>
-                    <div class="col"><%= submission.submitter_id %></div>
-                    <div class="col"><%= submission.content %></div>
-                    <div class="col"><%= submission.note %></div>
-                    <div class="col"><%= submission.taglist.join(', ') %></div>
-                    <div class="col">
-                        <button type="button" class="btn btn-success btn-sm">
-                            Approve
-                        </button>
-                        <button type="button" class="btn btn-danger btn-sm">
-                            Delete
-                        </button>
-                        <button type="button" class="btn btn-warning btn-sm">
-                            Edit
-                        </button>
-                    </div>
-                </div>
-            <% }); %>
-        <% } %>
+        <% if (submissions.length > 0) {
+            submissions.forEach(function (submission) { %>
+        <div class="row text-start text-wrap pb-4">
+            <div class="col"><%= submission.posting_date %></div>
+            <div class="col"><%= submission.submitter_id %></div>
+            <div class="col"><%= submission.content %></div>
+            <div class="col"><%= submission.note %></div>
+            <div class="col"><%= submission.taglist.join(', ') %></div>
+            <div class="col">
+                <button type="button" class="btn btn-success btn-sm">
+                    Approve
+                </button>
+                <button type="button" class="btn btn-danger btn-sm">
+                    Delete
+                </button>
+                <button type="button" class="btn btn-warning btn-sm">
+                    Edit
+                </button>
+            </div>
+        </div>
+        <% });
+        } %>
     </div>
 
     <div class="container mt-5 mb-3 ps-0">
@@ -64,7 +64,7 @@
         <form action="/api/tag?_method=PUT" method="POST">
             <div class="row text-start">
                 <div class="col-3">
-                    <input type="text" class="form-control" placeholder="Tag name" name="tagName" aria-label="Tag name"/>
+                    <input type="text" class="form-control" placeholder="Tag name" name="tagName" aria-label="Tag name" />
                 </div>
                 <div class="col">
                     <button type="submit" class="btn btn-success btn">
@@ -73,47 +73,47 @@
                 </div>
             </div>
             <div>
-                <input type="checkbox" id="isPrimary" class="form-check-input" name="isPrimary"/>
+                <input type="checkbox" id="isPrimary" class="form-check-input" name="isPrimary" />
                 <label for="isPrimary">Is it a primary tag?</label>
             </div>
         </form>
     </div>
 
     <div class="container mt-5 mb-3 ps-0">
-      <h3>Existing Tags</h3>
-    
-      <div id="tags-dashboard" class="container text-center">
-        <div class="row text-start fw-bold text-wrap bg-light">
-          <div class="col mt-3">
-            <p>Tag Name</p>
-          </div>
-          <div class="col mt-3">
-            <p>Primary Tag (Category)</p>
-          </div>
-          <div class="col mt-3"></div>
+        <h3>Existing Tags</h3>
+
+        <div id="tags-dashboard" class="container text-center">
+            <div class="row text-start fw-bold text-wrap bg-light">
+                <div class="col mt-3">
+                    <p>Tag Name</p>
+                </div>
+                <div class="col mt-3">
+                    <p>Primary Tag (Category)</p>
+                </div>
+                <div class="col mt-3"></div>
+            </div>
+
+            <hr />
+
+            <div id="tags-list">
+                <% if (tags.length> 0) {
+                    tags.forEach(function (tag) { %>
+                <div class="row text-start text-wrap pb-4 bg-light">
+                    <div class="col">
+                        <%= tag.name %>
+                    </div>
+                    <div class="col">
+                        <%= tag.is_primary %>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                        <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                    </div>
+                </div>
+                <% });
+                } %>
+            </div>
         </div>
-    
-        <hr />
-    
-        <div id="tags-list">
-          <% if (tags.length> 0) { %>
-            <% tags.forEach(function (tag) { %>
-              <div class="row text-start text-wrap pb-4 bg-light">
-                <div class="col">
-                  <%= tag.name %>
-                </div>
-                <div class="col">
-                  <%= tag.is_primary %>
-                </div>
-                <div class="col">
-                  <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                  <button type="button" class="btn btn-warning btn-sm">Edit</button>
-                </div>
-              </div>
-              <% }); %>
-                <% } %>
-        </div>
-      </div>
     </div>
 </main>
 
