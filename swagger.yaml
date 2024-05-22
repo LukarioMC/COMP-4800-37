@@ -427,11 +427,11 @@ paths:
         description: Attachments files and fact ID.
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
-                content:
+                factID:
                   description: The fact ID.
                   type: integer
                 attachment:
@@ -447,13 +447,5 @@ paths:
                 $ref: '#/components/schemas/ResponseMessage'
         '400':
           description: 'Invalid request.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseMessage'
         '403':
           description: Unauthorized request; user must be administrator.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseMessage'
