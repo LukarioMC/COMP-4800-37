@@ -142,44 +142,105 @@ function deleteFactByID(factoidID) {
 /**
  * Adds a new fact to the database.
  * @param {Object} factData An object containing data for the new fact.
- * @returns {boolean} True if the fact was successfully added, false otherwise.
  */
-function addFact(factData) {
+function addFact({ 
+    submitter_id, 
+    content, 
+    discovery_date = new Date().toUTCString(), 
+    note, tags = [], 
+    attachments = []}) 
+    {
     try {
-        let { submitter_id, content, discovery_date, note, tags} = factData;
-        tags = tags || []
-        discovery_date = discovery_date || new Date().toUTCString()
-
         const stmt = db.prepare(`
             INSERT INTO Factoid (submitter_id, content, posting_date, discovery_date, note, is_approved, approval_date)
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
             RETURNING id
         `);
-        const id = stmt.get(submitter_id, content, discovery_date, note).id;
 
-        const addTagStmt = db.prepare(`
-            INSERT INTO tag
-            VALUES (?, (SELECT id FROM category WHERE name = ?))
-        `)
-        const insertTags = db.transaction((tags) => {
-            tags.forEach((tag) => {
-                try { 
-                    addTagStmt.run(id, tag) 
-                } catch (err) {
-                    if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
-                        console.log(`Category ${tag} does not exist`)
-                    } else {
-                        console.log(err)
-                    }
-                }
-            })
-        })
-        insertTags(tags)
+        db.transaction(() => {
+            const factID = stmt.get(submitter_id, content, discovery_date, note).id
 
-        return true;
+            insertTags(tags, factID)
+            insertAttachments(attachments, factID)
+        })()
+
+    } catch (err) {
+        throw new Error(`Failed to add fact because -> ${err.message}`)
+    }
+}
+
+/**
+ * Creates attachments in the database with the given path and fact ID.
+ * @param {string} paths string containing filename
+ * @param {integer} factID fact ID
+ */
+function insertAttachments(paths = [], factID) {
+
+    let insertAttachmentStmt = db.prepare(`
+        INSERT INTO attachment (factoid_id, link, type) 
+        VALUES (?, ?, ?)
+    `)
+    
+    paths.forEach((path) => {
+        try {
+            insertAttachmentStmt.run(factID, path, inferType(path))
+        } catch (err) {
+            throw new Error(`Failed to insert attachment ${path} because -> ${err.message}`)
+        }
+    })
+}
+
+/**
+ * Infers the type of the attachment based on the extension name.
+ * @param {string} name file/path name.
+ * @returns attachment type as a string.
+ */
+function inferType(name) {
+    if (/(jpg|jpeg|png|svg)$/.test(name)) return 'image'
+    if (/(gif)$/.test(name)) return 'gif'
+    if (/(mp3|mpeg)$/.test(name)) return 'audio'
+    if (name.toLowerCase().contains('youtube.com')) return 'youtube'
+    return 'website'
+}
+
+/**
+ * Inserts tags associated with the fact with the given id.
+ * @param {Array<string>} tags Name of the tag category. Must be a pre-existing category in the database.
+ * @param {integer} id Fact ID
+ */
+function insertTags(tags = [], id) {
+    const addTagStmt = db.prepare(`
+        INSERT INTO tag
+        VALUES (?, (SELECT id FROM category WHERE name = ?))
+    `)
+
+    tags.forEach((tag) => {
+        try { 
+            addTagStmt.run(id, tag) 
+        } catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
+                throw new Error(`Failed to add tag ${tag} because -> Category ${tag} does not exist.`)
+            } else {
+                throw new Error(`Failed to add tag ${tag} because -> ${err.message}.`)
+            }
+        }
+    })
+
+}
+
+/**
+ * Approves a fact in the database by setting its approval status to true.
+ * @param {number} factoidID The ID of the fact to approve.
+ * @returns {boolean} True if the fact was successfully approved, false otherwise.
+ */
+function approveFactByID(factoidID) {
+    try {
+        let approveFactStmt = db.prepare('UPDATE factoid SET is_approved = 1 WHERE id = ?')
+        let result = approveFactStmt.run(factoidID)
+        return result.changes > 0
     } catch (e) {
         console.log(e);
-        return false;
+        return false
     }
 }
 

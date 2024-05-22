@@ -52,7 +52,7 @@ VALUES
 
 INSERT INTO attachment (factoid_id, link, type)
 VALUES
-    (1, 'https://example.com/document.pdf', 'pdf'),
+    -- (1, 'https://example.com/document.pdf', 'pdf'),
     (2, 'https://example.com/image.jpg', 'image'),
-    (3, 'https://example.com/video.mp4', 'video')
+    (3, 'https://example.com/audio.mp3', 'audio')
 ;
