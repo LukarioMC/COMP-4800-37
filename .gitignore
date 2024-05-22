@@ -2,4 +2,5 @@
 **.db
 **.db-journal
 node_modules
+uploads
 app/public/uploads
