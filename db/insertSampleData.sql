@@ -32,10 +32,10 @@ VALUES
 -- 10:21
 INSERT INTO category (name, is_primary)
 VALUES
-    ('Cat A', true),
-    ('Cat B', true),
+    ('Cat A', false),
+    ('Cat B', false),
     ('Cat C', false),
-    ('Cat D', true),
+    ('Cat D', false),
     ('Amazing', true),
     ('Historical', true),
     ('Ephemeral', true),
