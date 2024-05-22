@@ -1,4 +1,5 @@
 const db = require('better-sqlite3')('app.db');
+const { inferType } = require('../modules/upload');
 
 /**
  * Given an id, returns the associated fact.
@@ -188,19 +189,6 @@ function insertAttachments(paths = [], factID) {
             throw new Error(`Failed to insert attachment ${path} because -> ${err.message}`)
         }
     })
-}
-
-/**
- * Infers the type of the attachment based on the extension name.
- * @param {string} name file/path name.
- * @returns attachment type as a string.
- */
-function inferType(name) {
-    if (/(jpg|jpeg|png|svg|gif)$/.test(name)) return 'image'
-    if (/(mp3|mpeg)$/.test(name)) return 'audio'
-    name = name.toLowerCase();
-    if (name.includes('youtube.com') || name.includes('youtu.be')) return 'youtube'
-    return 'website'
 }
 
 /**
