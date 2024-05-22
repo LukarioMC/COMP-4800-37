@@ -2,6 +2,8 @@
  * Contains custom Express middleware functions.
  */
 
+const { getPrimaryTags } = require('./handlers/tag')
+
 /**
  * Middleware that will redirect users to login page if they are not logged in.
  * @param {Express.Request} req Incoming request object
@@ -42,8 +44,21 @@ function rejectUnauthorizedRequest(req, res, next) {
     }
 }
 
+function fetchPrimaryTags(req, res, next) {
+    try {
+        const primaryTags = getPrimaryTags();
+        res.locals.primaryTags = primaryTags;
+        next();
+    } catch (err) {
+        console.error('Error fetching primary tags:', err);
+        res.locals.primaryTags = [];
+        next();
+    }
+}
+
 module.exports = {
     redirectUnauthorizedRequestHome,
     rejectUnauthorizedRequest,
     isLoggedIn,
+    fetchPrimaryTags,
 };
