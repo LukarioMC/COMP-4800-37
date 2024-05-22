@@ -4,7 +4,8 @@ const path = require('path')
 require('dotenv').config()
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || 'app/public/uploads'
-const MAX_UPLOAD_DIR_SIZE = process.env.MAX_UPLOAD_DIR_SIZE || 1 * Math.pow(1024, 3)
+const MAX_FILE_SIZE = (process.env.MAX_FILE_SIZE || 10) * Math.pow(1024, 2)
+const MAX_UPLOAD_DIR_SIZE = (process.env.MAX_UPLOAD_DIR_SIZE || 1000) * Math.pow(1024, 2)
 const VALID_FILE_TYPES = {
     image: ['jpg', 'jpeg', 'png', 'svg', 'webp', 'gif'],
     audio: ['mp3', 'mpeg'],
@@ -35,11 +36,10 @@ const storage = multer.diskStorage({
     }
 })
 
-const maxFileSize = 10 * Math.pow(1024, 2)
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: maxFileSize
+        fileSize: MAX_FILE_SIZE
     },
     fileFilter: filterFiles
 })
