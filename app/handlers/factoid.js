@@ -3,6 +3,7 @@ const db = require('better-sqlite3')('app.db');
 /**
  * Given an id, returns the associated fact.
  * @param {number} factID An integer representing a fact ID.
+ * @param {boolean} isApproved Retrieves only an approved fact, set false to also retrieve non-approved (Default: true)
  * @returns Fact with the corresponding id and associated tags and attachments. Undefined if the id is not associated with any fact or is invalid.
  */
 function getFactByID(factID, isApproved = true) {
@@ -43,12 +44,21 @@ function getFactByID(factID, isApproved = true) {
 
 /**
  * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
+ * @param {boolean} isApproved Retrieve only approved facts, set false to retrieve only unapproved facts or omit/pass undefined to retrieve all facts.
  * @param {Array} tags a list of tag strings
  * @param {string} searchText search text
+ * @param {number} pageNum current page number
+ * @param {number} pageSize size of each page
  * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
+function getFacts(isApproved = undefined, tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
     try {
+        let approvalStmt = '';
+        if (isApproved === true) {
+            approvalStmt = 'WHERE is_approved';
+        } else if (isApproved === false) {
+            approvalStmt = 'WHERE NOT is_approved';
+        }
         let getFactsStmt = db.prepare(`
 				SELECT 
 						id, 
@@ -63,7 +73,7 @@ function getFacts(tags = undefined, searchText = undefined, pageNum = undefined,
 										) as fulltag
 								ON factoid.id = factoid_id
 				)
-				WHERE is_approved
+				${approvalStmt} 
 				GROUP BY id         
 				`);
         let unfilteredFacts = getFactsStmt.all();
@@ -74,7 +84,7 @@ function getFacts(tags = undefined, searchText = undefined, pageNum = undefined,
         let filteredFacts = filterFacts(unfilteredFacts, tags);
 
         let fetchedFacts = filteredFacts.map((fact) => {
-            return getFactByID(fact.id);
+            return getFactByID(fact.id, isApproved);
         });
 
         if (searchText) {
@@ -366,12 +376,21 @@ function getRandomFact() {
     }
 }
 
+/**
+ * Returns all unapproved facts
+ * @returns All unapproved facts
+ */
+function getUnapprovedFacts() {
+    return getFacts(false);
+}
+
 module.exports = {
     getFactByID,
     getFacts,
     addFact,
     updateFact,
     getRandomFact,
+    getUnapprovedFacts,
     deleteFactByID,
     approveFactByID
 };

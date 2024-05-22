@@ -23,9 +23,9 @@
             ></button>
         </div>
         <div class="offcanvas-body pt-0">
-            <h2 class="offcanvas-title pb-3 text-decoration-underline">
+            <h3 class="offcanvas-title pb-3 text-decoration-underline">
                 Categories
-            </h2>
+            </h3>
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a href="#">amazing</a>
@@ -76,15 +76,33 @@
                     <a href="#">multiples</a>
                 </li>
                 <hr size="1" />
+                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                    Functionalities
+                </h3>
+                <li class="nav-item">
+                    <a href="/submit">Submit a Fact</a>
+                </li>
+                <% if (user?.isAdmin) { %>
+                <li class="nav-item">
+                    <a href="/admin">Admin Dashboard</a>
+                </li>
+                <% } %>
+                <hr size="1" />
+                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                    User
+                </h3>
                 <li class="nav-item">
                     <a href="/account">Account</a>
                 </li>
                 <hr size="1" />
+                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                    More Info
+                </h3>
                 <li class="nav-item">
-                    <a href="/about">but why??</a>
+                    <a href="/about">But Why??</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/contact">contacting me</a>
+                    <a href="/contact">Contacting Me</a>
                 </li>
             </ul>
             <hr size="1" />
