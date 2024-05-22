@@ -19,11 +19,10 @@
                 <% }) %>
             </div>
             <% if (factoid.attachments) {
-                const order = ['image', 'gif', 'youtube', 'audio', 'website']
+                const order = ['image', 'youtube', 'audio', 'website']
                 let sortedAttachments = factoid.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
                 sortedAttachments.forEach(att => {
                     switch (att.type) { 
-                        case 'gif':
                         case 'image': %>
                             <img src="<%= att.link %>" style="width: 50%; height: 50%">
                             <% break;
