@@ -59,6 +59,27 @@ router.post('/fact', (req, res) => {
     //const success = addFact({ submitter_id, content, note, discovery_date });
     const success = addFact({ submitter_id, content, discovery_date, note, tags });
 
+    // Send email
+    const submitter = res.locals.user?.id || 'zzz3737';
+    const factContent = req.body.content || 'Unknown';
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_RECEIVER,
+        subject: 'thirty-seven.org - New Fact has been Submitted for Approval',
+        html:
+            `<p> Submitted by: ${submitter}
+            <br> Fact: ${factContent}
+            <br><br> Click <a href=${process.env.SITE_LINK}>here</a>
+            to go to the 37 admin dashboard for more details. You may need to log in. </p>`
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email: ', error);
+        } else {
+            console.log('Email sent: ', info.response);
+        }
+    });
+
     if (success) {
         res.status(201).json({ message: 'Fact added successfully' });
     } else {
