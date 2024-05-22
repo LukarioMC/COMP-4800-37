@@ -52,6 +52,7 @@ VALUES
     ('Sounds', true),
     ('Links', true),
     ('Multiples', true),
+    ('OG Grand Fact', false)
 ;
 
 INSERT INTO tag
