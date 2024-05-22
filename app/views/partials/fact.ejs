@@ -12,18 +12,16 @@
             <div><b>By:</b> <%= factoid.submitter_id === 'zzz3737' ? `${factoid.submitter_id} (Anonymous)` : factoid.submitter_id %></div>
             <div>
                 <% factoid.tags.forEach((tag) => { %>
-                    <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
+                <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
                 <% }) %>
             </div>
             <!-- Button trigger modal -->
-            <br/>
+            <br />
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
-                <!-- TODO: Link edit fact page here -->
-                <% console.log(typeof isAdmin) %>
-                <a class="btn btn-primary mb-3" id=<%= factoid.id %> href="#">Edit</a>
+            <% console.log(typeof isAdmin) %>
+            <a class="btn btn-primary mb-3" href="/edit-fact/<%= factoid.id %>">Edit</a>
             <% } %>
-             
         </div>
     </div>
 
