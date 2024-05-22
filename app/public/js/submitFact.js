@@ -24,7 +24,7 @@ function createSearchTag(name) {
     input.name = 'tag'
     input.type = 'hidden'
     input.value = name
-    form.appendChild(input)
+    tag.appendChild(input)
 
     tag.onclick = () => {
         tag.remove()
