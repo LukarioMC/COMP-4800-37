@@ -204,6 +204,7 @@ router.delete('/attachment/:attachmentID', rejectUnauthorizedRequest, (req, res,
     }
 });
 
+// Route to add attachments to a given fact.
 router.put('/attachment', 
     rejectUnauthorizedRequest, 
     upload.array('attachment'),
