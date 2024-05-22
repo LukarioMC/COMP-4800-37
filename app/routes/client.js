@@ -64,10 +64,15 @@ router.get('/contact', (_, res) => {
 function prepForFactList(req, pageContext = {}) {
     pageNum = req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1
 
-    let factoids = getFacts(req.query.tag, req.query.searchText, pageNum, PAGE_SIZE).map((fact) => {
-        let { is_approved, approval_date, ...publicFields } = fact;
-        return publicFields;
-    });
+    let factoids = getFacts(req.query.tag, req.query.searchText, pageNum, PAGE_SIZE, !req.user?.isAdmin)
+    
+    // Extract non-public fields if unauthorized/non-admin user.
+    if (!req.user?.isAdmin) {
+        factoids = factoids.map((fact) => {
+            let { is_approved, approval_date, ...publicFields } = fact;
+            return publicFields;
+        });
+    }
 
     maxPages = Math.ceil(getFacts(req.query.tag, req.query.searchText).length / PAGE_SIZE)
     

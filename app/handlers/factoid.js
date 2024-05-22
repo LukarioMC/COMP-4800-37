@@ -67,7 +67,7 @@ function getFacts(tags = undefined, searchText = undefined, pageNum = undefined,
 										) as fulltag
 								ON factoid.id = factoid_id
 				)
-				WHERE is_approved
+				${isApproved ? 'WHERE is_approved' : ''} 
 				GROUP BY id         
 				`);
         let unfilteredFacts = getFactsStmt.all();
