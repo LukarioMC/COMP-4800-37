@@ -13,7 +13,6 @@ const PAGE_SIZE = 5
 router.get('/', (req, res) => {
     pageContext = prepForFactList(req);
     pageContext.factoid = getRandomFact();
-    pageContext.user = req.user;
     res.render('pages/landing-page', pageContext);
 });
 
@@ -21,8 +20,7 @@ router.get('/', (req, res) => {
 router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
         const unapprovedFacts = getUnapprovedFacts();
         const tags = getTags();
-        const adminName = req.user?.id;
-        res.render('pages/admin-dashboard', { submissions: unapprovedFacts, tags: tags, adminName });
+        res.render('pages/admin-dashboard', { submissions: unapprovedFacts, tags: tags });
 
 });
 
