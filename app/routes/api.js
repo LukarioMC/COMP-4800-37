@@ -62,6 +62,12 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
     let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
     let tags = typeof tag === 'string' ? [tag] : tag
 
+    attachments = attachments.filter(att => att !== '')
+    tags = tags.filter(tag => tag !== '')
+
+    console.log(tags)
+    console.log(attachments)
+
     try {
         addFact({ submitter_id, content, discovery_date, note, tags, attachments});
         return res.status(201).json({message: 'Successfully added fact.'})
