@@ -7,7 +7,7 @@ const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
-const { rejectUnauthorizedRequest } = require('../middleware');
+const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
 const { upload, deleteUploads } = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
@@ -33,7 +33,7 @@ router.get('/fact', (req, res) => {
         }
     try {
         if (req.user?.isAdmin) {
-            let facts = getFacts(undefined, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
+            let facts = getFacts(null, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
             return res.status(200).json(facts);
         } else {
             let facts = getFacts(true, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
@@ -49,19 +49,13 @@ router.get('/fact', (req, res) => {
     }
 });
 
-const uploadErrorHandler = (err, _req, res, next) => {
-    if (err) return res.status(400).json({message: err.message})
-    next()
-}
-
 // API endpoint to add a new fact to the database.
 router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, res) => {
-    //
-
     let { userId, content, discovery_date, note, tag, attachment } = req.body.data ? JSON.parse(req.body.data) : req.body
-
+    
     if (!content) return res.status(400).json({ error: 'Content field is required' });
     
+    if (!discovery_date) discovery_date = undefined;
     let submitter_id = userId || ANON_USER_ID;
     if (typeof attachment === 'string') attachment = [attachment]
     let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
@@ -69,9 +63,6 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
 
     attachments = attachments.filter(att => att !== '')
     tags = tags.filter(tag => tag !== '')
-
-    console.log(tags)
-    console.log(attachments)
 
     try {
         addFact({ submitter_id, content, discovery_date, note, tags, attachments});

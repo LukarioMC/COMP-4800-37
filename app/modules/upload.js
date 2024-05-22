@@ -1,12 +1,16 @@
 const multer = require('multer')
 const fs = require('fs')
 const path = require('path')
-const db = require('better-sqlite3')('app.db');
 require('dotenv').config()
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || 'app/public/uploads'
-const MAX_UPLOAD_DIR_SIZE = process.env.MAX_UPLOAD_DIR_SIZE || 1 * Math.pow(1024, 3)
-const VALID_FILE_TYPES = /(jpg|jpeg|png|svg|webp|gif|mp3|mpeg)$/
+const MAX_FILE_SIZE = (process.env.MAX_FILE_SIZE || 10) * Math.pow(1024, 2)
+const MAX_UPLOAD_DIR_SIZE = (process.env.MAX_UPLOAD_DIR_SIZE || 1000) * Math.pow(1024, 2)
+const VALID_FILE_TYPES = {
+    image: ['jpg', 'jpeg', 'png', 'svg', 'webp', 'gif'],
+    audio: ['mp3', 'mpeg'],
+};
+const VALID_FILE_TYPES_REGEX = new RegExp('(' + Object.values(VALID_FILE_TYPES).flat().join('|') + ')$');
 
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR)
 
@@ -32,14 +36,30 @@ const storage = multer.diskStorage({
     }
 })
 
-const maxFileSize = 10 * Math.pow(1024, 2)
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: maxFileSize
+        fileSize: MAX_FILE_SIZE
     },
     fileFilter: filterFiles
 })
+
+/**
+ * Infers the type of the attachment based on the extension name.
+ * @param {string} name file/path name.
+ * @returns attachment type as a string.
+ */
+function inferType(name) {
+    for (type in VALID_FILE_TYPES) {
+        const typeRegex = new RegExp('(' + VALID_FILE_TYPES[type].join('|') + ')$');
+        if (typeRegex.test(name))
+            return type;
+    }
+    // Type was not of a regular file type, continue inferring.
+    name = name.toLowerCase();
+    if (name.includes('youtube.com') || name.includes('youtu.be')) return 'youtube';
+    return 'website';
+}
 
 /**
  * Returns whether the designated upload directory is above the max permissible size.
@@ -64,11 +84,11 @@ function filterFiles(req, file, cb) {
 
     if (isUploadDirFull()) return cb(new Error('No space for further uploads.'))
 
-    let validMimetype = VALID_FILE_TYPES.test(file.mimetype)
-    let validExtname = VALID_FILE_TYPES.test(path.extname(file.originalname).toLowerCase())
+    let validMimetype = VALID_FILE_TYPES_REGEX.test(file.mimetype)
+    let validExtname = VALID_FILE_TYPES_REGEX.test(path.extname(file.originalname).toLowerCase())
 
     if (!validMimetype || !validExtname) { 
-        return cb(new Error(`File ${file.originalname} is not of valid type. Only the following filetypes are supported - ${VALID_FILE_TYPES}`))
+        return cb(new Error(`File ${file.originalname} is not of valid type. Only the following filetypes are supported - ${VALID_FILE_TYPES.join(', ')}`))
     }
 
     return cb(null, true)
@@ -90,5 +110,6 @@ function deleteUploads(filenames = []) {
 
 module.exports = { 
     upload,
-    deleteUploads
+    deleteUploads,
+    inferType
 }

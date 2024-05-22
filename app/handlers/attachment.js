@@ -1,5 +1,5 @@
 const db = require('better-sqlite3')('app.db');
-const { deleteUploads } = require('../modules/upload');
+const { deleteUploads, inferType } = require('../modules/upload');
 
 /**
  * Deletes the attachment with the specified attachment ID from the database.
@@ -72,20 +72,6 @@ function insertAttachments(paths = [], factID) {
         }
     })
 }
-
-/**
- * Infers the type of the attachment based on the extension name.
- * @param {string} name file/path name.
- * @returns attachment type as a string.
- */
-function inferType(name) {
-    if (/(jpg|jpeg|png|svg)$/.test(name)) return 'image'
-    if (/(gif)$/.test(name)) return 'gif'
-    if (/(mp3|mpeg)$/.test(name)) return 'audio'
-    if (name.toLowerCase().contains('youtube.com')) return 'youtube'
-    return 'website'
-}
-
 
 module.exports = {
     deleteAttachmentforFactoid,
