@@ -43,6 +43,7 @@ function defineTag(name, isPrimary = false) {
  * @returns true if string is valid, false otherwise.
  */
 function isValidTagName(str) {
+  // /(A-Za-z0-9\s_-)/.test(req.body.tagName) - Might use this instead
   var code, i, len;
 
   for (i = 0, len = str.length; i < len; i++) {
