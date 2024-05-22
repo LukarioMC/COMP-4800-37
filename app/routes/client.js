@@ -18,10 +18,13 @@ router.get('/', (req, res) => {
 
 // This route is for the admin dashboard where the admin can routerroved, edit, and delete fact submissions.
 router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
-        const unapprovedFacts = getUnapprovedFacts();
-        const tags = getTags();
-        res.render('pages/admin-dashboard', { submissions: unapprovedFacts, tags: tags });
-
+    const getTagNames = (fact) => {
+        fact.tags = fact.tags?.map(tag => tag.name);
+        return fact;
+    }
+    const unapprovedFacts = getUnapprovedFacts().map(getTagNames);
+    const tags = getTags();
+    res.render('pages/admin-dashboard', { submissions: unapprovedFacts, tags: tags });
 });
 
 // route for submitting facts
