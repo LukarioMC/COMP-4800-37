@@ -23,7 +23,6 @@
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
             <!-- TODO: Link edit fact page here -->
-            <% console.log(typeof isAdmin) %>
             <a class="btn btn-primary mb-3" id=<%= factoid.id %> href="#">Edit</a>
             <% } %>
 
