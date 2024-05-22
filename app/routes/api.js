@@ -147,11 +147,12 @@ router.post('/report', (req, res) => {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_RECEIVER,
         subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
-        text:
-            'Reported by: ' + reporter +
-            '\nFact #' + factID +
-            '\nFact: ' + factContent +
-            '\n\nIssue: ' + reportContent,
+        html:
+            `<p> Reported by: ${reporter}
+            <br> Fact # ${factID}
+            <br> Fact: ${factContent}
+            <br><br> Issue: ${reportContent} <br><br> Click
+            <a href=${process.env.SITE_LINK}>here</a> to go to the 37 home page. You may need to log in. </p>`
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
