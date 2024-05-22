@@ -58,5 +58,5 @@ VALUES
     (1, 'gif.gif', 'gif'),
     (1, 'sound.mp3', 'audio'),
     (2, 'https://example.com/image.jpg', 'image'),
-    (3, 'https://example.com/video.mp4', 'video')
+    (3, 'https://example.com/audio.mp3', 'audio')
 ;

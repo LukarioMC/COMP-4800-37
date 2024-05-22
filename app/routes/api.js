@@ -7,7 +7,8 @@ const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid } = require('../handlers/attachment');
-const { rejectUnauthorizedRequest } = require('../middleware');
+const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
+const { upload, deleteUploads } = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -31,38 +32,44 @@ router.get('/fact', (req, res) => {
             return res.status(400).json({message: 'Page number and size must be greater than 0.'})
         }
     try {
-        let facts = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
-        let publicFieldFacts = facts.map((fact) => {
-            let { is_approved, approval_date, ...publicFields } = fact;
-            return publicFields;
-        });
-        return res.status(200).send(JSON.stringify(publicFieldFacts));
+        if (req.user?.isAdmin) {
+            let facts = getFacts(null, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
+            return res.status(200).json(facts);
+        } else {
+            let facts = getFacts(true, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
+            let publicFieldFacts = facts.map((fact) => {
+                let { is_approved, approval_date, ...publicFields } = fact;
+                return publicFields;
+            });
+            return res.status(200).json(publicFieldFacts);
+        }
     } catch (e) {
         console.log(e);
-        return res.status(500).send({ message: 'Server error.' });
+        return res.status(500).json({ message: 'Server error.' });
     }
 });
 
 // API endpoint to add a new fact to the database.
-router.post('/fact', (req, res) => {
-    const { userId, content, discovery_date, note, tags } = req.body;
+router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, res) => {
+    let { userId, content, discovery_date, note, tag, attachment } = req.body.data ? JSON.parse(req.body.data) : req.body
+    
+    if (!content) return res.status(400).json({ error: 'Content field is required' });
+    
+    if (!discovery_date) discovery_date = undefined;
+    let submitter_id = userId || ANON_USER_ID;
+    if (typeof attachment === 'string') attachment = [attachment]
+    let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
+    let tags = typeof tag === 'string' ? [tag] : tag
 
-    // v no longer fails foreign key constraint
-    const submitter_id = userId || ANON_USER_ID;
-    //const submitter_id = null;
+    attachments = attachments.filter(att => att !== '')
+    tags = tags.filter(tag => tag !== '')
 
-    if (!content) {
-        res.status(400).json({ error: 'Content field is required' });
-        return;
-    }
-
-    //const success = addFact({ submitter_id, content, note, discovery_date });
-    const success = addFact({ submitter_id, content, discovery_date, note, tags });
-
-    if (success) {
-        res.status(201).json({ message: 'Fact added successfully' });
-    } else {
-        res.status(500).json({ error: 'Failed to add fact' });
+    try {
+        addFact({ submitter_id, content, discovery_date, note, tags, attachments});
+        return res.status(201).json({message: 'Successfully added fact.'})
+    } catch (err) {
+        deleteUploads(res.locals.filenames)
+        return res.status(400).json({message: err.message})
     }
 });
 
@@ -115,19 +122,21 @@ router.get('/tags', (req, res) => {
     }
 });
 
+
 // Route to add a new tag.
 router.put('/tag', rejectUnauthorizedRequest, (req, res) => {
     if (req.body.tagName) {
         let queryRes = defineTag(req.body.tagName, req.body.isPrimary);
         if (queryRes.successful) {
-            return res.status(201).json({
-                message: `Successfully added tag ${req.body.tagName}.`,
-            });
+            req.flash('success', `Successfully added tag ${req.body.tagName}.`);
+            return res.status(201).redirect('back');
         } else {
-            return res.status(500).json({ message: queryRes.message });
+            req.flash('error', 'Error: ' + queryRes.message);
+            return res.status(500).redirect('back');
         }
     } else {
-        return res.status(400).json({ message: 'Invalid args.' });
+        req.flash('error', 'Error: Invalid input');
+        return res.status(400).redirect('back');
     }
 });
 

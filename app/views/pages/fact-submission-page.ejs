@@ -14,10 +14,10 @@
             <% } %>
    
             <!-- submission form -->
-            <form id="submission-form" enctype="multipart/form-data">
+            <form id="submission-form" enctype="multipart/form-data" action="/api/fact" method="POST">
                 <div class="mb-3">
                     <label for="text-line" class="form-label">Fact:</label>
-                    <input type="text" class="form-control" id="text-line" name="text-line" required>
+                    <input type="text" class="form-control" id="text-line" name="content" required>
                 </div>
                 <div class="mb-3">
                     <label for="note" class="form-label">Note:</label>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="date" class="form-label"> Discovery Date: </label>
-                    <input type="date" class="form-control" id="discovery-date" name="date" value="<%= new Date().toISOString().substr(0, 10) %>">
+                    <input type="date" class="form-control" id="discovery-date" name="discovery_date" value="<%= new Date().toISOString().substr(0, 10) %>">
                 </div>
 
                 <!-- additional component appearing when user is not passed in  -->
@@ -59,11 +59,10 @@
                         </div>
                     </div>
                 <% } %>         
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary text-left">Submit</button>
+                </div>
             </form>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary text-left">Submit</button>
-            </div>
-
         </div>
     </div>
 </main>
