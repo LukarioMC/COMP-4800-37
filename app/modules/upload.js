@@ -4,7 +4,7 @@ const path = require('path')
 const db = require('better-sqlite3')('app.db');
 require('dotenv').config()
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR || 'uploads'
+const UPLOAD_DIR = process.env.UPLOAD_DIR || 'app/public/uploads'
 const MAX_UPLOAD_DIR_SIZE = process.env.MAX_UPLOAD_DIR_SIZE || 1 * Math.pow(1024, 3)
 const VALID_FILE_TYPES = /(jpg|jpeg|png|svg|webp|gif|mp3|mpeg)$/
 
