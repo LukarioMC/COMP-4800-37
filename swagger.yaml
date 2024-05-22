@@ -127,7 +127,7 @@ paths:
         description: Fact data to be added.
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -141,6 +141,7 @@ paths:
                   description: The date when the fact was discovered.
                   type: string
                   format: date-time
+                # Sending an array of items is currently bugged, see: https://github.com/swagger-api/swagger-ui/issues/8614
                 tag:
                   description: A tag or tags.
                   type: array
@@ -148,12 +149,8 @@ paths:
                     type: string
                 attachment:
                   description: URL link(s) or file(s) associated with the fact. 
-                  oneOf:
-                    - type: string
-                      description: File(s) to upload.
-                      format: binary
-                    - type: string
-                      description: URL(s)
+                  type: string
+                  format: binary
                 data:
                   description: JSON that contains all the other mentioned fields with the
                     exception of attachment files (URLs still permissible). If present, all 
