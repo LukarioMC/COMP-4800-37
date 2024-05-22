@@ -4,38 +4,23 @@
 const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
+const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
 const { redirectUnauthorizedRequestHome } = require('../middleware');
-const { getFacts, getRandomFact } = require('../handlers/factoid');
 const { getTags } = require('../handlers/tag')
 
 const PAGE_SIZE = 5
 
 router.get('/', (req, res) => {
-    pageContext = prepForFactList(req)
-    pageContext.factoid = getRandomFact()
+    pageContext = prepForFactList(req);
+    pageContext.factoid = getRandomFact();
     res.render('pages/landing-page', pageContext);
 });
 
 // This route is for the admin dashboard where the admin can routerroved, edit, and delete fact submissions.
 router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
-        const testData = [
-            {
-                dateSubmitted: '05 / 04 / 2024',
-                user: 'abc0185',
-                fact: 'The number of pages in this book is a multiple of 37!',
-                note: 'Name of the book: "All things 37" by Greg Jones',
-                tags: 'media, books',
-            },
-            {
-                dateSubmitted: '05 / 06 / 2024',
-                user: 'mag3737',
-                fact: 'Another super cool 37 fact',
-                note: 'Found in Vancouver, BC',
-                tags: 'nature',
-            },
-        ];
-        const adminName = req.user?.id;
-        res.render('pages/admin-dashboard', { submissions: testData, adminName });
+        const unapprovedFacts = getUnapprovedFacts();
+        const tags = getTags();
+        res.render('pages/admin-dashboard', { submissions: unapprovedFacts, tags: tags });
 
 });
 
@@ -79,12 +64,18 @@ router.get('/contact', (_, res) => {
 function prepForFactList(req, pageContext = {}) {
     pageNum = req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1
 
-    let factoids = getFacts(req.query.tag, req.query.searchText, pageNum, PAGE_SIZE).map((fact) => {
-        let { is_approved, approval_date, ...publicFields } = fact;
-        return publicFields;
-    });
+    const retrieveApproved = req.user?.isAdmin ? undefined : true; // Pass undefined to retrieve all facts if user is an administrator.
+    let factoids = getFacts(retrieveApproved, req.query.tag, req.query.searchText, pageNum, PAGE_SIZE)
+    
+    // Extract non-public fields if unauthorized/non-admin user.
+    if (!req.user?.isAdmin) {
+        factoids = factoids.map((fact) => {
+            let { is_approved, approval_date, ...publicFields } = fact;
+            return publicFields;
+        });
+    }
 
-    maxPages = Math.ceil(getFacts(req.query.tag, req.query.searchText).length / PAGE_SIZE)
+    maxPages = Math.ceil(getFacts(retrieveApproved, req.query.tag, req.query.searchText).length / PAGE_SIZE)
     
     pageContext.factoids = factoids, 
     pageContext.tags = getTags(), 
