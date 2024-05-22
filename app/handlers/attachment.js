@@ -52,7 +52,43 @@ function deleteAllAttachmentsforFactoid(factoidID) {
     }
 }
 
+/**
+ * Creates attachments in the database with the given path and fact ID.
+ * @param {Array<string>} paths string array containing filenames
+ * @param {integer} factID fact ID
+ */
+function insertAttachments(paths = [], factID) {
+
+    let insertAttachmentStmt = db.prepare(`
+        INSERT INTO attachment (factoid_id, link, type) 
+        VALUES (?, ?, ?)
+    `)
+    
+    paths.forEach((path) => {
+        try {
+            insertAttachmentStmt.run(factID, path, inferType(path))
+        } catch (err) {
+            throw new Error(`Failed to insert attachment ${path} because -> ${err.message}`)
+        }
+    })
+}
+
+/**
+ * Infers the type of the attachment based on the extension name.
+ * @param {string} name file/path name.
+ * @returns attachment type as a string.
+ */
+function inferType(name) {
+    if (/(jpg|jpeg|png|svg)$/.test(name)) return 'image'
+    if (/(gif)$/.test(name)) return 'gif'
+    if (/(mp3|mpeg)$/.test(name)) return 'audio'
+    if (name.toLowerCase().contains('youtube.com')) return 'youtube'
+    return 'website'
+}
+
+
 module.exports = {
     deleteAttachmentforFactoid,
     deleteAllAttachmentsforFactoid,
+    insertAttachments
 };
