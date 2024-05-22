@@ -32,7 +32,7 @@ router.get('/fact', (req, res) => {
         }
     try {
         if (req.user?.isAdmin) {
-            let facts = getFacts(undefined, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
+            let facts = getFacts(null, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
             return res.status(200).json(facts);
         } else {
             let facts = getFacts(true, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
