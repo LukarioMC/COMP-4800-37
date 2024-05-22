@@ -7,7 +7,8 @@ const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid } = require('../handlers/attachment');
-const { rejectUnauthorizedRequest } = require('../middleware');
+const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
+const { upload, deleteUploads } = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -49,25 +50,26 @@ router.get('/fact', (req, res) => {
 });
 
 // API endpoint to add a new fact to the database.
-router.post('/fact', (req, res) => {
-    const { userId, content, discovery_date, note, tags } = req.body;
+router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, res) => {
+    let { userId, content, discovery_date, note, tag, attachment } = req.body.data ? JSON.parse(req.body.data) : req.body
+    
+    if (!content) return res.status(400).json({ error: 'Content field is required' });
+    
+    if (!discovery_date) discovery_date = undefined;
+    let submitter_id = userId || ANON_USER_ID;
+    if (typeof attachment === 'string') attachment = [attachment]
+    let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
+    let tags = typeof tag === 'string' ? [tag] : tag
 
-    // v no longer fails foreign key constraint
-    const submitter_id = userId || ANON_USER_ID;
-    //const submitter_id = null;
+    attachments = attachments.filter(att => att !== '')
+    tags = tags.filter(tag => tag !== '')
 
-    if (!content) {
-        res.status(400).json({ error: 'Content field is required' });
-        return;
-    }
-
-    //const success = addFact({ submitter_id, content, note, discovery_date });
-    const success = addFact({ submitter_id, content, discovery_date, note, tags });
-
-    if (success) {
-        res.status(201).json({ message: 'Fact added successfully' });
-    } else {
-        res.status(500).json({ error: 'Failed to add fact' });
+    try {
+        addFact({ submitter_id, content, discovery_date, note, tags, attachments});
+        return res.status(201).json({message: 'Successfully added fact.'})
+    } catch (err) {
+        deleteUploads(res.locals.filenames)
+        return res.status(400).json({message: err.message})
     }
 });
 

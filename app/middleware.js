@@ -42,8 +42,24 @@ function rejectUnauthorizedRequest(req, res, next) {
     }
 }
 
+/**
+ * Middleware that handles incoming upload errors and rejects with a message.
+ * @param {*} err Error object, present if there are errors uploading.
+ * @param {Express.Request} _req Incoming request object
+ * @param {Express.Response} res Outgoing response object
+ * @param {Express.RequestHandler} next Next request handler in request chain
+ * @returns 
+ */
+const uploadErrorHandler = (err, _req, res, next) => {
+    if (err) {
+        return res.status(400).json({ message: err.message });
+    }
+    next();
+}
+
 module.exports = {
     redirectUnauthorizedRequestHome,
     rejectUnauthorizedRequest,
     isLoggedIn,
+    uploadErrorHandler
 };
