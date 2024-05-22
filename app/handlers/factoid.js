@@ -189,6 +189,7 @@ function inferType(name) {
     if (/(jpg|jpeg|png|svg)$/.test(name)) return 'image'
     if (/(gif)$/.test(name)) return 'gif'
     if (/(mp3|mpeg)$/.test(name)) return 'audio'
+    if (name.toLowerCase().contains('youtube.com')) return 'youtube'
     return 'website'
 }
 
