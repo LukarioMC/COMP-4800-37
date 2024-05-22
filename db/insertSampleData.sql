@@ -1,6 +1,6 @@
 INSERT INTO factoid (content, note, is_approved, approval_date)
 VALUES
-    -- amazing
+    -- amazing 1-5
     ('There are 37 holes in the mouthpiece of a telephone',
     'I''m talking about "old" style phones with the "Mickey Mouse" handsets that have the round mouthpieces with roughly the following pattern of holes:
 
@@ -33,7 +33,7 @@ VALUES
     Any light that an alert reader could shed on this stressful situation would be appreciated.
     ', true, null),
     ('In the Bible, Psalm 37 is one of the few that are acrostic.', 'The first letter of every other verse is a consecutive letter of the Hebrew alphabet.', true, null),
-    -- historical
+    -- historical 6-10
     ('William Shakespeare wrote 37 plays.', 
     '10 histories, 10 tragedies, 17 comedies.
 
@@ -50,7 +50,7 @@ VALUES
     'Contributed by The 37 Group of Boston.', true, null),
     
     ('unapproved fact', null, false, null),
-    -- ephemeral
+    -- ephemeral 12-16
     ('There are 37 million Americans without health insurance.', 
     'Chicago Tribune front page story, sometime in the spring of 1993.', true, null),
     ('Levi Strauss Corp. has 37 manufacturing plants in North America.', 
@@ -89,7 +89,7 @@ VALUES
     We''ve attempted to provide the best search engines for you to access the more than thirty-seven thousand products, services, case studies, application notes and other items residing on the Xerox Web Site.', true, null),
     ('An Open Text Index search for 37s returned 37 hits.', 
     'In particular, I did a "power search", and asked for "thirty-seven" in "summary" OR "thirty-seven" in "title". Cool, man.', true, null),
-    -- random
+    -- random 17-21
     ('The Maelstrom space ship has ACME XQJ-37 retro-thrusters.', 
     'Maelstrom is an Asteroids-like computer game for the Mac. Here''s a quote from the "About Maelstrom" information window, which reads as if narrated by the pilot of the little ship that you''re flying around in the game:
 
@@ -134,13 +134,13 @@ VALUES
     Foggia, Italy', true, null),
     ('Michiel Boland reports that 37 gets used a lot by mathematicians at the University of Nijmegen, The Netherlands.', null, true, null),
     ('Gary Greenberg once rolled 37 on a d100 three times in a row.', null, true, null),
-    -- sports
+    -- sports 22-26
     ('Bo Jackson gained 37 yards (on 12 carries) in his first NFL appearance.', null, true, null),
     ('Magic Johnson and Larry Bird competed against each other in 37 NBA games.', null, true, null),
     ('Mark McGwire''s 37 home runs in 1987 broke Al Rosen''s 37-year-old American League rookie record.', null, true, null),
     ('The Illini basketball team was ranked #1 in the AP poll in 1989 for the first time in 37 years.', null, true, null),
     ('Kansas won the NCAA basketball championship in 1988 for the first time in 37 years.', null, true, null),
-    -- scientific
+    -- scientific 27-31
     ('"Normal" human body temperature is 37 degrees Celsius.', 
     'This is based on the old idea that "normal" body temperature is 98.6 degrees Fahrenheit. This is exactly 37 degrees Celsius:
 
@@ -169,61 +169,61 @@ VALUES
 
     Contributed by alert reader Adam Gower.', true, null),
     ('Blue light spans 37 nm of the visible wavelength spectrum.', null, true, null),
-    -- personal
+    -- personal 32-36
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- numerical
+    -- numerical 37-41
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- movies
+    -- movies 42-46
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- comics
+    -- comics 47-51
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- media
+    -- media 52-56
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- 37th things
+    -- 37th things 57-61
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- pictures
+    -- pictures 62-66
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- sounds
+    -- sounds 67-71
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- links
+    -- links 72-76
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
-    -- multiples
+    -- multiples 77-81
     ('fact e', null, true, null),
     ('fact e', null, true, null),
     ('fact e', null, true, null),
