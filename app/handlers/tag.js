@@ -106,9 +106,20 @@ function deleteAllTagsforFactoid(factoidID) {
   }
 }
 
+function getPrimaryTags() {
+    try {
+        const stmt = db.prepare('SELECT * FROM category WHERE is_primary = 1 ORDER BY name');
+        return stmt.all();
+    } catch (err) {
+        console.error(err);
+        return [];
+    }
+}
+
 module.exports = {
   getTags,
   defineTag,
   deleteTagforFactoid,
-  deleteAllTagsforFactoid
+  deleteAllTagsforFactoid,
+  getPrimaryTags
 }
