@@ -44,14 +44,14 @@ function getFactByID(factID, isApproved = true) {
 
 /**
  * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
- * @param {boolean} isApproved Retrieve only approved facts, set false to retrieve only unapproved facts or omit/pass undefined to retrieve all facts.
+ * @param {boolean} isApproved Retrieve only approved facts, set false to retrieve only unapproved facts or pass null to retrieve all facts.
  * @param {Array} tags a list of tag strings
  * @param {string} searchText search text
  * @param {number} pageNum current page number
  * @param {number} pageSize size of each page
  * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(isApproved = undefined, tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
+function getFacts(isApproved = null, tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
     try {
         let approvalStmt = '';
         if (isApproved === true) {
