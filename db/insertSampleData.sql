@@ -29,12 +29,29 @@ VALUES
     ('unapproved fact', null, false, null)
 ;
 
+-- 10:21
 INSERT INTO category (name, is_primary)
 VALUES
     ('Cat A', true),
     ('Cat B', true),
     ('Cat C', false),
-    ('Cat D', true)
+    ('Cat D', true),
+    ('Amazing', true),
+    ('Historical', true),
+    ('Ephemeral', true),
+    ('Random', true),
+    ('Sports', true),
+    ('Scientific', true),
+    ('Personal', true),
+    ('Numerical', true),
+    ('Movies', true),
+    ('Comics', true),
+    ('Media', true),
+    ('37th things', true),
+    ('Pictures', true),
+    ('Sounds', true),
+    ('Links', true),
+    ('Multiples', true),
 ;
 
 INSERT INTO tag
