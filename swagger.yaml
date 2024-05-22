@@ -418,7 +418,7 @@ paths:
           description: Server error.
 
   /api/attachment:
-    put:
+    post:
       summary: Attaches a list of attachment files to the fact specified by the ID. Requires admin privileges.
       requestBody:
         description: Attachments files and fact ID.
