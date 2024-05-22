@@ -18,7 +18,6 @@
             <% if (factoid.attachments) {
                 const order = ['image', 'gif', 'youtube', 'audio', 'website']
                 let sortedAttachments = factoid.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
-                if (factoid.id === 1) console.log(sortedAttachments)
                 sortedAttachments.forEach(att => {
                     switch (att.type) { 
                         case 'gif':
