@@ -24,7 +24,7 @@
                     <label for="tags" class="form-label">Tags:</label>
                     <div id="tags-container">
                         <% tags.forEach((tag) => { %>
-                        <span class="badge rounded-pill tag-selectable <%= fact.tags.some(factTag => factTag.name === tag.name) ? 'bg-success' : 'bg-primary' %>" data-tag="<%= tag.name %>"><%= tag.name %></span>
+                        <span class="badge rounded-pill tag-selectable <%= fact.tags.some(factTag => factTag.name === tag.name) ? 'bg-primary' : 'bg-secondary' %>" data-tag="<%= tag.name %>"><%= tag.name %></span>
                         <% }) %>
                     </div>
                 </div>
