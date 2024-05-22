@@ -54,6 +54,7 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
     //
 
     let { userId, content, discovery_date, note, tag, attachment } = req.body.data ? JSON.parse(req.body.data) : req.body
+    if (!discovery_date) discovery_date = undefined;
 
     if (!content) return res.status(400).json({ error: 'Content field is required' });
     
