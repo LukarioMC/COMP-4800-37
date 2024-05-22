@@ -15,6 +15,35 @@
                     <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
                 <% }) %>
             </div>
+            <% if (factoid.attachments) {
+                factoid.attachments.forEach(att => {
+                    if(att.factoid_id === 1) console.log(att)
+                    switch (att.type) { 
+                        case 'gif':
+                        case 'image': %>
+                            <img src="<%= att.link %>" style="width: 50%; height: 50%">
+                            <% break;
+                        case 'audio': %>
+                            <audio controls><source src="<%= att.link %>"></audio>
+                            <% break;
+                        case 'youtube': 
+                        let embedLink = att.link.replace('watch?v=', 'embed/') %>
+                        <iframe 
+                            width="50%" 
+                            height="50%" 
+                            src="<%=embedLink%>" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen>
+                        </iframe>
+                            <% break;
+                        case 'website': %>
+                            <a href="<%= att.link %>">Read More</a>
+                            <% break;       
+            }})} %>
+            
             <!-- Button trigger modal -->
             <br/>
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
