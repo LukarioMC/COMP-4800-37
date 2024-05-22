@@ -32,14 +32,18 @@ router.get('/fact', (req, res) => {
         }
     try {
         let facts = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
-        let publicFieldFacts = facts.map((fact) => {
-            let { is_approved, approval_date, ...publicFields } = fact;
-            return publicFields;
-        });
-        return res.status(200).send(JSON.stringify(publicFieldFacts));
+        if (req.user?.isAdmin) {
+            return res.status(200).json(facts);
+        } else {
+            let publicFieldFacts = facts.map((fact) => {
+                let { is_approved, approval_date, ...publicFields } = fact;
+                return publicFields;
+            });
+            return res.status(200).json(publicFieldFacts);
+        }
     } catch (e) {
         console.log(e);
-        return res.status(500).send({ message: 'Server error.' });
+        return res.status(500).json({ message: 'Server error.' });
     }
 });
 
