@@ -53,7 +53,7 @@ CREATE TABLE "Attachment" (
     "link" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     CONSTRAINT "Attachment_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "attachment_type_check" CHECK ("type" in ('image', 'audio', 'website', 'gif', 'youtube'))
+    CONSTRAINT "attachment_type_check" CHECK ("type" in ('image', 'audio', 'website', 'youtube'))
 );
 
 -- CreateTable
