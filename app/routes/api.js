@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
-const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid } = require('../handlers/attachment');
+const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
 const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
 const { upload, deleteUploads } = require('../modules/upload')
 
@@ -216,6 +216,24 @@ router.delete('/attachment/:attachmentID', rejectUnauthorizedRequest, (req, res,
         return res.status(500).send({ message: 'Server error.' });
     }
 });
+
+// Route to add attachments to a given fact.
+router.post('/attachment', 
+    rejectUnauthorizedRequest, 
+    upload.array('attachment'),
+    uploadErrorHandler, 
+    (req, res) => {
+        if (!req.body.factID) return res.status(400).json({message: 'Fact ID must be provided.'})
+        if (!res.locals.filenames) return res.status(400).json({message: 'No attachments provided.'})
+
+        try {
+            insertAttachments(res.locals.filenames, req.body.factID)
+            return res.status(201).json({message: 'Attachments added successfully.'})
+        } catch (err) {
+            console.log(err)
+            return res.status(400).json({message: `Unable to add attachment(s) to fact ${req.body.factID}.`})
+        }
+})
 
 // API endpoint to delete a tag for a given factoid ID and category ID
 router.delete('/tag/:factoidID/:categoryID', rejectUnauthorizedRequest, (req, res) => {

@@ -1,5 +1,5 @@
 const db = require('better-sqlite3')('app.db');
-const { inferType } = require('../modules/upload');
+const { insertAttachments } = require('./attachment')
 
 /**
  * Given an id, returns the associated fact.
@@ -168,27 +168,6 @@ function addFact({
     } catch (err) {
         throw new Error(`Failed to add fact because -> ${err.message}`)
     }
-}
-
-/**
- * Creates attachments in the database with the given path and fact ID.
- * @param {string} paths string containing filename
- * @param {integer} factID fact ID
- */
-function insertAttachments(paths = [], factID) {
-
-    let insertAttachmentStmt = db.prepare(`
-        INSERT INTO attachment (factoid_id, link, type) 
-        VALUES (?, ?, ?)
-    `)
-    
-    paths.forEach((path) => {
-        try {
-            insertAttachmentStmt.run(factID, path, inferType(path))
-        } catch (err) {
-            throw new Error(`Failed to insert attachment ${path} because -> ${err.message}`)
-        }
-    })
 }
 
 /**
