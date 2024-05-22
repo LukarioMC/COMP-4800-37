@@ -16,8 +16,10 @@
                 <% }) %>
             </div>
             <% if (factoid.attachments) {
-                factoid.attachments.forEach(att => {
-                    if(att.factoid_id === 1) console.log(att)
+                const order = ['image', 'gif', 'youtube', 'audio', 'website']
+                let sortedAttachments = factoid.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
+                if (factoid.id === 1) console.log(sortedAttachments)
+                sortedAttachments.forEach(att => {
                     switch (att.type) { 
                         case 'gif':
                         case 'image': %>
@@ -27,7 +29,7 @@
                             <audio controls><source src="<%= att.link %>"></audio>
                             <% break;
                         case 'youtube': 
-                        let embedLink = att.link.replace('watch?v=', 'embed/') %>
+                        const embedLink = att.link.replace('watch?v=', 'embed/') %>
                         <iframe 
                             width="50%" 
                             height="50%" 
@@ -40,7 +42,7 @@
                         </iframe>
                             <% break;
                         case 'website': %>
-                            <a href="<%= att.link %>">Read More</a>
+                            <a href="<%= att.link %>" style="display: block">Read More</a>
                             <% break;       
             }})} %>
             
