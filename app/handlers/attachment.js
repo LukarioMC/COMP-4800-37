@@ -1,4 +1,5 @@
 const db = require('better-sqlite3')('app.db');
+const { deleteUploads } = require('../modules/upload');
 
 /**
  * Deletes the attachment with the specified attachment ID from the database.
@@ -8,10 +9,11 @@ const db = require('better-sqlite3')('app.db');
 function deleteAttachmentforFactoid(attachmentID) {
     try {
         const deleteAttachmentStatement = db.prepare(
-            'DELETE FROM Attachment WHERE id = ?'
+            'DELETE FROM Attachment WHERE id = ? RETURNING link'
         );
-        const result = deleteAttachmentStatement.run(attachmentID);
-        return result.changes > 0;
+        const link = deleteAttachmentStatement.get(attachmentID).link;
+        deleteUploads([link]);
+        return link;
     } catch (e) {
         console.log('Error deleting attachment:', e);
         return false;

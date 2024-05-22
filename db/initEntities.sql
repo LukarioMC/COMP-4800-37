@@ -52,7 +52,8 @@ CREATE TABLE "Attachment" (
     "factoid_id" INTEGER NOT NULL,
     "link" TEXT NOT NULL,
     "type" TEXT NOT NULL,
-    CONSTRAINT "Attachment_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "Attachment_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "attachment_type_check" CHECK ("type" in ('image', 'audio', 'website', 'youtube'))
 );
 
 -- CreateTable
@@ -74,5 +75,7 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 -- CreateIndex
 DROP INDEX IF EXISTS Category_name_key;
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+
+DROP TABLE IF EXISTS sessions;
 
 PRAGMA foreign_keys=ON;
