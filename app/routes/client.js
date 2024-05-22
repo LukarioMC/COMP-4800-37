@@ -64,7 +64,8 @@ router.get('/contact', (_, res) => {
 function prepForFactList(req, pageContext = {}) {
     pageNum = req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1
 
-    let factoids = getFacts(req.query.tag, req.query.searchText, pageNum, PAGE_SIZE, !req.user?.isAdmin)
+    const retrieveApproved = req.user?.isAdmin ? undefined : true; // Pass undefined to retrieve all facts if user is an administrator.
+    let factoids = getFacts(retrieveApproved, req.query.tag, req.query.searchText, pageNum, PAGE_SIZE)
     
     // Extract non-public fields if unauthorized/non-admin user.
     if (!req.user?.isAdmin) {
@@ -74,7 +75,7 @@ function prepForFactList(req, pageContext = {}) {
         });
     }
 
-    maxPages = Math.ceil(getFacts(req.query.tag, req.query.searchText).length / PAGE_SIZE)
+    maxPages = Math.ceil(getFacts(retrieveApproved, req.query.tag, req.query.searchText).length / PAGE_SIZE)
     
     pageContext.factoids = factoids, 
     pageContext.tags = getTags(), 

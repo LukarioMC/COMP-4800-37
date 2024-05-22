@@ -31,10 +31,11 @@ router.get('/fact', (req, res) => {
             return res.status(400).json({message: 'Page number and size must be greater than 0.'})
         }
     try {
-        let facts = getFacts(req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
         if (req.user?.isAdmin) {
+            let facts = getFacts(undefined, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
             return res.status(200).json(facts);
         } else {
+            let facts = getFacts(true, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
             let publicFieldFacts = facts.map((fact) => {
                 let { is_approved, approval_date, ...publicFields } = fact;
                 return publicFields;

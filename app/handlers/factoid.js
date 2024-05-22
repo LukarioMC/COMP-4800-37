@@ -3,7 +3,7 @@ const db = require('better-sqlite3')('app.db');
 /**
  * Given an id, returns the associated fact.
  * @param {number} factID An integer representing a fact ID.
- * @param {boolean} isApproved Retrieves only an approved fact, set false to retrieve non-approved (Default: true)
+ * @param {boolean} isApproved Retrieves only an approved fact, set false to also retrieve non-approved (Default: true)
  * @returns Fact with the corresponding id and associated tags and attachments. Undefined if the id is not associated with any fact or is invalid.
  */
 function getFactByID(factID, isApproved = true) {
@@ -44,15 +44,21 @@ function getFactByID(factID, isApproved = true) {
 
 /**
  * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
+ * @param {boolean} isApproved Retrieve only approved facts, set false to retrieve only unapproved facts or omit/pass undefined to retrieve all facts.
  * @param {Array} tags a list of tag strings
  * @param {string} searchText search text
  * @param {number} pageNum current page number
  * @param {number} pageSize size of each page
- * @param {boolean} isApproved Retrieves only approved facts, set false to retrieve all (Default: true)
  * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined, isApproved = true) {
+function getFacts(isApproved = undefined, tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
     try {
+        let approvalStmt = '';
+        if (isApproved === true) {
+            approvalStmt = 'WHERE is_approved';
+        } else if (isApproved === false) {
+            approvalStmt = 'WHERE NOT is_approved';
+        }
         let getFactsStmt = db.prepare(`
 				SELECT 
 						id, 
@@ -67,7 +73,7 @@ function getFacts(tags = undefined, searchText = undefined, pageNum = undefined,
 										) as fulltag
 								ON factoid.id = factoid_id
 				)
-				${isApproved ? 'WHERE is_approved' : ''} 
+				${approvalStmt} 
 				GROUP BY id         
 				`);
         let unfilteredFacts = getFactsStmt.all();
@@ -309,57 +315,12 @@ function getRandomFact() {
     }
 }
 
-// /**
-//  * Returns all unapproved facts
-//  * @returns All unapproved facts
-//  */
-// function getUnapprovedFacts() {
-//     try {
-//         const unapprovedFactsStmt = db.prepare(
-//             `SELECT * FROM factoid
-//             LEFT JOIN tag ON factoid.id=tag.factoid_id
-//             WHERE NOT is_approved
-//             ORDER BY posting_date`);
-//         const unapprovedFacts = unapprovedFactsStmt.all();
-//         return unapprovedFacts;
-//     } catch (err) {
-//         console.log(err);
-//         return null;
-//     }
-// }
-
 /**
- * Returns all unapproved facts with their associated tags.
- * @returns a list of unapproved facts with associated tags.
+ * Returns all unapproved facts
+ * @returns All unapproved facts
  */
 function getUnapprovedFacts() {
-    try {
-        let getUnapprovedFactsStmt = db.prepare(`
-            SELECT 
-                factoid.id, 
-                factoid.submitter_id, 
-                factoid.content, 
-                factoid.posting_date, 
-                factoid.note, 
-                group_concat(category.name) as taglist
-            FROM factoid
-            LEFT JOIN tag ON factoid.id = tag.factoid_id
-            LEFT JOIN category ON tag.category_id = category.id
-            WHERE NOT factoid.is_approved
-            GROUP BY factoid.id
-            ORDER BY factoid.posting_date
-        `);
-
-        let unapprovedFacts = getUnapprovedFactsStmt.all();
-        unapprovedFacts.forEach(fact => {
-            fact.taglist = fact.taglist ? fact.taglist.split(',').sort() : [];
-        });
-
-        return unapprovedFacts;
-    } catch (err) {
-        console.log(err);
-        return [];
-    }
+    return getFacts(false);
 }
 
 module.exports = {
