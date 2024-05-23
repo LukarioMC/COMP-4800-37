@@ -44,6 +44,13 @@ function rejectUnauthorizedRequest(req, res, next) {
     }
 }
 
+/**
+ * Middleware that fetches primary tags and stores them in res.locals for later use.
+ * If an error occurs during fetching, an empty array is stored in res.locals.
+ * @param {Express.Request} req - Incoming request object.
+ * @param {Express.Response} res - Outgoing response object.
+ * @param {Function} next - Next request handler in the request chain.
+ */
 function fetchPrimaryTags(req, res, next) {
     try {
         const primaryTags = getPrimaryTags();
