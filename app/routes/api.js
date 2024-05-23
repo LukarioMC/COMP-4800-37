@@ -51,15 +51,21 @@ router.get('/fact', (req, res) => {
 
 // API endpoint to add a new fact to the database.
 router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, res) => {
-    let { userId, content, discovery_date, note, tag, attachment } = req.body.data ? JSON.parse(req.body.data) : req.body
     
+    console.log('test')
+
+    let { userId, content, discovery_date, note, tag, attachment} = req.body.data ? JSON.parse(req.body.data) : req.body
+
     if (!content) return res.status(400).json({ error: 'Content field is required' });
     
     if (!discovery_date) discovery_date = undefined;
     let submitter_id = userId || ANON_USER_ID;
+
     if (typeof attachment === 'string') attachment = [attachment]
-    let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
+    let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames || [])
+    
     let tags = typeof tag === 'string' ? [tag] : tag
+    tags = tags || []
 
     attachments = attachments.filter(att => att !== '')
     tags = tags.filter(tag => tag !== '')
@@ -182,7 +188,7 @@ router.post('/report', (req, res) => {
             <br> Fact # ${factID}
             <br> Fact: ${factContent}
             <br><br> Issue: ${reportContent} <br><br> Click
-            <a href=${process.env.SITE_LINK}>here</a> to go to the 37 home page. You may need to log in. </p>`
+            <a href=${process.env.ADMIN_LINK}>here</a> to go to the 37 home page. You may need to log in. </p>`
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {

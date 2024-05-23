@@ -88,7 +88,7 @@ function filterFiles(req, file, cb) {
     let validExtname = VALID_FILE_TYPES_REGEX.test(path.extname(file.originalname).toLowerCase())
 
     if (!validMimetype || !validExtname) { 
-        return cb(new Error(`File ${file.originalname} is not of valid type. Only the following filetypes are supported - ${VALID_FILE_TYPES.join(', ')}`))
+        return cb(new Error(`File ${file.originalname} is not of valid type. Only the following filetypes are supported - ${[].concat(Object.values(VALID_FILE_TYPES))}`))
     }
 
     return cb(null, true)
