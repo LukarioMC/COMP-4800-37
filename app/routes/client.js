@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
 const { redirectUnauthorizedRequestHome } = require('../middleware');
-const { getFacts, getRandomFact } = require('../handlers/factoid');
+const { getFacts, getRandomFact, getFactByID, updateFact } = require('../handlers/factoid');
 const { getTags } = require('../handlers/tag')
 
 const PAGE_SIZE = 5
@@ -72,7 +72,21 @@ router.get('/contact', (_, res) => {
 
 // Route to edit a fact
 router.get('/edit-fact/:id', async (req, res) => {
+    const factID = req.params.id;
+    const fact = getFactByID(factID, false); 
+    const tags = getTags();
 
+    if (!fact) {
+        return res.status(404).send('Fact not found');
+    }
+  
+    countryUtils.readCountryData((err, countries) => {
+        if (err) {
+            return res.status(500).send('Internal Server Error');
+        }
+
+        res.render('pages/edit-fact', { fact, user: req.user, countries, tags });
+    });
 });
 
 /**
