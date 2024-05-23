@@ -51,8 +51,6 @@ router.get('/fact', (req, res) => {
 
 // API endpoint to add a new fact to the database.
 router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, res) => {
-    
-    console.log('test')
 
     let { userId, content, discovery_date, note, tag, attachment} = req.body.data ? JSON.parse(req.body.data) : req.body
 

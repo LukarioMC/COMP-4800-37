@@ -1,5 +1,4 @@
 
-
 /**
  * Adds a tag name to the searchTags array and creates a corresponding HTML element.
  * @param {string} name Tag name.
@@ -62,11 +61,27 @@ function createAttachmentInput() {
         input.type = 'file'
         input.className = 'form-control'
         input.name = 'attachment'
+        input.accept = ['.jpg', '.jpeg', '.png', '.svg', '.webp', '.gif', '.mp3', '.mpeg'].join(',')
         input.onchange = () => {
-            if (input.files.length > 0) createAttachmentInput()           
+            if (input.files.length > 0) {
+                if (input.files[0].size > 5 * Math.pow(1024, 2)) {
+                    input.value = ''
+                    alert('File is too large.')
+                } else {
+                    createAttachmentInput()
+                }  
+            }       
         }
         attachmentsDiv.appendChild(input)
     }
+}
+
+function resetForm() {
+    let form = document.getElementById('submission-form')
+    form.reset()
+    document.getElementById('tags').innerHTML = ''
+    document.getElementById('attachments').innerHTML = ''
+    createAttachmentInput()
 }
 
 /**
@@ -89,9 +104,8 @@ function configPage() {
             method: 'post',
             body: data
         })
-        .then(res => console.log(res.json()))
         .then((res) => {
-            if (res.status === 201) form.reset()
+            if (res.status === 201) resetForm()
             return res.json()
         })
         .then((result) => alert(result.message))

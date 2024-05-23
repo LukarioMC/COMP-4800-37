@@ -50,13 +50,15 @@ function rejectUnauthorizedRequest(req, res, next) {
  * @param {Express.RequestHandler} next Next request handler in request chain
  * @returns 
  */
-const uploadErrorHandler = (err, _req, res, next) => {
+const uploadErrorHandler = (err, req, res, next) => {
     if (err) {
-       return res.status(400).json({ message: err.message });
+        // req.setTimeout(7000, () => {
+        //     console.log('timeout')
+        // });
+        return res.status(400).json({ message: err.message });
     } else {
         next();
     }
-    
 }
 
 module.exports = {
