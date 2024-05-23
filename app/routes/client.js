@@ -5,10 +5,12 @@ const express = require('express');
 const router = express.Router();
 const countryUtils = require('../utils/countryUtils');
 const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
-const { redirectUnauthorizedRequestHome } = require('../middleware');
+const { redirectUnauthorizedRequestHome, fetchPrimaryTags } = require('../middleware');
 const { getTags } = require('../handlers/tag')
 
 const PAGE_SIZE = 5
+
+router.use(fetchPrimaryTags);
 
 router.get('/', (req, res) => {
     pageContext = prepForFactList(req);
