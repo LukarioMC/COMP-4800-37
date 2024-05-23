@@ -1,6 +1,5 @@
 INSERT INTO factoid (content, note, is_approved, approval_date)
 VALUES
-    -- amazing(5) 1-5
     ('There are 37 holes in the mouthpiece of a telephone',
     'I''m talking about "old" style phones with the "Mickey Mouse" handsets that have the round mouthpieces with roughly the following pattern of holes:
 
@@ -23,17 +22,15 @@ VALUES
     '2024-05-09T22:19:56+0000'),
     ('All American Express card numbers begin with 37.', null, true, '2024-05-09T22:19:56+0000'),
     ('There are 37 miracles in the Bible.', 
-    '
-    I don''t know what is going on here. Many people have told me this is impossible. 
+    'I don''t know what is going on here. Many people have told me this is impossible. 
     They always say things like "there have to be a lot more than that", or start musing on what sorts of contrivances might have been applied to the set of miracles that "count" to arrive at 37.
 
     All I know is I have a little scrap of paper, about 15 years old, which says in my handwriting "37 miracles in the Bible". 
     My assumption (though I don''t remember) is that someone told me the factoid, and I scribbled it down so I wouldn''t forget.
 
-    Any light that an alert reader could shed on this stressful situation would be appreciated.
-    ', true, null),
+    Any light that an alert reader could shed on this stressful situation would be appreciated.', true, null),
     ('In the Bible, Psalm 37 is one of the few that are acrostic.', 'The first letter of every other verse is a consecutive letter of the Hebrew alphabet.', true, null),
-    -- historical(6) 6-10
+    
     ('William Shakespeare wrote 37 plays.', 
     '10 histories, 10 tragedies, 17 comedies.
 
@@ -50,7 +47,7 @@ VALUES
     'Contributed by The 37 Group of Boston.', true, null),
     
     ('unapproved fact', null, false, null),
-    -- ephemeral(7) 12-16
+  
     ('There are 37 million Americans without health insurance.', 
     'Chicago Tribune front page story, sometime in the spring of 1993.', true, null),
     ('Levi Strauss Corp. has 37 manufacturing plants in North America.', 
@@ -89,7 +86,7 @@ VALUES
     We''ve attempted to provide the best search engines for you to access the more than thirty-seven thousand products, services, case studies, application notes and other items residing on the Xerox Web Site.', true, null),
     ('An Open Text Index search for 37s returned 37 hits.', 
     'In particular, I did a "power search", and asked for "thirty-seven" in "summary" OR "thirty-seven" in "title". Cool, man.', true, null),
-    -- random(8) 17-21
+    
     ('The Maelstrom space ship has ACME XQJ-37 retro-thrusters.', 
     'Maelstrom is an Asteroids-like computer game for the Mac. Here''s a quote from the "About Maelstrom" information window, which reads as if narrated by the pilot of the little ship that you''re flying around in the game:
 
@@ -134,13 +131,13 @@ VALUES
     Foggia, Italy', true, null),
     ('Michiel Boland reports that 37 gets used a lot by mathematicians at the University of Nijmegen, The Netherlands.', null, true, null),
     ('Gary Greenberg once rolled 37 on a d100 three times in a row.', null, true, null),
-    -- sports(9) 22-26
+    
     ('Bo Jackson gained 37 yards (on 12 carries) in his first NFL appearance.', null, true, null),
     ('Magic Johnson and Larry Bird competed against each other in 37 NBA games.', null, true, null),
     ('Mark McGwire''s 37 home runs in 1987 broke Al Rosen''s 37-year-old American League rookie record.', null, true, null),
     ('The Illini basketball team was ranked #1 in the AP poll in 1989 for the first time in 37 years.', null, true, null),
     ('Kansas won the NCAA basketball championship in 1988 for the first time in 37 years.', null, true, null),
-    -- scientific(10) 27-31
+    
     ('"Normal" human body temperature is 37 degrees Celsius.', 
     'This is based on the old idea that "normal" body temperature is 98.6 degrees Fahrenheit. This is exactly 37 degrees Celsius:
 
@@ -169,43 +166,43 @@ VALUES
 
     Contributed by alert reader Adam Gower.', true, null),
     ('Blue light spans 37 nm of the visible wavelength spectrum.', null, true, null),
-    -- personal(11) 32-36
+    
     ('The lowest score I ever got on any test was 37%.', 
     'MATH 526, Introduction to Statistics, at the University of Kansas, c.1985.', true, null),
     ('Chris Richmond also got 37% on a stats test once.', null, true, null),
     ('My MATH 500 book had 37 chapters.', null, true, null),
     ('There are 37 steps in the staircase leading downhill across the street from the Jayhawk Bookstore at the University of Kansas.', null, true, null),
     ('In 1984 two KU sororities each had 37 pledges, and the total number of pledges in all sororities was 444.', null, true, null),
-    -- numerical(12) 37-41
+    
     ('A trick for testing a number for divisibility by 37.', null, true, null),
     ('37 is a "hex number", also known as a centered hexagonal number.', 
     'As opposed to a plain old ordinary hexagonal number.
 
     By the way, this is intimately related to The Supreme Factoid, the one about the mouthpiece of a telephone.', true, null),
-    ('37×3 is 111; 37×6 is 222; and so on. 37×18 is 666.', null, true, null),
-    ('3×7×37 = three 7''s (777).', null, true, null),
+    ('37x3 is 111; 37x6 is 222; and so on. 37x18 is 666.', null, true, null),
+    ('3x7x37 = three 7''s (777).', null, true, null),
     ('If you multiply 37 by palindromic "3-ish" numbers, e.g. 63636, you get amusing palindromic products.', null, true, null),
-    -- movies(13) 42-46
+    
     ('Dennis the peasant in Monty Python and the Holy Grail is 37.', null, true, null),
     ('In Cousins Lloyd Bridges'' character arrives at a funeral in cab #37.', null, true, null),
     ('In The Shawshank Redemption Tim Robbins'' character Andy''s prison number started with 37.', null, true, null),
     ('In Phenomenon, John Travolta''s character''s weird experiences begin at his 37th birthday party.', null, true, null),
     ('In Cool Hand Luke, Lucas Jackson''s (Paul Newman''s) prison number is 37.', null, true, null),
-    -- comics(14) 47-51
+
     ('fact a', null, true, null),
     ('fact b', null, true, null),
     ('fact c', null, true, null),
     ('fact d', null, true, null),
     ('fact e', null, true, null),
-    -- media(15) 52-56
+    
     ('Brenda Starr lives in apartment 37F.', null, true, null),
     ('Andy Capp lives at #37.', null, true, null),
-    ('An episode of "Star Trek: Voyager" was named 'The 37s'.', null, true, null),
+    ('An episode of "Star Trek: Voyager" was named ''The 37s''.', null, true, null),
     ('"Yesterday it was announced that a 63-year-old woman has become the oldest woman in the world to give birth. The weird part is she gave birth to a 37-year-old man."', 
     'Conan O''Brien, probably about April or May 1997.', true, null),
     ('"Maris, for God''s sake you have 37 wigs. Just go down to the wig vault and pick one."', 
     'Niles Crane on the phone to ex-wife Maris, in an episode of "Frasier", aired on NBC, 28 October 1997.', true, null),
-    -- 37th things(16) 57-61
+    
     ('The 37th ASCII character is ''%''.', null, true, null),
     ('The 37th chemical element is Rubidium.', 
     'Symbol Rb, atomic number 37, discovered 1861. Check out its Chemicool entry.', true, null),
@@ -215,30 +212,30 @@ VALUES
 
     Most contributed by The 37 Group of Boston; others by Terri Jones.', true, null),
     ('The 37th week of the year is 10-16 September. (In leap years it''s 9-15 September.)', null, true, null),
-    -- pictures(17) 62-66
+    
     ('fact f', null, true, null),
     ('fact g', null, true, null),
     ('fact h', null, true, null),
     ('fact i', null, true, null),
     ('fact j', null, true, null),
-    -- sounds(18) 67-71
+    
     ('fact k', null, true, null),
     ('fact l', null, true, null),
     ('fact m', null, true, null),
     ('fact n', null, true, null),
     ('fact o', null, true, null),
-    -- links(19) 72-76
+    
     ('fact p', null, true, null),
     ('fact q', null, true, null),
     ('fact r', null, true, null),
     ('fact s', null, true, null),
     ('fact t', null, true, null),
-    -- multiples(20) 77-81
+    
     ('The Macintosh tank game Bolo has a tank numbered 74 on its splash screen.', null, true, null),
     ('The "number of the beast" is 666.', null, true, null),
     ('The Iran hostage crisis of 1980(ish) lasted for 444 days.', null, true, null),
     ('With my first full-time summer job at KU came health insurance at a monthly cost of $13.69.', null, true, null),
-    ('My keycard for entrance to my scholarship hall in 1984-85 was #1369.', null, true, null),
+    ('My keycard for entrance to my scholarship hall in 1984-85 was #1369.', null, true, null)
 ;
 
 INSERT INTO category (name, is_primary)
@@ -282,7 +279,7 @@ VALUES
     (6, 4),
     (6, 6),
     (7, 3),
-    (7, 4)
+    (7, 4),
     (7, 6),
     (8, 6),
     (9, 6),
