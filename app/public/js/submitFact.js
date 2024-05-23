@@ -109,6 +109,11 @@ function configPage() {
             return res.json()
         })
         .then((result) => alert(result.message))
+        .catch((err) => {
+            if (err instanceof TypeError) {
+                alert('Failure to upload attachment. Ensure that all attachments are of valid type and size.')
+            }
+        })
     }
 }
 
