@@ -6,8 +6,9 @@ const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
-const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid } = require('../handlers/attachment');
-const { rejectUnauthorizedRequest } = require('../middleware');
+const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
+const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
+const { upload, deleteUploads } = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
 // Configures email settings for reporting
@@ -32,7 +33,7 @@ router.get('/fact', (req, res) => {
         }
     try {
         if (req.user?.isAdmin) {
-            let facts = getFacts(undefined, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
+            let facts = getFacts(null, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
             return res.status(200).json(facts);
         } else {
             let facts = getFacts(true, req.query.tag, req.query.searchText, req.query.pageNum, req.query.pageSize);
@@ -49,25 +50,47 @@ router.get('/fact', (req, res) => {
 });
 
 // API endpoint to add a new fact to the database.
-router.post('/fact', (req, res) => {
-    const { userId, content, discovery_date, note, tags } = req.body;
+router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, res) => {
+    let { userId, content, discovery_date, note, tag, attachment } = req.body.data ? JSON.parse(req.body.data) : req.body
+    
+    if (!content) return res.status(400).json({ error: 'Content field is required' });
+    
+    if (!discovery_date) discovery_date = undefined;
+    let submitter_id = userId || ANON_USER_ID;
+    if (typeof attachment === 'string') attachment = [attachment]
+    let attachments = attachment && res.locals.filenames ? attachment.concat(res.locals.filenames) : (attachment || res.locals.filenames)
+    let tags = typeof tag === 'string' ? [tag] : tag
 
-    // v no longer fails foreign key constraint
-    const submitter_id = userId || ANON_USER_ID;
-    //const submitter_id = null;
+    attachments = attachments.filter(att => att !== '')
+    tags = tags.filter(tag => tag !== '')
 
-    if (!content) {
-        res.status(400).json({ error: 'Content field is required' });
-        return;
-    }
+    // Send email
+    const submitter = res.locals.user?.id || 'zzz3737';
+    const factContent = req.body.content || 'Unknown';
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_RECEIVER,
+        subject: 'thirty-seven.org - New Fact has been Submitted for Approval',
+        html:
+            `<p> Submitted by: ${submitter}
+            <br> Fact: ${factContent}
+            <br><br> Click <a href=${process.env.SITE_LINK}>here</a>
+            to go to the 37 admin dashboard for more details. You may need to log in. </p>`
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email: ', error);
+        } else {
+            console.log('Email sent: ', info.response);
+        }
+    });
 
-    //const success = addFact({ submitter_id, content, note, discovery_date });
-    const success = addFact({ submitter_id, content, discovery_date, note, tags });
-
-    if (success) {
-        res.status(201).json({ message: 'Fact added successfully' });
-    } else {
-        res.status(500).json({ error: 'Failed to add fact' });
+    try {
+        addFact({ submitter_id, content, discovery_date, note, tags, attachments});
+        return res.status(201).json({message: 'Successfully added fact.'})
+    } catch (err) {
+        deleteUploads(res.locals.filenames)
+        return res.status(400).json({message: err.message})
     }
 });
 
@@ -154,11 +177,12 @@ router.post('/report', (req, res) => {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_RECEIVER,
         subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
-        text:
-            'Reported by: ' + reporter +
-            '\nFact #' + factID +
-            '\nFact: ' + factContent +
-            '\n\nIssue: ' + reportContent,
+        html:
+            `<p> Reported by: ${reporter}
+            <br> Fact # ${factID}
+            <br> Fact: ${factContent}
+            <br><br> Issue: ${reportContent} <br><br> Click
+            <a href=${process.env.SITE_LINK}>here</a> to go to the 37 home page. You may need to log in. </p>`
     };
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -192,6 +216,24 @@ router.delete('/attachment/:attachmentID', rejectUnauthorizedRequest, (req, res,
         return res.status(500).send({ message: 'Server error.' });
     }
 });
+
+// Route to add attachments to a given fact.
+router.post('/attachment', 
+    rejectUnauthorizedRequest, 
+    upload.array('attachment'),
+    uploadErrorHandler, 
+    (req, res) => {
+        if (!req.body.factID) return res.status(400).json({message: 'Fact ID must be provided.'})
+        if (!res.locals.filenames) return res.status(400).json({message: 'No attachments provided.'})
+
+        try {
+            insertAttachments(res.locals.filenames, req.body.factID)
+            return res.status(201).json({message: 'Attachments added successfully.'})
+        } catch (err) {
+            console.log(err)
+            return res.status(400).json({message: `Unable to add attachment(s) to fact ${req.body.factID}.`})
+        }
+})
 
 // API endpoint to delete a tag for a given factoid ID and category ID
 router.delete('/tag/:factoidID/:categoryID', rejectUnauthorizedRequest, (req, res) => {

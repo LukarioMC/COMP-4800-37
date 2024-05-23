@@ -60,6 +60,11 @@ router.get('/contact', (_, res) => {
     res.render('pages/contact');
 });
 
+// Test path for uploading files.
+router.get('/upload', (req, res) => {
+    res.render('pages/upload')
+})
+
 /**
  * Returns an object with properties necessary to render fact-list.ejs. Can modify an existing object via the pageContext arg or return a new one if pageContext is undefined.
  * @param {*} req Request
@@ -69,7 +74,7 @@ router.get('/contact', (_, res) => {
 function prepForFactList(req, pageContext = {}) {
     pageNum = req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1
 
-    const retrieveApproved = req.user?.isAdmin ? undefined : true; // Pass undefined to retrieve all facts if user is an administrator.
+    const retrieveApproved = req.user?.isAdmin ? null : true; // Pass null to retrieve all facts if user is an administrator.
     let factoids = getFacts(retrieveApproved, req.query.tag, req.query.searchText, pageNum, PAGE_SIZE)
     
     // Extract non-public fields if unauthorized/non-admin user.

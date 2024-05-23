@@ -1,4 +1,5 @@
 const db = require('better-sqlite3')('app.db');
+const { insertAttachments } = require('./attachment')
 
 /**
  * Given an id, returns the associated fact.
@@ -44,14 +45,14 @@ function getFactByID(factID, isApproved = true) {
 
 /**
  * Given a list of tags, returns facts filtering out those who do not have all the given tags or do not have the search text in their content or note.
- * @param {boolean} isApproved Retrieve only approved facts, set false to retrieve only unapproved facts or omit/pass undefined to retrieve all facts.
+ * @param {boolean} isApproved Retrieve only approved facts, set false to retrieve only unapproved facts or pass null to retrieve all facts.
  * @param {Array} tags a list of tag strings
  * @param {string} searchText search text
  * @param {number} pageNum current page number
  * @param {number} pageSize size of each page
  * @returns a list of facts with associated tags and attachments whose tags are a superset of the input tags and/or contain the search text. Returns empty list if error occurs.
  */
-function getFacts(isApproved = undefined, tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
+function getFacts(isApproved = null, tags = undefined, searchText = undefined, pageNum = undefined, pageSize = undefined) {
     try {
         let approvalStmt = '';
         if (isApproved === true) {
@@ -142,44 +143,71 @@ function deleteFactByID(factoidID) {
 /**
  * Adds a new fact to the database.
  * @param {Object} factData An object containing data for the new fact.
- * @returns {boolean} True if the fact was successfully added, false otherwise.
  */
-function addFact(factData) {
+function addFact({ 
+    submitter_id, 
+    content, 
+    discovery_date = new Date().toUTCString(), 
+    note, tags = [], 
+    attachments = []}) 
+    {
     try {
-        let { submitter_id, content, discovery_date, note, tags} = factData;
-        tags = tags || []
-        discovery_date = discovery_date || new Date().toUTCString()
-
         const stmt = db.prepare(`
             INSERT INTO Factoid (submitter_id, content, posting_date, discovery_date, note, is_approved, approval_date)
             VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, false, NULL)
             RETURNING id
         `);
-        const id = stmt.get(submitter_id, content, discovery_date, note).id;
 
-        const addTagStmt = db.prepare(`
-            INSERT INTO tag
-            VALUES (?, (SELECT id FROM category WHERE name = ?))
-        `)
-        const insertTags = db.transaction((tags) => {
-            tags.forEach((tag) => {
-                try { 
-                    addTagStmt.run(id, tag) 
-                } catch (err) {
-                    if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
-                        console.log(`Category ${tag} does not exist`)
-                    } else {
-                        console.log(err)
-                    }
-                }
-            })
-        })
-        insertTags(tags)
+        db.transaction(() => {
+            const factID = stmt.get(submitter_id, content, discovery_date, note).id
 
-        return true;
+            insertTags(tags, factID)
+            insertAttachments(attachments, factID)
+        })()
+
+    } catch (err) {
+        throw new Error(`Failed to add fact because -> ${err.message}`)
+    }
+}
+
+/**
+ * Inserts tags associated with the fact with the given id.
+ * @param {Array<string>} tags Name of the tag category. Must be a pre-existing category in the database.
+ * @param {integer} id Fact ID
+ */
+function insertTags(tags = [], id) {
+    const addTagStmt = db.prepare(`
+        INSERT INTO tag
+        VALUES (?, (SELECT id FROM category WHERE name = ?))
+    `)
+
+    tags.forEach((tag) => {
+        try { 
+            addTagStmt.run(id, tag) 
+        } catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT_NOTNULL') {
+                throw new Error(`Failed to add tag ${tag} because -> Category ${tag} does not exist.`)
+            } else {
+                throw new Error(`Failed to add tag ${tag} because -> ${err.message}.`)
+            }
+        }
+    })
+
+}
+
+/**
+ * Approves a fact in the database by setting its approval status to true.
+ * @param {number} factoidID The ID of the fact to approve.
+ * @returns {boolean} True if the fact was successfully approved, false otherwise.
+ */
+function approveFactByID(factoidID) {
+    try {
+        let approveFactStmt = db.prepare('UPDATE factoid SET is_approved = 1 WHERE id = ?')
+        let result = approveFactStmt.run(factoidID)
+        return result.changes > 0
     } catch (e) {
         console.log(e);
-        return false;
+        return false
     }
 }
 
