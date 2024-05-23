@@ -28,7 +28,7 @@
             </h3>
             <% primaryTags.forEach(tag=> { %>
               <li class="nav-item">
-                <a href="#">
+                <a href="/facts?&tag=<%= encodeURIComponent(tag.name) %>">
                   <%= tag.name %>
                 </a>
               </li>
