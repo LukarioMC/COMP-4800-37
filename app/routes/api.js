@@ -64,29 +64,29 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
     attachments = attachments.filter(att => att !== '')
     tags = tags.filter(tag => tag !== '')
 
-    // Send email
-    const submitter = res.locals.user?.id || 'zzz3737';
-    const factContent = req.body.content || 'Unknown';
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_RECEIVER,
-        subject: 'thirty-seven.org - New Fact has been Submitted for Approval',
-        html:
-            `<p> Submitted by: ${submitter}
-            <br> Fact: ${factContent}
-            <br><br> Click <a href=${process.env.SITE_LINK}>here</a>
-            to go to the 37 admin dashboard for more details. You may need to log in. </p>`
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email: ', error);
-        } else {
-            console.log('Email sent: ', info.response);
-        }
-    });
-
     try {
         addFact({ submitter_id, content, discovery_date, note, tags, attachments});
+        // Send email after adding fact
+        const submitter = res.locals.user?.id || 'zzz3737';
+        const factContent = req.body.content || 'Unknown';
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_RECEIVER,
+            subject: 'thirty-seven.org - New Fact has been Submitted for Approval',
+            html:
+                `<p> Submitted by: ${submitter}
+                <br> Fact: ${factContent}
+                <br><br> Click <a href=${process.env.SITE_LINK}>here</a>
+                to go to the 37 admin dashboard for more details. You may need to log in. </p>`
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email: ', error);
+            } else {
+                console.log('Email sent: ', info.response);
+            }
+        });
+        
         return res.status(201).json({message: 'Successfully added fact.'})
     } catch (err) {
         deleteUploads(res.locals.filenames)
