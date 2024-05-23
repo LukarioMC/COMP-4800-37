@@ -70,6 +70,11 @@ router.get('/contact', (_, res) => {
     res.render('pages/contact');
 });
 
+// Route to edit a fact
+router.get('/edit-fact/:id', async (req, res) => {
+
+});
+
 /**
  * Returns an object with properties necessary to render fact-list.ejs. Can modify an existing object via the pageContext arg or return a new one if pageContext is undefined.
  * @param {*} req Request
