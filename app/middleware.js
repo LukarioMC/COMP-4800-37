@@ -2,6 +2,8 @@
  * Contains custom Express middleware functions.
  */
 
+const { getPrimaryTags } = require('./handlers/tag')
+
 /**
  * Middleware that will redirect users to login page if they are not logged in.
  * @param {Express.Request} req Incoming request object
@@ -42,8 +44,44 @@ function rejectUnauthorizedRequest(req, res, next) {
     }
 }
 
+/**
+ * Middleware that handles incoming upload errors and rejects with a message.
+ * @param {*} err Error object, present if there are errors uploading.
+ * @param {Express.Request} _req Incoming request object
+ * @param {Express.Response} res Outgoing response object
+ * @param {Express.RequestHandler} next Next request handler in request chain
+ * @returns 
+ */
+const uploadErrorHandler = (err, _req, res, next) => {
+    if (err) {
+        return res.status(400).json({ message: err.message });
+    }
+    next();
+}
+
+/**
+ * Middleware that fetches primary tags and stores them in res.locals for later use.
+ * If an error occurs during fetching, an empty array is stored in res.locals.
+ * @param {Express.Request} req - Incoming request object.
+ * @param {Express.Response} res - Outgoing response object.
+ * @param {Function} next - Next request handler in the request chain.
+ */
+function fetchPrimaryTags(req, res, next) {
+    try {
+        const primaryTags = getPrimaryTags();
+        res.locals.primaryTags = primaryTags;
+        next();
+    } catch (err) {
+        console.error('Error fetching primary tags:', err);
+        res.locals.primaryTags = [];
+        next();
+    }
+}
+
 module.exports = {
     redirectUnauthorizedRequestHome,
     rejectUnauthorizedRequest,
     isLoggedIn,
+    uploadErrorHandler,
+    fetchPrimaryTags
 };

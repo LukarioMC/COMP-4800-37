@@ -2,6 +2,9 @@
     <h2 class="accordion-header" id="heading-<%= typeof rand !== 'undefined' ? rand: factoid.id %>">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" aria-expanded="true" aria-controls="collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>">
             <%- factoid.content %>
+            <% if (user?.isAdmin && !factoid.is_approved) { %>
+            <span class="text-warning text-right" style="margin-left: 50px;">Pending</span>
+            <% } %>
         </button>
     </h2>
 
@@ -15,12 +18,35 @@
                 <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
                 <% }) %>
             </div>
+            <% if (factoid.attachments) {
+                const order = ['image', 'youtube', 'audio', 'website']
+                let sortedAttachments = factoid.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
+                sortedAttachments.forEach(att => {
+                    switch (att.type) { 
+                        case 'image': %>
+            <img src="uploads/<%= att.link %>" style="width: 50%; height: 50%">
+            <% break;
+                        case 'audio': %>
+            <audio controls>
+                <source src="uploads/<%= att.link %>">
+            </audio>
+            <% break;
+                        case 'youtube': 
+                        const embedLink = att.link.replace('watch?v=', 'embed/') %>
+            <iframe width="50%" height="50%" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+            </iframe>
+            <% break;
+                        case 'website': %>
+            <a href="<%= att.link %>" style="display: block">Learn More</a>
+            <% break;       
+            }})} %>
+
             <!-- Button trigger modal -->
             <br />
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
             <% console.log(typeof isAdmin) %>
-            <a class="btn btn-primary mb-3" href="/edit-fact/<%= factoid.id %>">Edit</a>
+            <a class="btn btn-primary mb-3" id=<%= factoid.id %> href="/edit-fact/<%= factoid.id %>">Edit</a>
             <% } %>
         </div>
     </div>

@@ -21,6 +21,7 @@ const apiRouter = require('./routes/api');
 const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
+const methodOverride = require('method-override');
 
 const SQLiteStore = require('connect-sqlite3')(session);
 
@@ -61,6 +62,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(passport.authenticate('session'));
 app.use(flash());
+app.use(methodOverride('_method'));
 
 // Middleware to make user data available to EJS on all pages.
 app.use(function (req, res, next) {
@@ -70,6 +72,7 @@ app.use(function (req, res, next) {
               email: req.user.email,
               fname: req.user.fname,
               lname: req.user.lname,
+              isAdmin: req.user.isAdmin
           }
         : undefined;
     res.locals.success = req.flash('success');
@@ -87,8 +90,9 @@ app.use('/', authRouter, clientRouter);
 app.use('/api', apiRouter);
 
 // ================ JS AND CSS PATH SETUP ================
-app.use(express.static(path.join(__dirname, 'public/css')));
-app.use(express.static(path.join(__dirname, 'public/js')));
+app.use('/css', express.static(path.join(__dirname, 'public/css')));
+app.use('/js', express.static(path.join(__dirname, 'public/js')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Begin the server and listen on the configured port
 app.listen(PORT);
