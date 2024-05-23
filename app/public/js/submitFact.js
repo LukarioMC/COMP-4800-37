@@ -31,6 +31,14 @@ function createSearchTag(name) {
     }
 }
 
+let typingTimer;                
+const doneTypingInterval = 1000;  
+const attIDs = []
+
+function doneTyping (e) {
+    if (e.target !== '' && e.target.type === 'text') createAttachmentInput()
+}
+
 /**
  * Creates an attachment file input and adds a remove button for already-filled file inputs.
  */
@@ -43,27 +51,40 @@ function createAttachmentInput() {
     })
 
     attachments.forEach((att) => {
-        if (att.files.length > 0 && !att.hasButton) {
+        if (((att.type === 'file' && att.files.length > 0) || (att.type === 'text' && att.value !== '')) &&
+            !document.getElementById(`${att.id}-remove`)) {
             let btn = document.createElement('button')
             btn.className = 'btn btn-danger'
             btn.innerHTML = 'Remove'
+            btn.id = `${att.id}-remove`
+            let toggle = document.getElementById(`${att.id}-toggle`)
             btn.onclick = () => {
                 att.remove()
                 btn.remove()
+                if (toggle) toggle.remove()
             }
             att.after(btn)
-            att.hasButton = true
         }
     })
 
-    if (!attachments.find((att) => att.files.length === 0)){
+    if (!attachments.find((att) => {
+        (att.type === 'file' && att.files.length === 0) ||
+        (att.type === 'text' && att.value === '')
+    })){
         let input = document.createElement('input')
         input.type = 'file'
         input.className = 'form-control'
         input.name = 'attachment'
+        let ptnAttID;
+        do {
+            ptnAttID = Math.random()
+        }
+        while (attIDs.includes(ptnAttID))
+        attIDs.push(ptnAttID) 
+        input.id = ptnAttID
         input.accept = ['.jpg', '.jpeg', '.png', '.svg', '.webp', '.gif', '.mp3', '.mpeg'].join(',')
         input.onchange = () => {
-            if (input.files.length > 0) {
+            if (input.type === 'file' && input.files.length > 0) {
                 if (input.files[0].size > 5 * Math.pow(1024, 2)) {
                     input.value = ''
                     alert('File is too large.')
@@ -72,7 +93,28 @@ function createAttachmentInput() {
                 }  
             }       
         }
+        input.addEventListener('keyup', function (e) {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => doneTyping(e), doneTypingInterval);
+        });
+        
+        input.addEventListener('keydown', function () {
+            clearTimeout(typingTimer);
+        });
         attachmentsDiv.appendChild(input)
+
+        let btn = document.createElement('button')
+        btn.className = 'btn btn-secondary'
+        btn.textContent = 'Toggle to Link'
+        btn.id = `${input.id}-toggle`
+        btn.onclick = () => {
+            input.value = ''
+            input.type = input.type === 'file' ? 'text' : 'file'
+            btn.textContent = input.type === 'file' ? 'Toggle to Link' : 'Toggle to File'
+            
+            
+        }
+        attachmentsDiv.appendChild(btn)
     }
 }
 
