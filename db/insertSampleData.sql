@@ -1,5 +1,6 @@
 INSERT INTO factoid (content, note, is_approved, approval_date)
 VALUES
+    -- amazing
     ('There are 37 holes in the mouthpiece of a telephone',
     'I''m talking about "old" style phones with the "Mickey Mouse" handsets that have the round mouthpieces with roughly the following pattern of holes:
 
@@ -30,7 +31,7 @@ VALUES
 
     Any light that an alert reader could shed on this stressful situation would be appreciated.', true, null),
     ('In the Bible, Psalm 37 is one of the few that are acrostic.', 'The first letter of every other verse is a consecutive letter of the Hebrew alphabet.', true, null),
-    
+    -- historical
     ('William Shakespeare wrote 37 plays.', 
     '10 histories, 10 tragedies, 17 comedies.
 
@@ -47,7 +48,7 @@ VALUES
     'Contributed by The 37 Group of Boston.', true, null),
     
     ('unapproved fact', null, false, null),
-  
+    -- ephemeral
     ('There are 37 million Americans without health insurance.', 
     'Chicago Tribune front page story, sometime in the spring of 1993.', true, null),
     ('Levi Strauss Corp. has 37 manufacturing plants in North America.', 
@@ -86,7 +87,7 @@ VALUES
     We''ve attempted to provide the best search engines for you to access the more than thirty-seven thousand products, services, case studies, application notes and other items residing on the Xerox Web Site.', true, null),
     ('An Open Text Index search for 37s returned 37 hits.', 
     'In particular, I did a "power search", and asked for "thirty-seven" in "summary" OR "thirty-seven" in "title". Cool, man.', true, null),
-    
+    -- random
     ('The Maelstrom space ship has ACME XQJ-37 retro-thrusters.', 
     'Maelstrom is an Asteroids-like computer game for the Mac. Here''s a quote from the "About Maelstrom" information window, which reads as if narrated by the pilot of the little ship that you''re flying around in the game:
 
@@ -131,13 +132,13 @@ VALUES
     Foggia, Italy', true, null),
     ('Michiel Boland reports that 37 gets used a lot by mathematicians at the University of Nijmegen, The Netherlands.', null, true, null),
     ('Gary Greenberg once rolled 37 on a d100 three times in a row.', null, true, null),
-    
+    -- sports
     ('Bo Jackson gained 37 yards (on 12 carries) in his first NFL appearance.', null, true, null),
     ('Magic Johnson and Larry Bird competed against each other in 37 NBA games.', null, true, null),
     ('Mark McGwire''s 37 home runs in 1987 broke Al Rosen''s 37-year-old American League rookie record.', null, true, null),
     ('The Illini basketball team was ranked #1 in the AP poll in 1989 for the first time in 37 years.', null, true, null),
     ('Kansas won the NCAA basketball championship in 1988 for the first time in 37 years.', null, true, null),
-    
+    -- scientific
     ('"Normal" human body temperature is 37 degrees Celsius.', 
     'This is based on the old idea that "normal" body temperature is 98.6 degrees Fahrenheit. This is exactly 37 degrees Celsius:
 
@@ -166,14 +167,14 @@ VALUES
 
     Contributed by alert reader Adam Gower.', true, null),
     ('Blue light spans 37 nm of the visible wavelength spectrum.', null, true, null),
-    
+    -- personal
     ('The lowest score I ever got on any test was 37%.', 
     'MATH 526, Introduction to Statistics, at the University of Kansas, c.1985.', true, null),
     ('Chris Richmond also got 37% on a stats test once.', null, true, null),
     ('My MATH 500 book had 37 chapters.', null, true, null),
     ('There are 37 steps in the staircase leading downhill across the street from the Jayhawk Bookstore at the University of Kansas.', null, true, null),
     ('In 1984 two KU sororities each had 37 pledges, and the total number of pledges in all sororities was 444.', null, true, null),
-    
+    -- numerical
     ('A trick for testing a number for divisibility by 37.', null, true, null),
     ('37 is a "hex number", also known as a centered hexagonal number.', 
     'As opposed to a plain old ordinary hexagonal number.
@@ -182,19 +183,19 @@ VALUES
     ('37x3 is 111; 37x6 is 222; and so on. 37x18 is 666.', null, true, null),
     ('3x7x37 = three 7''s (777).', null, true, null),
     ('If you multiply 37 by palindromic "3-ish" numbers, e.g. 63636, you get amusing palindromic products.', null, true, null),
-    
+    -- movies
     ('Dennis the peasant in Monty Python and the Holy Grail is 37.', null, true, null),
     ('In Cousins Lloyd Bridges'' character arrives at a funeral in cab #37.', null, true, null),
     ('In The Shawshank Redemption Tim Robbins'' character Andy''s prison number started with 37.', null, true, null),
     ('In Phenomenon, John Travolta''s character''s weird experiences begin at his 37th birthday party.', null, true, null),
     ('In Cool Hand Luke, Lucas Jackson''s (Paul Newman''s) prison number is 37.', null, true, null),
-
+    -- comics
     ('fact a', null, true, null),
     ('fact b', null, true, null),
     ('fact c', null, true, null),
     ('fact d', null, true, null),
     ('fact e', null, true, null),
-    
+    -- media
     ('Brenda Starr lives in apartment 37F.', null, true, null),
     ('Andy Capp lives at #37.', null, true, null),
     ('An episode of "Star Trek: Voyager" was named ''The 37s''.', null, true, null),
@@ -202,7 +203,7 @@ VALUES
     'Conan O''Brien, probably about April or May 1997.', true, null),
     ('"Maris, for God''s sake you have 37 wigs. Just go down to the wig vault and pick one."', 
     'Niles Crane on the phone to ex-wife Maris, in an episode of "Frasier", aired on NBC, 28 October 1997.', true, null),
-    
+    -- 37th things
     ('The 37th ASCII character is ''%''.', null, true, null),
     ('The 37th chemical element is Rubidium.', 
     'Symbol Rb, atomic number 37, discovered 1861. Check out its Chemicool entry.', true, null),
@@ -212,25 +213,25 @@ VALUES
 
     Most contributed by The 37 Group of Boston; others by Terri Jones.', true, null),
     ('The 37th week of the year is 10-16 September. (In leap years it''s 9-15 September.)', null, true, null),
-    
+    -- pictures
     ('fact f', null, true, null),
     ('fact g', null, true, null),
     ('fact h', null, true, null),
     ('fact i', null, true, null),
     ('fact j', null, true, null),
-    
+    -- sounds
     ('fact k', null, true, null),
     ('fact l', null, true, null),
     ('fact m', null, true, null),
     ('fact n', null, true, null),
     ('fact o', null, true, null),
-    
+    -- links
     ('fact p', null, true, null),
     ('fact q', null, true, null),
     ('fact r', null, true, null),
     ('fact s', null, true, null),
     ('fact t', null, true, null),
-    
+    -- multiples
     ('The Macintosh tank game Bolo has a tank numbered 74 on its splash screen.', null, true, null),
     ('The "number of the beast" is 666.', null, true, null),
     ('The Iran hostage crisis of 1980(ish) lasted for 444 days.', null, true, null),
@@ -265,6 +266,7 @@ VALUES
 
 INSERT INTO tag
 VALUES
+    -- amazing
     (1, 1),
     (1, 5),
     (2, 2),
@@ -276,6 +278,7 @@ VALUES
     (4, 2),
     (4, 5),
     (5, 5),
+    -- historical
     (6, 4),
     (6, 6),
     (7, 3),
@@ -285,71 +288,85 @@ VALUES
     (9, 6),
     (10, 6),
     (11, 6),
+    -- ephemeral
     (12, 7),
     (13, 7),
     (14, 7),
     (15, 7),
     (16, 7),
+    -- random
     (17, 8),
     (18, 8),
     (19, 8),
     (20, 8),
     (21, 8),
+    -- sports
     (22, 9),
     (23, 9),
     (24, 9),
     (25, 9),
     (26, 9),
+    -- scientific
     (27, 10),
     (28, 10),
     (29, 10),
     (30, 10),
     (31, 10),
+    -- personal
     (32, 11),
     (33, 11),
     (34, 11),
     (35, 11),
     (36, 11),
+    -- numerical
     (37, 12),
     (38, 12),
     (39, 12),
     (40, 12),
     (41, 12),
+    -- movies
     (42, 13),
     (43, 13),
     (44, 13),
     (45, 13),
     (46, 13),
+    -- comics
     (47, 14),
     (48, 14),
     (49, 14),
     (50, 14),
     (51, 14),
+    -- media
     (52, 15),
     (53, 15),
     (54, 15),
     (55, 15),
     (56, 15),
+    -- 37th things
     (57, 16),
     (58, 16),
     (59, 16),
     (60, 16),
     (61, 16),
+    -- pictures
     (62, 17),
     (63, 17),
     (64, 17),
     (65, 17),
     (66, 17),
+    -- sounds
     (67, 18),
     (68, 18),
     (69, 18),
     (70, 18),
     (71, 18),
+    -- links
     (72, 19),
     (73, 19),
     (74, 19),
     (75, 19),
     (76, 19),
+    -- multiples
     (77, 20),
     (78, 20),
     (79, 20),
