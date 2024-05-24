@@ -6,13 +6,15 @@
         <div class="col-md-6">
             <h2 class="text-center">Submit a Fact </h2>
 
+            <script src="js/submitFact.js" defer></script>
+
             <!-- note that will appear when user is not passed in -->
             <% if (!user) { %>
                 <div class="mb-3 text-center">
                     <small id="submit-note" class="form-text text-muted text-center">You are not logged in. Your fact will be submitted anonymously.</small>
                 </div>
             <% } %>
-   
+
             <!-- submission form -->
             <form id="submission-form" enctype="multipart/form-data" action="/api/fact" method="POST">
                 <div class="mb-3">
@@ -23,12 +25,28 @@
                     <label for="note" class="form-label">Note:</label>
                     <textarea class="form-control" id="note" name="note" rows="3"></textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="attachment" class="form-label">Attachment:</label>
-                    <input type="file" class="form-control" id="attachment" name="attachment" multiple>
+
+                <div id="tags" class="mb-3"></div>
+                <div class="dropdown mb-3">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tags
+                    </button>
+                    <ul class="dropdown-menu">
+                        <% tags.forEach((tag) => { %>
+                            <li class="ddtag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
+                        <% })%>
+                    </ul>
                 </div>
+
+                <div class="mb-3" id="attachments">
+                    <label for="attachment" class="form-label">Attachment(s):</label>
+                </div>
+                
                 <div class="mb-3">
-                    <label for="date" class="form-label"> Discovery Date: </label>
+                    <label for="date" class="form-label" > 
+                        Discovery Date 
+                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="When did you learn this?"></i> : 
+                        </label>
                     <input type="date" class="form-control" id="discovery-date" name="discovery_date" value="<%= new Date().toISOString().substr(0, 10) %>">
                 </div>
 

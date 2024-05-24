@@ -29,16 +29,17 @@ router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
 
 // route for submitting facts
 router.get('/submit', (req, res) => {
+    const tags = getTags();
     if (!req.user) {
         // gets country data from json for fact submitter country options
         countryUtils.readCountryData((err, countries) => {
             if (err) {
                 return res.status(500).send('Internal Server Error');
             }
-            res.render('pages/fact-submission-page', { countries: countries });
+            res.render('pages/fact-submission-page', { countries: countries, tags: tags });
         });
     } else {
-        res.render('pages/fact-submission-page', { user: req.user });
+        res.render('pages/fact-submission-page', { user: req.user, tags: tags });
     }
 });
 
