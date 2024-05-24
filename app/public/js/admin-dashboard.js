@@ -26,6 +26,14 @@ async function deleteFact(factID) {
             }
         });
 
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert('Fact deleted successfully');
+            window.location.reload();
+        } else {
+            alert('Error deleting fact: ' + result.message);
+        }
     }
 }
 
