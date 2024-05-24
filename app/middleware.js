@@ -55,8 +55,9 @@ function rejectUnauthorizedRequest(req, res, next) {
 const uploadErrorHandler = (err, _req, res, next) => {
     if (err) {
         return res.status(400).json({ message: err.message });
+    } else {
+        next();
     }
-    next();
 }
 
 /**
