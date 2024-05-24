@@ -26,8 +26,8 @@ h1, h2, h3 {
 
 .btn-primary:hover {
     color: #370370 !important;
-    background-color: #deb9de !important;
-    border-color: #deb9de !important;
+    background-color: #de94b9 !important;
+    border-color: #de94b9 !important;
 }
 
 nav,
@@ -41,7 +41,7 @@ nav > .offcanvas a {
 }
 
 nav > .offcanvas a:hover {
-    color: #deb9de;
+    color: #de94b9;
 }
 
 nav > button {
