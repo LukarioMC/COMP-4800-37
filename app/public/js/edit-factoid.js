@@ -57,6 +57,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Fact deleted successfully');
+                    window.location.href = '/'; 
+                } else {
+                    alert('Error deleting fact: ' + result.error);
+                }
             }
         });
 })
