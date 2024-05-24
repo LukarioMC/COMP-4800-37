@@ -30,17 +30,21 @@ h1, h2, h3, h5 {
     border-color: #de94b9;
 }
 
-nav,
-nav > .offcanvas {
+nav.navbar {
+    color: #dedeb9;
+    background-color: #370370;
+}
+
+nav.navbar > .offcanvas {
     color: #370370;
     background-color: #dedede;
 }
 
-nav > .offcanvas a {
+nav.navbar > .offcanvas a {
     color: #370370;
 }
 
-nav > .offcanvas a:hover {
+nav.navbar > .offcanvas a:hover {
     color: #de94b9;
 }
 
@@ -52,11 +56,11 @@ nav > .offcanvas a:hover {
     background-color: #b9b9de;
 }
 
-nav > .login a {
+nav.navbar > .login a {
     color: #dedeb9 !important;
 }
 
-nav > .login a:hover {
+nav.navbar > .login a:hover {
     color: #b9b9de !important;
 }
 
