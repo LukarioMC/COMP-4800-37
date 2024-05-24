@@ -86,6 +86,7 @@ app.use('/api', apiRouter);
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/favicon', express.static(path.join(__dirname, 'public/favicon')))
 
 // Begin the server and listen on the configured port
 app.listen(PORT);
