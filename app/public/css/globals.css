@@ -14,7 +14,7 @@ body {
     background-color: #dedeb9;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h5 {
     font-family: '74', sans-serif !important;
 }
 
@@ -58,6 +58,11 @@ nav > .login a {
 
 nav > .login a:hover {
     color: #b9b9de !important;
+}
+
+.card {
+    color: #370370;
+    background-color: #dedede;
 }
 
 .form-control {
