@@ -8,4 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedTags.add(tagElement.getAttribute('data-tag'));
         }
     });
+
+    // add event listener to each tag
+    document.querySelectorAll('.tag-selectable').forEach(tagElement => {
+        tagElement.addEventListener('click', () => toggleTagSelection(tagElement));
+    });
 })
+
+// function to handle toggling of tags
+function toggleTagSelection(tagElement) {
+    const tagName = tagElement.getAttribute('data-tag');
+}
