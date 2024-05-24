@@ -16,7 +16,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // add event listener for form submission
     document.getElementById('submission-form').addEventListener('submit', async function(event) {
-        
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        // Convert selectedTags Set to an array and add to form data
+        formData.append('tags', JSON.stringify(Array.from(selectedTags)));
+
+        const data = Object.fromEntries(formData.entries());
+        data.tags = JSON.parse(data.tags);
+
+        const factId = form.getAttribute('data-fact-id');
+
+        const response = await fetch(`/api/fact/${factId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
     });
 })
 
