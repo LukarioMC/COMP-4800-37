@@ -9,10 +9,12 @@ const { deleteUploads, inferType, parseYoutubeUrlToEmbeded } = require('../modul
 function deleteAttachmentforFactoid(attachmentID) {
     try {
         const deleteAttachmentStatement = db.prepare(
-            'DELETE FROM Attachment WHERE id = ? RETURNING link'
+            'DELETE FROM Attachment WHERE id = ? RETURNING link, type'
         );
-        const link = deleteAttachmentStatement.get(attachmentID).link;
-        deleteUploads([link]);
+        const { link, type } = deleteAttachmentStatement.get(attachmentID);
+        if (type !== 'youtube' && type !== 'website') {
+            deleteUploads([link]);
+        }
         return link;
     } catch (e) {
         console.log('Error deleting attachment:', e);
