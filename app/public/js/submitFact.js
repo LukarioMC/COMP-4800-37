@@ -119,12 +119,40 @@ function createAttachmentInput() {
     }
 }
 
+/**
+ * Resets submission form.
+ */
 function resetForm() {
     let form = document.getElementById('submission-form')
+    let i = countryMenu.selectedIndex
+    
     form.reset()
     document.getElementById('tags').innerHTML = ''
     document.getElementById('attachments').innerHTML = ''
     createAttachmentInput()
+
+    setCountry(i)
+}
+
+const countryMenu = document.getElementById('country')
+
+/**
+ * Sets user's country selection based on their IP.
+ * @param {Integer} i The index of the selected country, optional.
+ * @returns undefined
+ */
+function setCountry(i = 0) {
+    if (i !== 0) { 
+        countryMenu.selectedIndex = i
+        return
+    }
+
+    fetch('https://get.geojs.io/v1/ip/country.json')
+    .then(res => res.json())
+    .then((countryData) => {
+        let i = Array.from(countryMenu.children).findIndex(opt => opt.value === countryData.country)
+        if (i > -1) countryMenu.selectedIndex = i
+    })
 }
 
 /**
@@ -158,6 +186,8 @@ function configPage() {
             }
         })
     }
+
+    setCountry()
 }
 
 configPage()

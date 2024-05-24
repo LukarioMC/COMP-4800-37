@@ -159,30 +159,34 @@ function addFact({
             RETURNING id
         `);
 
+        let factID
         db.transaction(() => {
-            const factID = stmt.get(submitter_id, content, discovery_date, note).id
+            factID = stmt.get(submitter_id, content, discovery_date, note).id
 
             insertTags(tags, factID)
             insertAttachments(attachments, factID)
         })()
 
-        // if (anonData.country) insertAnonUserData(anonData)
+        if (anonData.name === '') anonData.name = undefined
+        insertAnonUserData(anonData, factID)
 
     } catch (err) {
         throw new Error(`Failed to add fact because -> ${err.message}`)
     }
 }
 
-function insertAnonUserData({name, email, country}) {
-    try {
-        const insertAnonData = db.prepare(`
-                INSERT INTO anon_submitter (name, email, country)
-                VALUES (?, ?, ?)
-        `)
-
-        db.run(name, email, country)
-    } catch (err) {
-        console.log(err)
+function insertAnonUserData({name, email, country}, factID) {
+    if (name || email || country) {
+        try {
+            const insertAnonData = db.prepare(`
+                    INSERT INTO ANON_USER (name, email, country, factoid_id)
+                    VALUES (?, ?, ?, ?)
+            `)
+    
+            insertAnonData.run(name, email, country, factID)
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
 

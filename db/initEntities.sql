@@ -69,14 +69,14 @@ DROP TABLE IF EXISTS report;
 -- );
 
 -- CreateTable
-DROP TABLE IF EXISTS anon_submitter;
-CREATE TABLE "anon_submitter" (
+DROP TABLE IF EXISTS Anon_User;
+CREATE TABLE "Anon_User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "factoid_id" INTEGER NOT NULL,
-    "link" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    CONSTRAINT "Attachment_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "attachment_type_check" CHECK ("type" in ('image', 'audio', 'website', 'youtube'))
+    "name" TEXT,
+    "email" TEXT,
+    "country" TEXT,
+    CONSTRAINT "Anon_User_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex
