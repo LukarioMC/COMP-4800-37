@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function deleteFact(factID) {
     const confirmation = confirm('Are you sure you want to delete this fact? This action cannot be undone.');
+    if (confirmation) {
+    
+    }
 }
 
 async function approveFact(factID) {
