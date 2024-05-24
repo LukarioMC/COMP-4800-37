@@ -107,6 +107,7 @@ function createAttachmentInput() {
         btn.className = 'btn btn-secondary'
         btn.textContent = 'Toggle to Link'
         btn.id = `${input.id}-toggle`
+        btn.type = 'button'
         btn.onclick = () => {
             input.value = ''
             input.type = input.type === 'file' ? 'text' : 'file'
