@@ -24,7 +24,6 @@ Contents of .env:
  - `ANON_PWD=` - Placeholder password for the anonymous user. Best made very complex.
  - `TOMS_PWD` - Password for Tom to use as a site administrator.
  - `SITE_LINK=` - Link to the 37 home page
- - `ADMIN_LINK=` - Link to the 37 admin dashboard
  - `INIT_DATABASE` - Controls whether to initialize/reset the database on application start. (Useful for deployment with non-persistent storage)
 
 Scripts:
