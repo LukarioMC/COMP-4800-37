@@ -44,6 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Error updating fact: ' + result.error);
         }
     });
+
+        // adds event listener for delete button on click
+        document.getElementById('delete-button').addEventListener('click', async function() {
+ 
+        });
 })
 
 // function to handle toggling of tags
