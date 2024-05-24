@@ -3,14 +3,12 @@
  */
 const express = require('express');
 const router = express.Router();
-const countryUtils = require('../utils/countryUtils');
+const countryUtils = require('../modules/countryUtils');
 const { getFacts, getRandomFact, getUnapprovedFacts, getFactByID, updateFact } = require('../handlers/factoid');
 const { redirectUnauthorizedRequestHome, fetchPrimaryTags } = require('../middleware');
 const { getTags } = require('../handlers/tag')
 
 const PAGE_SIZE = 5
-
-router.use(fetchPrimaryTags);
 
 router.get('/', (req, res) => {
     pageContext = prepForFactList(req);
@@ -31,16 +29,17 @@ router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
 
 // route for submitting facts
 router.get('/submit', (req, res) => {
+    const tags = getTags();
     if (!req.user) {
         // gets country data from json for fact submitter country options
         countryUtils.readCountryData((err, countries) => {
             if (err) {
                 return res.status(500).send('Internal Server Error');
             }
-            res.render('pages/fact-submission-page', { countries: countries });
+            res.render('pages/fact-submission-page', { countries: countries, tags: tags });
         });
     } else {
-        res.render('pages/fact-submission-page', { user: req.user });
+        res.render('pages/fact-submission-page', { user: req.user, tags: tags });
     }
 });
 

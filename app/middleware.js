@@ -55,8 +55,9 @@ function rejectUnauthorizedRequest(req, res, next) {
 const uploadErrorHandler = (err, _req, res, next) => {
     if (err) {
         return res.status(400).json({ message: err.message });
+    } else {
+        next();
     }
-    next();
 }
 
 /**
@@ -64,7 +65,7 @@ const uploadErrorHandler = (err, _req, res, next) => {
  * If an error occurs during fetching, an empty array is stored in res.locals.
  * @param {Express.Request} req - Incoming request object.
  * @param {Express.Response} res - Outgoing response object.
- * @param {Function} next - Next request handler in the request chain.
+ * @param {Express.RequestHandler} next - Next request handler in the request chain.
  */
 function fetchPrimaryTags(req, res, next) {
     try {
@@ -78,10 +79,32 @@ function fetchPrimaryTags(req, res, next) {
     }
 }
 
+/**
+ * Middleware that extracts the currently logged in users data (such as id, name, etc.) and makes it available to all EJS template `.render` calls
+ * @param {Express.Request} req _req Incoming request object
+ * @param {Express.Response} res res Outgoing response object
+ * @param {Express.RequestHandler} next next Next request handler in request chain
+ */
+function setUserDataLocals(req, res, next) {
+    res.locals.user = req.user
+        ? {
+              id: req.user.id,
+              email: req.user.email,
+              fname: req.user.fname,
+              lname: req.user.lname,
+              isAdmin: req.user.isAdmin
+          }
+        : undefined;
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+}
+
 module.exports = {
     redirectUnauthorizedRequestHome,
     rejectUnauthorizedRequest,
     isLoggedIn,
     uploadErrorHandler,
-    fetchPrimaryTags
+    fetchPrimaryTags,
+    setUserDataLocals
 };

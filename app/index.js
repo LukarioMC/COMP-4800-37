@@ -29,6 +29,8 @@ const swaggerUI = require('swagger-ui-express');
 const yaml = require('yaml');
 const fs = require('fs');
 
+const { setUserDataLocals, fetchPrimaryTags } = require('./middleware');
+
 const backupTimer = require('./modules/backupTimer')
 backupTimer.start()
 
@@ -60,25 +62,16 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// Use passport as authentication middleware
 app.use(passport.authenticate('session'));
+// Middleware used to 'flash' temporary messages back to the user (e.g. Error messages, warnings).
 app.use(flash());
+// Middleware used to allow forms to use methods other than exclusively POST/GET through a query parameter.
 app.use(methodOverride('_method'));
-
 // Middleware to make user data available to EJS on all pages.
-app.use(function (req, res, next) {
-    res.locals.user = req.user
-        ? {
-              id: req.user.id,
-              email: req.user.email,
-              fname: req.user.fname,
-              lname: req.user.lname,
-              isAdmin: req.user.isAdmin
-          }
-        : undefined;
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    next();
-});
+app.use(setUserDataLocals);
+// Middleware to make categories available throughout the application
+app.use(fetchPrimaryTags);
 
 // Configuring API docs via Swagger.
 const swaggerFile = fs.readFileSync('./swagger.yaml', 'utf-8');
@@ -89,10 +82,11 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 app.use('/', authRouter, clientRouter);
 app.use('/api', apiRouter);
 
-// ================ JS AND CSS PATH SETUP ================
+// ================ STATIC PATHS SETUP ================
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/favicon', express.static(path.join(__dirname, 'public/favicon')))
 
 // Begin the server and listen on the configured port
 app.listen(PORT);
