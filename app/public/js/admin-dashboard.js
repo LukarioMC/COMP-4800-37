@@ -38,6 +38,20 @@ async function deleteFact(factID) {
 }
 
 async function approveFact(factID) {
+    const response = await fetch(`/api/approve/${factID}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+        alert('Fact approved successfully');
+        window.location.reload(); 
+    } else {
+        alert('Error approving fact: ' + result.message);
+    }
 }
 
 function editFact(factID) {
