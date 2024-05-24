@@ -1,10 +1,100 @@
 body {
-    background-color: rgb(111, 185, 185);
+    color: #370370;
+    background-color: #dedeb9;
+}
+
+.btn-primary {
+    color: #370370 !important;
+    background-color: #b9b9de !important;
+    border-color: #b9b9de !important;
+}
+
+.btn-primary:hover {
+    color: #370370 !important;
+    background-color: #deb9de !important;
+    border-color: #deb9de !important;
 }
 
 nav,
 nav > .offcanvas {
-    background-color: #d0d0d0;
+    color: #370370;
+    background-color: #dedede;
+}
+
+nav > .offcanvas a {
+    color: #370370;
+}
+
+nav > .offcanvas a:hover {
+    color: #deb9de;
+}
+
+nav > button {
+    background-color: #dedeb9 !important;
+}
+
+nav > button:hover {
+    background-color: #b9b9de !important;
+}
+
+nav > .login a {
+    color: #dedeb9 !important;
+}
+
+nav > .login a:hover {
+    color: #b9b9de !important;
+}
+
+.form-control {
+    color: #370370 !important;
+    background-color: #dedede;
+}
+
+.fact {
+    color: #370370;
+    background-color: #dedede;
+}
+
+.fact > h2 > button {
+    color: #370370 !important;
+    background-color: #dedede !important;
+}
+
+.fact > h2 > button:hover {
+    color: #370370 !important;
+    background-color: #b9b9de !important;
+}
+
+.fact > h2 > button:focus {
+    color: #370370 !important;
+    background-color: #b9b9de !important;
+}
+
+.pagination {
+    color: #370370;
+    background-color: #dedeb9;
+}
+
+.pagination > .page-item > .page-link {
+    color: #370370;
+    background-color: #dedede;
+}
+
+.pagination > .page-item > .page-link:hover {
+    color: #370370;
+    background-color: #b9b9de;
+}
+
+footer {
+    background-color: #370370;
+}
+
+footer > .text-center a {
+    color: #dedeb9;
+}
+
+footer > .text-center a:hover {
+    color: #b9b9de;
 }
 
 .alert {
