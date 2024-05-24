@@ -4,7 +4,7 @@
 <main class="container-xl mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2 class="text-center">Update Fact <%= fact.id %></h2>
+            <h2 class="text-center">Edit Fact <%= fact.id %></h2>
 
             <!-- submission form -->
             <form id="submission-form" method="POST" data-fact-id="<%= fact.id %>">
@@ -23,6 +23,7 @@
                 <div class="mb-3">
                     <label for="tags" class="form-label">Tags:</label>
                     <div id="tags-container">
+                        <!-- loops through the tags and displays each as a selectable button -->
                         <% tags.forEach((tag) => { %>
                         <span class="badge rounded-pill tag-selectable <%= fact.tags.some(factTag => factTag.name === tag.name) ? 'bg-primary' : 'bg-secondary' %>" data-tag="<%= tag.name %>"><%= tag.name %></span>
                         <% }) %>
