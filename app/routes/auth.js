@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
-const db = require('better-sqlite3')('app.db');
+const db = require('../modules/db');
 const { SqliteError } = require('better-sqlite3');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');

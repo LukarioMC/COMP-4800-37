@@ -1,4 +1,4 @@
-const db = require('better-sqlite3')('app.db');
+const db = require('../modules/db');
 const fs = require('fs')
 require('dotenv').config
 
