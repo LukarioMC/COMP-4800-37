@@ -62,6 +62,30 @@ function inferType(name) {
 }
 
 /**
+ * Parses a youtube.com or youtu.be link into an embedded URL for display on the site.
+ * Note: Strips all query strings from the passed URL, and retains only the video ID.
+ * @param {string} url Of the youtube link.
+ * @returns String of youtube URL w/ embedded video ID, or null
+ */
+function parseYoutubeUrlToEmbeded(url) {
+    const parsedUrl = new URL(url);
+    let videoId;
+    if (parsedUrl.hostname === 'www.youtube.com') {
+        videoId = parsedUrl.searchParams.get('v');
+    } else if (parsedUrl.hostname === 'youtu.be') {
+        const pathSegments = parsedUrl.pathname.split('/');
+        videoId = pathSegments[1];
+    }
+    // Construct the embedded YouTube link from parsed video ID
+    if (videoId) {
+        const embeddedLink = `https://www.youtube.com/embed/${videoId}`;
+        return embeddedLink;
+    } else {
+        return null;
+    }
+}
+
+/**
  * Returns whether the designated upload directory is above the max permissible size.
  * @returns Whether the designated upload directory is above the max permissible size
  */
@@ -111,5 +135,6 @@ function deleteUploads(filenames = []) {
 module.exports = { 
     upload,
     deleteUploads,
-    inferType
+    inferType,
+    parseYoutubeUrlToEmbeded
 }

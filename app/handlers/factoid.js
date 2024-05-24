@@ -1,5 +1,5 @@
 const db = require('better-sqlite3')('app.db');
-const { inferType } = require('../modules/upload');
+const { inferType, parseYoutubeUrlToEmbeded } = require('../modules/upload');
 
 /**
  * Given an id, returns the associated fact.
@@ -184,7 +184,12 @@ function insertAttachments(paths = [], factID) {
     
     paths.forEach((path) => {
         try {
-            insertAttachmentStmt.run(factID, path, inferType(path))
+            const pathType = inferType(path);
+            if (pathType === 'youtube') {
+                path = parseYoutubeUrlToEmbeded(path);
+                if (!path) throw new Error(`Could not embed youtube link! (${path})`);
+            }
+            insertAttachmentStmt.run(factID, path, pathType)
         } catch (err) {
             throw new Error(`Failed to insert attachment ${path} because -> ${err.message}`)
         }
