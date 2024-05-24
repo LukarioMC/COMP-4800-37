@@ -18,4 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // function to handle toggling of tags
 function toggleTagSelection(tagElement) {
     const tagName = tagElement.getAttribute('data-tag');
+
+    if (selectedTags.has(tagName)) {
+        tagElement.classList.remove('bg-primary');
+        tagElement.classList.add('bg-secondary');
+    } else {
+        tagElement.classList.remove('bg-secondary');
+        tagElement.classList.add('bg-primary');
+    }
 }
