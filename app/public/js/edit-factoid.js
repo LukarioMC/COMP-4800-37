@@ -49,7 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('delete-button').addEventListener('click', async function() {
             const confirmation = confirm('Are you sure you want to delete this fact? This action cannot be undone.');
             if (confirmation) {
-               
+                const factId = document.getElementById('submission-form').getAttribute('data-fact-id');
+                const response = await fetch(`/api/fact/${factId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
             }
         });
 })
