@@ -41,4 +41,5 @@ async function approveFact(factID) {
 }
 
 function editFact(factID) {
+    window.location.href = `/edit-fact/${factID}`;
 }
