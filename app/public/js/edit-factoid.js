@@ -20,9 +20,11 @@ function toggleTagSelection(tagElement) {
     const tagName = tagElement.getAttribute('data-tag');
 
     if (selectedTags.has(tagName)) {
+        selectedTags.delete(tagName);
         tagElement.classList.remove('bg-primary');
         tagElement.classList.add('bg-secondary');
     } else {
+        selectedTags.add(tagName);
         tagElement.classList.remove('bg-secondary');
         tagElement.classList.add('bg-primary');
     }
