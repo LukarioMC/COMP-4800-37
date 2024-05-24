@@ -68,6 +68,17 @@ DROP TABLE IF EXISTS report;
 --     CONSTRAINT "Report_submitter_id_fkey" FOREIGN KEY ("submitter_id") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 -- );
 
+-- CreateTable
+DROP TABLE IF EXISTS anon_submitter;
+CREATE TABLE "anon_submitter" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "factoid_id" INTEGER NOT NULL,
+    "link" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    CONSTRAINT "Attachment_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "attachment_type_check" CHECK ("type" in ('image', 'audio', 'website', 'youtube'))
+);
+
 -- CreateIndex
 DROP INDEX IF EXISTS User_email_key;
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");

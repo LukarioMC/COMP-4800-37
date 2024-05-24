@@ -149,7 +149,8 @@ function addFact({
     content, 
     discovery_date = new Date().toUTCString(), 
     note, tags = [], 
-    attachments = []}) 
+    attachments = [],
+    anonData}) 
     {
     try {
         const stmt = db.prepare(`
@@ -165,8 +166,23 @@ function addFact({
             insertAttachments(attachments, factID)
         })()
 
+        // if (anonData.country) insertAnonUserData(anonData)
+
     } catch (err) {
         throw new Error(`Failed to add fact because -> ${err.message}`)
+    }
+}
+
+function insertAnonUserData({name, email, country}) {
+    try {
+        const insertAnonData = db.prepare(`
+                INSERT INTO anon_submitter (name, email, country)
+                VALUES (?, ?, ?)
+        `)
+
+        db.run(name, email, country)
+    } catch (err) {
+        console.log(err)
     }
 }
 
