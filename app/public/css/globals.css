@@ -48,11 +48,11 @@ nav.navbar > .offcanvas a:hover {
     color: #de94b9;
 }
 
-.navbar-toggler {
+nav .navbar-toggler {
     background-color: #dedeb9;
 }
 
-.navbar-toggler:hover {
+nav .navbar-toggler:hover {
     background-color: #b9b9de;
 }
 
