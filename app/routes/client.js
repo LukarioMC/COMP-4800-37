@@ -3,7 +3,7 @@
  */
 const express = require('express');
 const router = express.Router();
-const countryUtils = require('../utils/countryUtils');
+const countryUtils = require('../modules/countryUtils');
 const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
 const { redirectUnauthorizedRequestHome } = require('../middleware');
 const { getTags } = require('../handlers/tag')

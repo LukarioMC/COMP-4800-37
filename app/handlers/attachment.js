@@ -1,5 +1,5 @@
 const db = require('better-sqlite3')('app.db');
-const { deleteUploads } = require('../modules/upload');
+const { deleteUploads, inferType, parseYoutubeUrlToEmbeded } = require('../modules/upload');
 
 /**
  * Deletes the attachment with the specified attachment ID from the database.
@@ -52,7 +52,34 @@ function deleteAllAttachmentsforFactoid(factoidID) {
     }
 }
 
+/**
+ * Creates attachments in the database with the given path and fact ID.
+ * @param {Array<string>} paths string array containing filenames
+ * @param {integer} factID fact ID
+ */
+function insertAttachments(paths = [], factID) {
+
+    let insertAttachmentStmt = db.prepare(`
+        INSERT INTO attachment (factoid_id, link, type) 
+        VALUES (?, ?, ?)
+    `)
+    
+    paths.forEach((path) => {
+        try {
+            const pathType = inferType(path);
+            if (pathType === 'youtube') {
+                path = parseYoutubeUrlToEmbeded(path);
+                if (!path) throw new Error(`Could not embed youtube link! (${path})`);
+            }
+            insertAttachmentStmt.run(factID, path, pathType)
+        } catch (err) {
+            throw new Error(`Failed to insert attachment ${path} because -> ${err.message}`)
+        }
+    })
+}
+
 module.exports = {
     deleteAttachmentforFactoid,
     deleteAllAttachmentsforFactoid,
+    insertAttachments
 };

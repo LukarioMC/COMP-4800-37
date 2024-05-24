@@ -12,7 +12,7 @@
 			"request": "launch",
 			"restart": true,
 			"runtimeExecutable": "nodemon",
-			"args": "--watch 'swagger.yaml'",
+			"args": "--watch app --watch 'swagger.yaml'",
 			"skipFiles": [
 				"<node_internals>/**"
 			],

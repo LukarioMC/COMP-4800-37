@@ -127,7 +127,7 @@ paths:
         description: Fact data to be added.
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -141,19 +141,16 @@ paths:
                   description: The date when the fact was discovered.
                   type: string
                   format: date-time
-                tags:
+                # Sending an array of items is currently bugged, see: https://github.com/swagger-api/swagger-ui/issues/8614
+                tag:
                   description: A tag or tags.
                   type: array
                   items:
                     type: string
-                attachments:
+                attachment:
                   description: URL link(s) or file(s) associated with the fact. 
-                  oneOf:
-                    - type: string
-                      description: File(s) to upload.
-                      format: binary
-                    - type: string
-                      description: URL(s)
+                  type: string
+                  format: binary
                 data:
                   description: JSON that contains all the other mentioned fields with the
                     exception of attachment files (URLs still permissible). If present, all 
@@ -171,12 +168,12 @@ paths:
                       description: The date when the fact was discovered.
                       type: string
                       format: date-time
-                    tags:
+                    tag:
                       description: A tag or tags.
                       type: array
                       items:
                         type: string
-                    attachments:
+                    attachment:
                       description: URL link(s) associated with the fact. 
                       type: string
       responses:
@@ -419,3 +416,33 @@ paths:
           description: Attachment not found.
         '500':
           description: Server error.
+
+  /api/attachment:
+    post:
+      summary: Attaches a list of attachment files to the fact specified by the ID. Requires admin privileges.
+      requestBody:
+        description: Attachments files and fact ID.
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                factID:
+                  description: The fact ID.
+                  type: integer
+                attachment:
+                  description: File(s) to be added to the fact. 
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Attachment(s) added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+        '400':
+          description: 'Invalid request.'
+        '403':
+          description: Unauthorized request; user must be administrator.
