@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.tag-selectable').forEach(tagElement => {
         tagElement.addEventListener('click', () => toggleTagSelection(tagElement));
     });
+
+    // add event listener for form submission
+    document.getElementById('submission-form').addEventListener('submit', async function(event) {
+        
+    });
 })
 
 // function to handle toggling of tags
