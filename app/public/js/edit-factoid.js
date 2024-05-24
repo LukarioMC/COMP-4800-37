@@ -47,7 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // adds event listener for delete button on click
         document.getElementById('delete-button').addEventListener('click', async function() {
- 
+            const confirmation = confirm('Are you sure you want to delete this fact? This action cannot be undone.');
+            if (confirmation) {
+               
+            }
         });
 })
 
