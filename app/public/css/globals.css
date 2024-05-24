@@ -1,6 +1,21 @@
+@font-face {
+  font-family: '37';
+  src: url('./no_name_37_Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: '74';
+  src: url('./Planet\ 37.ttf') format('opentype');
+}
+
 body {
+    font-family: '37', sans-serif !important;
     color: #370370;
     background-color: #dedeb9;
+}
+
+h1, h2, h3 {
+    font-family: '74', sans-serif !important;
 }
 
 .btn-primary {
@@ -53,6 +68,10 @@ nav > .login a:hover {
 .fact {
     color: #370370;
     background-color: #dedede;
+}
+
+.fact > h2 {
+    font-family: '37', sans-serif !important;
 }
 
 .fact > h2 > button {
