@@ -5,29 +5,29 @@
 
 @font-face {
   font-family: '74';
-  src: url('./Planet\ 37.ttf') format('opentype');
+  src: url('./Planet 37.ttf') format('opentype');
 }
 
 body {
-    font-family: '37', sans-serif !important;
+    font-family: '37', sans-serif;
     color: #370370;
     background-color: #dedeb9;
 }
 
 h1, h2, h3, h5 {
-    font-family: '74', sans-serif !important;
+    font-family: '74', sans-serif;
 }
 
 .btn-primary {
-    color: #370370 !important;
-    background-color: #b9b9de !important;
-    border-color: #b9b9de !important;
+    color: #370370;
+    background-color: #b9b9de;
+    border-color: #b9b9de;
 }
 
 .btn-primary:hover {
-    color: #370370 !important;
-    background-color: #de94b9 !important;
-    border-color: #de94b9 !important;
+    color: #370370;
+    background-color: #de94b9;
+    border-color: #de94b9;
 }
 
 nav,
@@ -44,12 +44,12 @@ nav > .offcanvas a:hover {
     color: #de94b9;
 }
 
-nav > button {
-    background-color: #dedeb9 !important;
+.navbar-toggler {
+    background-color: #dedeb9;
 }
 
-nav > button:hover {
-    background-color: #b9b9de !important;
+.navbar-toggler:hover {
+    background-color: #b9b9de;
 }
 
 nav > .login a {
@@ -66,7 +66,7 @@ nav > .login a:hover {
 }
 
 .form-control {
-    color: #370370 !important;
+    color: #370370;
     background-color: #dedede;
 }
 
@@ -75,23 +75,23 @@ nav > .login a:hover {
     background-color: #dedede;
 }
 
-.fact > h2 {
-    font-family: '37', sans-serif !important;
+.fact > .accordion-header {
+    font-family: '37', sans-serif;
 }
 
-.fact > h2 > button {
-    color: #370370 !important;
-    background-color: #dedede !important;
+.fact > .accordion-header > .accordion-button {
+    color: #370370;
+    background-color: #dedede;
 }
 
-.fact > h2 > button:hover {
-    color: #370370 !important;
-    background-color: #b9b9de !important;
+.fact > .accordion-header > .accordion-button:hover {
+    color: #370370;
+    background-color: #b9b9de;
 }
 
-.fact > h2 > button:focus {
-    color: #370370 !important;
-    background-color: #b9b9de !important;
+.fact > .accordion-header > .accordion-button:focus {
+    color: #370370;
+    background-color: #b9b9de;
 }
 
 .pagination {
