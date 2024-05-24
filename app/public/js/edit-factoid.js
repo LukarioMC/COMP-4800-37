@@ -36,6 +36,13 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(data)
         });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Fact updated successfully');
+        } else {
+            alert('Error updating fact: ' + result.error);
+        }
     });
 })
 
