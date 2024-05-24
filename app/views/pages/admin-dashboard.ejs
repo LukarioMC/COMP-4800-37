@@ -33,20 +33,20 @@
 
         <% if (submissions.length > 0) {
             submissions.forEach(function (submission) { %>
-        <div class="row text-start text-wrap pb-4">
+        <div class="row text-start text-wrap pb-4" data-id="<%= submission.id %>">
             <div class="col"><%= submission.posting_date %></div>
             <div class="col"><%= submission.submitter_id %></div>
             <div class="col"><%= submission.content %></div>
             <div class="col"><%= submission.note %></div>
             <div class="col"><%= submission.tags.join(', ') %></div>
             <div class="col">
-                <button type="button" class="btn btn-success btn-sm">
+                <button type="button" class="btn btn-success btn-sm action-btn" data-action="approve">
                     Approve
                 </button>
-                <button type="button" class="btn btn-danger btn-sm">
+                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="delete">
                     Delete
                 </button>
-                <button type="button" class="btn btn-warning btn-sm">
+                <button type="button" class="btn btn-warning btn-sm action-btn" data-action="edit">
                     Edit
                 </button>
             </div>
@@ -60,7 +60,6 @@
     </div>
 
     <div class="container mb-3 ps-0">
-        <!-- Change here for tag creation -->
         <form action="/api/tag?_method=PUT" method="POST">
             <div class="row text-start">
                 <div class="col-3">
@@ -96,7 +95,7 @@
             <hr />
 
             <div id="tags-list">
-                <% if (tags.length> 0) {
+                <% if (tags.length > 0) {
                     tags.forEach(function (tag) { %>
                 <div class="row text-start text-wrap pb-4 bg-light">
                     <div class="col">
@@ -106,8 +105,8 @@
                         <%= tag.is_primary %>
                     </div>
                     <div class="col">
-                        <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                        <button type="button" class="btn btn-warning btn-sm">Edit</button>
+                        <button type="button" class="btn btn-danger btn-sm action-btn" data-action="delete-tag" data-id="<%= tag.id %>">Delete</button>
+                        <button type="button" class="btn btn-warning btn-sm action-btn" data-action="edit-tag" data-id="<%= tag.id %>">Edit</button>
                     </div>
                 </div>
                 <% });
@@ -118,3 +117,5 @@
 </main>
 
 <%- include('../partials/footer'); %>
+
+<script src="/js/admin-dashboard.js" defer></script>
