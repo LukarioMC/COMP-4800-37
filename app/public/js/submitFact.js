@@ -67,10 +67,12 @@ function createAttachmentInput() {
         }
     })
 
-    if (!attachments.find((att) => {
-        (att.type === 'file' && att.files.length === 0) ||
+    const hasEmptyAttachment = attachments.find((att) => {
+        return (att.type === 'file' && att.files.length === 0) ||
         (att.type === 'text' && att.value === '')
-    })){
+    })
+    
+    if (!hasEmptyAttachment){
         let input = document.createElement('input')
         input.type = 'file'
         input.className = 'form-control'
@@ -78,8 +80,7 @@ function createAttachmentInput() {
         let ptnAttID;
         do {
             ptnAttID = Math.random()
-        }
-        while (attIDs.includes(ptnAttID))
+        } while (attIDs.includes(ptnAttID))
         attIDs.push(ptnAttID) 
         input.id = ptnAttID
         input.accept = ['.jpg', '.jpeg', '.png', '.svg', '.webp', '.gif', '.mp3', '.mpeg'].join(',')
