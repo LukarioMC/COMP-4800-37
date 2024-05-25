@@ -116,5 +116,44 @@ function deleteAttachment(attachmentId) {
  * Fetches the updated list of attachments for the current factoid and refreshes the attachments container.
  */
 function refreshAttachments() {
-    
+    const factId = document.getElementById('submission-form').getAttribute('data-fact-id');
+    fetch(`/api/fact/${factId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch attachments');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Fetched attachments:', data);
+            const attachmentsContainer = document.getElementById('attachments-container');
+            attachmentsContainer.innerHTML = '';
+
+            attachmentsContainer.forEach(att => {
+                const attachmentDiv = document.createElement('div');
+                attachmentDiv.classList.add('attachment');
+                let content = '';
+                switch (att.type) {
+                    case 'image':
+                        content = `<img src="../uploads/${att.link}" style="width: 50%; height: 50%"><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
+                        break;
+                    case 'audio':
+                        content = `<audio controls><source src="../uploads/${att.link}"></audio><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
+                        break;
+                    case 'youtube':
+                        const embedLink = att.link.replace('watch?v=', 'embed/');
+                        content = `<iframe width="50%" height="50%" src="${embedLink}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
+                        break;
+                    case 'website':
+                        content = `<a href="${att.link}" style="display: block">Learn More</a><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
+                        break;
+                }
+                attachmentDiv.innerHTML = content;
+                attachmentsContainer.appendChild(attachmentDiv);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching attachments', error);
+            alert('Error fetching attachments');
+        });
 }
