@@ -1,11 +1,11 @@
 @font-face {
   font-family: '37';
-  src: url('./no_name_37_Regular.otf') format('opentype');
+  src: url('../font/no_name_37_Regular.otf') format('opentype');
 }
 
 @font-face {
   font-family: '74';
-  src: url('./Planet 37.ttf') format('opentype');
+  src: url('../font/Planet 37.ttf') format('opentype');
 }
 
 body {
