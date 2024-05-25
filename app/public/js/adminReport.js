@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 })
 
 /**
+ * A fetch request to the delete route for /api/report/:reportID
  * 
  * @param {number} reportID The ID of the report 
  */
@@ -19,7 +20,8 @@ async function deleteReport(reportID, target) {
             'Content-Type': 'application/json'
         }
     })
-    .then(() =>
-        window.location.reload()
+    .then(() => {
+        window.location.reload();
+    }
     )  
 }

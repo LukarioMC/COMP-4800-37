@@ -218,7 +218,7 @@ router.post('/report', (req, res) => {
 
     // Store the report in the database
     try {
-        submitReport(factID, reporter, factContent, reportContent);
+        submitReport(factID, reporter, reportContent);
         req.flash('success', 'Report successfully sent!');
         res.redirect('back');
     } catch (e) {

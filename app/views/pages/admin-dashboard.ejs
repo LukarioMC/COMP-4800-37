@@ -99,10 +99,10 @@
                 <p>Date Submitted</p>
             </div>
             <div class="col mt-3">
-                <p>Fact #</p>
+                <p>Submitter</p>
             </div>
             <div class="col mt-3">
-                <p>Submitter</p>
+                <p>Fact #</p>
             </div>
             <div class="col mt-3">
                 <p>Fact</p>
@@ -119,19 +119,19 @@
             reports.forEach(function (report) { %>
         <div class="row text-start text-wrap pb-4">
             <div class="col"><%= report.submission_date %></div>
-            <div class="col"><%= report.factoid_id %></div>
             <div class="col"><%= report.submitter_id %></div>
-            <div class="col"><%= report.factoid_content %></div>
+            <div class="col"><%= report.factoid_id %></div>
+            <div class="col"><%= report.content %></div>
             <div class="col"><%= report.issue %></div>
-            <div class="col">
+            <div class="col text-center">
                 <button type="button" id="button<%= report.id %>" name="<%= report.id %>" class="btn btn-success btn-sm resolve-btn" data-action="resolve">
-                    Mark as Resolved
+                    Resolve
                 </button>
             </div>
         </div>
         <% }); %>
         <% } else { %>
-            <p class="pb-3">No reports yet</p>
+            <p class="pb-3">No reports to show</p>
         <% } %>
 
     </div>

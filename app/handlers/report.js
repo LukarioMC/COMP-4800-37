@@ -5,15 +5,14 @@ const db = require('../modules/db');
  * 
  * @param {*} factoidID The ID of the factoid
  * @param {*} submitterID The ID of the user who submitted the report
- * @param {*} factoidContent The fact itself
  * @param {*} issue The issue that the user has found
  */
-function submitReport(factoidID, submitterID, factoidContent, issue) {
+function submitReport(factoidID, submitterID, issue) {
     try {
         db.prepare(`
-            INSERT INTO report (factoid_id, submitter_id, factoid_content, issue)
-            VALUES (?, ?, ?, ?)`
-        ).run(factoidID, submitterID, factoidContent, issue);
+            INSERT INTO report (factoid_id, submitter_id, issue)
+            VALUES (?, ?, ?)`
+        ).run(factoidID, submitterID, issue);
     } catch (e) {
         throw new Error(`Failed to send report.`);
     }
@@ -26,8 +25,11 @@ function submitReport(factoidID, submitterID, factoidContent, issue) {
  */
 function getReports() {
     try {
-        const getReportsStmt = db.prepare(`
-        SELECT * FROM report ORDER BY submission_date ASC
+    const getReportsStmt = db.prepare(`
+    SELECT report.*, factoid.content
+    FROM report
+    LEFT JOIN factoid ON report.factoid_id = factoid.id
+    ORDER BY submission_date ASC
     `);
 
     return getReportsStmt.all();
@@ -48,8 +50,11 @@ function resolveReport(reportID) {
         const resolveReportsStmt = db.prepare(`
         DELETE FROM report
         WHERE id = ?
-    `).run(reportID);
+    `)
+    
+    resolveReportsStmt.run(reportID);
 
+    // Not sure why it needs this for page refresh to work
     return getReportsStmt.all();
 
     } catch (e) {
