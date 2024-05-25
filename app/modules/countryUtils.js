@@ -18,6 +18,14 @@ function readCountryData(callback) {
     });
 }
 
+function getCountryCodes() {
+    const data = fs.readFileSync('./app/modules/country-names.json', 'utf-8')
+
+    return Object.entries(JSON.parse(data))
+        .map(([code, name]) => (code))
+}
+
 module.exports = {
     readCountryData: readCountryData,
+    getCountryCodes
 };
