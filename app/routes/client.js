@@ -55,7 +55,7 @@ router.get('/contact', (_, res) => {
 });
 
 // Route to edit a fact
-router.get('/edit-fact/:id', async (req, res) => {
+router.get('/edit-fact/:id', redirectUnauthorizedRequestHome, (req, res) => {
     const factID = req.params.id;
     const factoid = getFactByID(factID, false); 
     const tags = getTags();
@@ -64,13 +64,7 @@ router.get('/edit-fact/:id', async (req, res) => {
         return res.status(404).send('Fact not found');
     }
   
-    countryUtils.readCountryData((err, countries) => {
-        if (err) {
-            return res.status(500).send('Internal Server Error');
-        }
-
-        res.render('pages/edit-fact', { factoid, user: req.user, countries, tags });
-    });
+    res.render('pages/edit-fact', { factoid, user: req.user, countries: readCountryData(), tags });
 });
 // Test path for uploading files.
 router.get('/upload', (req, res) => {
