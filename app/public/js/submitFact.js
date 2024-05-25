@@ -131,9 +131,9 @@ function resetForm() {
  * Configures page.
  */
 function configPage() {
-    let ddtags = document.getElementsByClassName('ddtag')
-    for (let i = 0; i < ddtags.length; i++) {
-        ddtags[i].onclick = () => createSearchTag(ddtags[i].id)
+    let dropdownTags = document.getElementsByClassName('37-dropdown-tag')
+    for (let i = 0; i < dropdownTags.length; i++) {
+        dropdownTags[i].onclick = () => createSearchTag(dropdownTags[i].id)
     }
 
     createAttachmentInput()
