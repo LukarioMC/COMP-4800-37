@@ -25,7 +25,6 @@ router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
     }
     const unapprovedFacts = getUnapprovedFacts().map(getTagNames);
     const allReports = getReports();
-    console.log(allReports);
     const tags = getTags();
     res.render('pages/admin-dashboard', { submissions: unapprovedFacts, reports: allReports, tags: tags });
 });

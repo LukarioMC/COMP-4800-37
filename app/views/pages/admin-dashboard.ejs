@@ -115,8 +115,6 @@
 
         <hr />
 
-        <% console.log(reports.length) %>
-
         <% if (reports.length > 0) {
             reports.forEach(function (report) { %>
         <div class="row text-start text-wrap pb-4">
@@ -125,9 +123,15 @@
             <div class="col"><%= report.submitter_id %></div>
             <div class="col"><%= report.factoid_content %></div>
             <div class="col"><%= report.issue %></div>
-            <div class="col"></div>
+            <div class="col">
+                <button type="button" id="button<%= report.id %>" name="<%= report.id %>" class="btn btn-success btn-sm resolve-btn" data-action="resolve">
+                    Mark as Resolved
+                </button>
+            </div>
         </div>
         <% }); %>
+        <% } else { %>
+            <p class="pb-3">No reports yet</p>
         <% } %>
 
     </div>
@@ -194,6 +198,6 @@
     </div>
 </main>
 
-<script src="js/adminDashboard.js" defer></script>
+<script src="js/adminReport.js" defer></script>
 
 <%- include('../partials/footer'); %>

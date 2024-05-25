@@ -7,7 +7,7 @@ const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
-const { submitReport } = require('../handlers/report');
+const { submitReport, resolveReport } = require('../handlers/report');
 const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
 const { upload, deleteUploads } = require('../modules/upload')
 
@@ -168,7 +168,7 @@ router.put('/tag', rejectUnauthorizedRequest, (req, res) => {
     }
 });
 
-// Sends a report to the specified receiver, and stores the report information into the reports table
+// Route to send a report to the specified receiver, and stores the report information into the reports table
 router.post('/report', (req, res) => {
     if (!req.body.issue || !req.body.fact?.id) {
         req.flash(
@@ -226,6 +226,28 @@ router.post('/report', (req, res) => {
         res.redirect('back');
     }
 });
+
+// Route to resolve/delete the specified report
+router.delete('/report/:reportID', rejectUnauthorizedRequest, (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    try {
+        const reportID = parseInt(req.params.reportID);
+
+        if (isNaN(reportID)) {
+            req.flash('error', 'Invalid report ID. Cannot delete report.');
+            res.redirect('back');
+        }
+        resolveReport(reportID);
+        req.flash('success', 'Report has been resolved.');
+
+    } catch (e) {
+        req.flash('error', 'Error deleting report.');
+        res.redirect('back');
+    }
+    
+});
+
 
 // API endpoint to delete an attachment for a given attachment ID
 router.delete('/attachment/:attachmentID', rejectUnauthorizedRequest, (req, res, next) => {

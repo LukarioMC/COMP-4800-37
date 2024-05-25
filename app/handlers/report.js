@@ -14,7 +14,7 @@ function submitReport(factoidID, submitterID, factoidContent, issue) {
             INSERT INTO report (factoid_id, submitter_id, factoid_content, issue)
             VALUES (?, ?, ?, ?)`
         ).run(factoidID, submitterID, factoidContent, issue);
-    } catch (err) {
+    } catch (e) {
         throw new Error(`Failed to send report.`);
     }
 }
@@ -37,7 +37,28 @@ function getReports() {
     }
 }
 
+/**
+ * Resolves/deletes the specified report.
+ * 
+ * @param {number} reportID The ID of the report being resolved
+ * @returns 
+ */
+function resolveReport(reportID) {
+    try {
+        const resolveReportsStmt = db.prepare(`
+        DELETE FROM report
+        WHERE id = ?
+    `).run(reportID);
+
+    return getReportsStmt.all();
+
+    } catch (e) {
+        throw new Error(`Failed to resolve report.`);
+    }
+}
+
 module.exports = {
     submitReport,
-    getReports
+    getReports,
+    resolveReport
 }
