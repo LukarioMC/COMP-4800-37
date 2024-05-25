@@ -185,7 +185,6 @@ function addFact({
  */
 function insertAnonUserData({name, email, country}, factID) {
     let countryCodes = getCountryCodes()
-    console.log(countryCodes)
     if (!countryCodes.includes(country)) country = undefined
 
     if (name || email || country) {

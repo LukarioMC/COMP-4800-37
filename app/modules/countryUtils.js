@@ -26,6 +26,6 @@ function getCountryCodes() {
 }
 
 module.exports = {
-    readCountryData: readCountryData,
+    readCountryData,
     getCountryCodes
 };
