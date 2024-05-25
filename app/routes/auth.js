@@ -8,6 +8,7 @@ const LocalStrategy = require('passport-local');
 const passwordValidator = require('password-validator');
 const emailValidator = require('email-validator');
 const middleware = require('../middleware');
+const { readCountryData } = require('../modules/countryUtils');
 
 // Configuring passport strategy.
 passport.use(
@@ -105,7 +106,7 @@ router.get('/register', (req, res, next) => {
             error = 'Password is invalid';
             break;
     }
-    res.render('pages/register', { err: error });
+    res.render('pages/register', { err: error, countries: readCountryData() });
 });
 
 // API route to sign a new user up.
@@ -141,7 +142,7 @@ router.post('/api/register', (req, res, next) => {
             while (true) {
                 try {
                     let insertNewUserStmt = db.prepare(
-                        'INSERT INTO user (id, email, hashed_password, salt, fname, lname) VALUES (?, ?, ?, ?, ?, ?) RETURNING *'
+                        'INSERT INTO user (id, email, hashed_password, salt, fname, lname, country) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *'
                     );
                     user = insertNewUserStmt.get(
                         generateRandomUID(),
@@ -149,7 +150,8 @@ router.post('/api/register', (req, res, next) => {
                         hashedPassword,
                         salt,
                         req.body.fname,
-                        req.body.lname
+                        req.body.lname,
+                        req.body.country || null
                     );
                 } catch (err) {
                     console.log(err);

@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "hashed_password" BLOB NOT NULL,
     "fname" TEXT,
     "lname" TEXT,
+    "country" TEXT,
     "is_admin" BOOLEAN NOT NULL DEFAULT false,
     "salt" BLOB NOT NULL
 );

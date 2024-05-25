@@ -30,6 +30,15 @@
             <label for="lname" class="form-label">Last Name (Optional)</label>
             <input id="lname" name="lname" type="text" class="form-control">
         </div>
+        <div class="mb-3">
+            <label for="country" class="form-label">Country (Optional)</label>
+            <select class="form-select" id="country" name="country">
+                <option value="" selected>No Country Selected</option>
+                <% countries.forEach(country => { %>
+                    <option value="<%= country.code %>"><%= country.name %></option>
+                <% }) %>
+            </select>
+        </div>
         <button id="submit" type="submit" class="btn btn-primary">Sign up</button>
         <div class="mt-3"><a href="/login">Already have an account? Log in here!</a></div>
     </form>
