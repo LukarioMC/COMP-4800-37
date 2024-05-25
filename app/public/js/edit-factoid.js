@@ -111,3 +111,10 @@ function deleteAttachment(attachmentId) {
         alert('Error deleting attachment');
     });
 }
+
+/**
+ * Fetches the updated list of attachments for the current factoid and refreshes the attachments container.
+ */
+function refreshAttachments() {
+    
+}
