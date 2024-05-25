@@ -1,10 +1,128 @@
-body {
-    background-color: rgb(111, 185, 185);
+@font-face {
+  font-family: '37';
+  src: url('../font/no_name_37_Regular.otf') format('opentype');
 }
 
-nav,
-nav > .offcanvas {
-    background-color: #d0d0d0;
+@font-face {
+  font-family: '74';
+  src: url('../font/Planet 37.ttf') format('opentype');
+}
+
+body {
+    font-family: '37', sans-serif;
+    color: #370370;
+    background-color: #dedeb9;
+}
+
+h1, h2, h3, h5 {
+    font-family: '74', sans-serif;
+}
+
+.btn-primary {
+    color: #370370;
+    background-color: #b9b9de;
+    border-color: #b9b9de;
+}
+
+.btn-primary:hover {
+    color: #370370;
+    background-color: #de94b9;
+    border-color: #de94b9;
+}
+
+nav.navbar {
+    color: #dedeb9;
+    background-color: #370370;
+}
+
+nav.navbar > .offcanvas {
+    color: #370370;
+    background-color: #dedede;
+}
+
+nav.navbar > .offcanvas a {
+    color: #370370;
+}
+
+nav.navbar > .offcanvas a:hover {
+    color: #de94b9;
+}
+
+nav .navbar-toggler {
+    background-color: #dedeb9;
+}
+
+nav .navbar-toggler:hover {
+    background-color: #b9b9de;
+}
+
+nav.navbar > .login a {
+    color: #dedeb9 !important;
+}
+
+nav.navbar > .login a:hover {
+    color: #b9b9de !important;
+}
+
+.card {
+    color: #370370;
+    background-color: #dedede;
+}
+
+.form-control {
+    color: #370370;
+    background-color: #dedede;
+}
+
+.fact {
+    color: #370370;
+    background-color: #dedede;
+}
+
+.fact > .accordion-header {
+    font-family: '37', sans-serif;
+}
+
+.fact > .accordion-header > .accordion-button {
+    color: #370370;
+    background-color: #dedede;
+}
+
+.fact > .accordion-header > .accordion-button:hover {
+    color: #370370;
+    background-color: #b9b9de;
+}
+
+.fact > .accordion-header > .accordion-button:focus {
+    color: #370370;
+    background-color: #b9b9de;
+}
+
+.pagination {
+    color: #370370;
+    background-color: #dedeb9;
+}
+
+.pagination > .page-item > .page-link {
+    color: #370370;
+    background-color: #dedede;
+}
+
+.pagination > .page-item > .page-link:hover {
+    color: #370370;
+    background-color: #b9b9de;
+}
+
+footer {
+    background-color: #370370;
+}
+
+footer > .text-center a {
+    color: #dedeb9;
+}
+
+footer > .text-center a:hover {
+    color: #b9b9de;
 }
 
 .alert {

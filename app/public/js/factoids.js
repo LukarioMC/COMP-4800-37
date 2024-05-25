@@ -48,9 +48,9 @@ function search() {
  * Configures /fact by adding onclick functionality to dropdown menu items, the search button and by creating HTML elements for tags already in use.
  */
 function configPage() {
-    let ddtags = document.getElementsByClassName('ddtag')
-    for (let i = 0; i < ddtags.length; i++) {
-        ddtags[i].onclick = () => createSearchTag(ddtags[i].id)
+    let dropdowntags = document.getElementsByClassName('37-dropdown-tag')
+    for (let i = 0; i < dropdowntags.length; i++) {
+        dropdowntags[i].onclick = () => createSearchTag(dropdowntags[i].id)
     }
 
     if (activeTagsString) {

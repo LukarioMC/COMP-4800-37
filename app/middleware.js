@@ -22,6 +22,7 @@ function isLoggedIn(req, res, next) {
  */
 function redirectUnauthorizedRequestHome(req, res, next) {
     if (!req.user?.isAdmin) {
+        req.flash('error', 'You must be an administrator to perform this action.');
         res.redirect('/');
     } else {
         next();

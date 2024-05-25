@@ -1,5 +1,6 @@
 const db = require('../modules/db');
 const { insertAttachments } = require('./attachment')
+const { getCountryCodes } = require('../modules/countryUtils')
 
 /**
  * Given an id, returns the associated fact.
@@ -149,7 +150,8 @@ function addFact({
     content, 
     discovery_date = new Date().toUTCString(), 
     note, tags = [], 
-    attachments = []}) 
+    attachments = [],
+    anonData}) 
     {
     try {
         const stmt = db.prepare(`
@@ -158,15 +160,44 @@ function addFact({
             RETURNING id
         `);
 
+        let factID
         db.transaction(() => {
-            const factID = stmt.get(submitter_id, content, discovery_date, note).id
+            factID = stmt.get(submitter_id, content, discovery_date, note).id
 
             insertTags(tags, factID)
             insertAttachments(attachments, factID)
         })()
 
+        if (anonData.name === '') anonData.name = undefined
+        insertAnonUserData(anonData, factID)
+
     } catch (err) {
         throw new Error(`Failed to add fact because -> ${err.message}`)
+    }
+}
+
+/**
+ * Inserts anonymous submitter data into the database. 
+ * @param {*} Object containing the name, email and two letter country code of an anonymous submitter.
+ * @param {*} factID ID of the associated submitted fact.
+ * @constraint One of name, email or country must be truthy.
+ * @constraint Country code must either be falsy or a valid ISO country code. 
+ */
+function insertAnonUserData({name, email, country}, factID) {
+    let countryCodes = getCountryCodes()
+    if (!countryCodes.includes(country)) country = undefined
+
+    if (name || email || country) {
+        try {
+            const insertAnonData = db.prepare(`
+                    INSERT INTO ANON_USER (name, email, country, factoid_id)
+                    VALUES (?, ?, ?, ?)
+            `)
+    
+            insertAnonData.run(name, email, country, factID)
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
 

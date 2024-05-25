@@ -12,10 +12,10 @@ db.exec(insertScript);
 const { ANON_PWD, ANON_EMAIL, TOMS_PWD } = process.env;
 if (!ANON_PWD || !ANON_EMAIL || !TOMS_PWD)
     throw 'Invalid configuration! `.env` *must* provide values for "ANON_PWD", "ANON_EMAIL", & "TOMS_PWD"';
-let addUserStmt = db.prepare('INSERT INTO user VALUES (?, ?, ?, ?, ?, ?, ?)');
+let addUserStmt = db.prepare('INSERT INTO user VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
 let anonSalt = crypto.randomBytes(16);
 let anonPwd = crypto.pbkdf2Sync(ANON_PWD, anonSalt, 310000, 32, 'sha256');
-addUserStmt.run('zzz3737', ANON_EMAIL, anonPwd, null, null, 0, anonSalt);
+addUserStmt.run('zzz3737', ANON_EMAIL, anonPwd, null, null, null, 0, anonSalt);
 let tomSalt = crypto.randomBytes(16);
 let tomPwd = crypto.pbkdf2Sync(TOMS_PWD, tomSalt, 310000, 32, 'sha256');
 addUserStmt.run(
@@ -24,6 +24,7 @@ addUserStmt.run(
     tomPwd,
     'Thomas',
     'Magliery',
+    'US',
     1,
     tomSalt
 );

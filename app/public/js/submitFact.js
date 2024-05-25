@@ -1,3 +1,7 @@
+let typingTimer;                
+const doneTypingInterval = 1000;  
+const countryMenu = document.getElementById('country')
+const attIDs = [];
 
 /**
  * Adds a tag name to the searchTags array and creates a corresponding HTML element.
@@ -31,10 +35,6 @@ function createSearchTag(name) {
     }
 }
 
-let typingTimer;                
-const doneTypingInterval = 1000;  
-const attIDs = []
-
 function doneTyping (e) {
     if (e.target !== '' && e.target.type === 'text') createAttachmentInput()
 }
@@ -67,10 +67,12 @@ function createAttachmentInput() {
         }
     })
 
-    if (!attachments.find((att) => {
-        (att.type === 'file' && att.files.length === 0) ||
+    const hasEmptyAttachment = attachments.find((att) => {
+        return (att.type === 'file' && att.files.length === 0) ||
         (att.type === 'text' && att.value === '')
-    })){
+    })
+    
+    if (!hasEmptyAttachment){
         let input = document.createElement('input')
         input.type = 'file'
         input.className = 'form-control'
@@ -78,8 +80,7 @@ function createAttachmentInput() {
         let ptnAttID;
         do {
             ptnAttID = Math.random()
-        }
-        while (attIDs.includes(ptnAttID))
+        } while (attIDs.includes(ptnAttID))
         attIDs.push(ptnAttID) 
         input.id = ptnAttID
         input.accept = ['.jpg', '.jpeg', '.png', '.svg', '.webp', '.gif', '.mp3', '.mpeg'].join(',')
@@ -119,21 +120,47 @@ function createAttachmentInput() {
     }
 }
 
+/**
+ * Resets submission form.
+ */
 function resetForm() {
     let form = document.getElementById('submission-form')
+    let i = countryMenu.selectedIndex
+    
     form.reset()
     document.getElementById('tags').innerHTML = ''
     document.getElementById('attachments').innerHTML = ''
     createAttachmentInput()
+
+    setCountry(i)
+}
+
+/**
+ * Sets user's country selection based on their IP.
+ * @param {Integer} i The index of the selected country, optional.
+ * @returns undefined
+ */
+function setCountry(i = 0) {
+    if (i !== 0) { 
+        countryMenu.selectedIndex = i
+        return
+    }
+
+    fetch('https://get.geojs.io/v1/ip/country.json')
+    .then(res => res.json())
+    .then((countryData) => {
+        let i = Array.from(countryMenu.children).findIndex(opt => opt.value === countryData.country)
+        if (i > -1) countryMenu.selectedIndex = i
+    })
 }
 
 /**
  * Configures page.
  */
 function configPage() {
-    let ddtags = document.getElementsByClassName('ddtag')
-    for (let i = 0; i < ddtags.length; i++) {
-        ddtags[i].onclick = () => createSearchTag(ddtags[i].id)
+    let dropdownTags = document.getElementsByClassName('37-dropdown-tag')
+    for (let i = 0; i < dropdownTags.length; i++) {
+        dropdownTags[i].onclick = () => createSearchTag(dropdownTags[i].id)
     }
 
     createAttachmentInput()
@@ -158,6 +185,8 @@ function configPage() {
             }
         })
     }
+    // Uncomment the following line to automatically select country from the dropdown on page load
+    // setCountry()
 }
 
 configPage()

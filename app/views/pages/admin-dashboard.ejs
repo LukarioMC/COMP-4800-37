@@ -26,6 +26,9 @@
             <div class="col mt-3">
                 <p>Tags</p>
             </div>
+            <div class="col mt-3">
+                <p>Attachments</p>
+            </div>
             <div class="col mt-3"></div>
         </div>
 
@@ -39,6 +42,31 @@
             <div class="col"><%= submission.content %></div>
             <div class="col"><%= submission.note %></div>
             <div class="col"><%= submission.tags.join(', ') %></div>
+            <% if (submission.attachments) { %>
+            <div class="col">
+                <% const order = ['image', 'youtube', 'audio', 'website']
+                let sortedAttachments = submission.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
+                sortedAttachments.forEach(att => {
+                    switch (att.type) { 
+                        case 'image': %>
+                <img src="uploads/<%= att.link %>" style="width: 100%">
+                <% break;
+                        case 'audio': %>
+                <audio controls>
+                    <source src="uploads/<%= att.link %>">
+                </audio>
+                <% break;
+                        case 'youtube': 
+                            const embedLink = att.link.replace('watch?v=', 'embed/') %>
+                <iframe width="100%" style="max-height: 20%;" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                </iframe>
+                <% break;
+                        case 'website': %>
+                <a href="<%= att.link %>" style="display: block">Learn More</a>
+                <% break;       
+                }}) %>
+            </div>
+            <% } %>
             <div class="col">
                 <button type="button" class="btn btn-success btn-sm action-btn" data-action="approve">
                     Approve
@@ -112,6 +140,8 @@
         </div>
     </div>
 </main>
+
+<script src="js/adminDashboard.js" defer></script>
 
 <%- include('../partials/footer'); %>
 

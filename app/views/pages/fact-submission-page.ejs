@@ -33,7 +33,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <% tags.forEach((tag) => { %>
-                            <li class="ddtag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
+                            <li class="37-dropdown-tag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
                         <% })%>
                     </ul>
                 </div>
@@ -67,10 +67,10 @@
                                 <div class="mb-3">
                                     <label for="country" class="form-label">Country:</label>
                                     <select class="form-select" id="country" name="country">
+                                        <option value="" selected>No Country Selected</option>
                                         <% countries.forEach(country => { %>
                                             <option value="<%= country.code %>"><%= country.name %></option>
                                         <% }) %>
-                       
                                     </select>
                                 </div>
                             </div>

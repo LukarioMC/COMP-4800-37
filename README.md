@@ -34,3 +34,9 @@ Optional Variables (Can be omitted or have default values):
 Run the following using 'npm run [cmd]'
  - `resetdb` - Creates all database entities (e.g. tables, indices) in app.db. Will drop pre-existing entities. Should only be run once the server has stopped.
  - `dev` - Run the app using nodemon serving to the localhost at the specified port (default of 8000).
+
+# Attributions
+The following resources were used in some way in the application:
+
+1. "No Name 37" [Font by Igor Kosinsky](https://www.dafont.com/no-name-37.font)
+2. "Planet 37" [Font by Tokopress](https://justtheskills.com/product/planet-37/) NOTE: This font **requires** a license to use.
