@@ -1,3 +1,7 @@
+let typingTimer;                
+const doneTypingInterval = 1000;  
+const countryMenu = document.getElementById('country')
+const attIDs = [];
 
 /**
  * Adds a tag name to the searchTags array and creates a corresponding HTML element.
@@ -30,10 +34,6 @@ function createSearchTag(name) {
         input.remove()
     }
 }
-
-let typingTimer;                
-const doneTypingInterval = 1000;  
-const attIDs = []
 
 function doneTyping (e) {
     if (e.target !== '' && e.target.type === 'text') createAttachmentInput()
@@ -120,12 +120,38 @@ function createAttachmentInput() {
     }
 }
 
+/**
+ * Resets submission form.
+ */
 function resetForm() {
     let form = document.getElementById('submission-form')
+    let i = countryMenu.selectedIndex
+    
     form.reset()
     document.getElementById('tags').innerHTML = ''
     document.getElementById('attachments').innerHTML = ''
     createAttachmentInput()
+
+    setCountry(i)
+}
+
+/**
+ * Sets user's country selection based on their IP.
+ * @param {Integer} i The index of the selected country, optional.
+ * @returns undefined
+ */
+function setCountry(i = 0) {
+    if (i !== 0) { 
+        countryMenu.selectedIndex = i
+        return
+    }
+
+    fetch('https://get.geojs.io/v1/ip/country.json')
+    .then(res => res.json())
+    .then((countryData) => {
+        let i = Array.from(countryMenu.children).findIndex(opt => opt.value === countryData.country)
+        if (i > -1) countryMenu.selectedIndex = i
+    })
 }
 
 /**
@@ -159,6 +185,8 @@ function configPage() {
             }
         })
     }
+    // Uncomment the following line to automatically select country from the dropdown on page load
+    // setCountry()
 }
 
 configPage()

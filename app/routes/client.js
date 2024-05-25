@@ -3,7 +3,7 @@
  */
 const express = require('express');
 const router = express.Router();
-const countryUtils = require('../modules/countryUtils');
+const { readCountryData } = require('../modules/countryUtils');
 const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
 const { redirectUnauthorizedRequestHome } = require('../middleware');
 const { getTags } = require('../handlers/tag')
@@ -32,12 +32,7 @@ router.get('/submit', (req, res) => {
     const tags = getTags();
     if (!req.user) {
         // gets country data from json for fact submitter country options
-        countryUtils.readCountryData((err, countries) => {
-            if (err) {
-                return res.status(500).send('Internal Server Error');
-            }
-            res.render('pages/fact-submission-page', { countries: countries, tags: tags });
-        });
+        res.render('pages/fact-submission-page', { countries: readCountryData(), tags: tags });
     } else {
         res.render('pages/fact-submission-page', { user: req.user, tags: tags });
     }

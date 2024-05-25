@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "hashed_password" BLOB NOT NULL,
     "fname" TEXT,
     "lname" TEXT,
+    "country" TEXT,
     "is_admin" BOOLEAN NOT NULL DEFAULT false,
     "salt" BLOB NOT NULL
 );
@@ -67,6 +68,16 @@ DROP TABLE IF EXISTS report;
 --     CONSTRAINT "Report_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
 --     CONSTRAINT "Report_submitter_id_fkey" FOREIGN KEY ("submitter_id") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 -- );
+
+-- CreateTable
+DROP TABLE IF EXISTS Anon_User;
+CREATE TABLE "Anon_User" (
+    "factoid_id" INTEGER NOT NULL PRIMARY KEY,
+    "name" TEXT,
+    "email" TEXT,
+    "country" TEXT,
+    CONSTRAINT "Anon_User_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
 
 -- CreateIndex
 DROP INDEX IF EXISTS User_email_key;
