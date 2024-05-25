@@ -1,3 +1,7 @@
+let typingTimer;                
+const doneTypingInterval = 1000;  
+const countryMenu = document.getElementById('country')
+const attIDs = [];
 
 /**
  * Adds a tag name to the searchTags array and creates a corresponding HTML element.
@@ -30,10 +34,6 @@ function createSearchTag(name) {
         input.remove()
     }
 }
-
-let typingTimer;                
-const doneTypingInterval = 1000;  
-const attIDs = []
 
 function doneTyping (e) {
     if (e.target !== '' && e.target.type === 'text') createAttachmentInput()
@@ -134,8 +134,6 @@ function resetForm() {
     setCountry(i)
 }
 
-const countryMenu = document.getElementById('country')
-
 /**
  * Sets user's country selection based on their IP.
  * @param {Integer} i The index of the selected country, optional.
@@ -186,8 +184,8 @@ function configPage() {
             }
         })
     }
-
-    setCountry()
+    // Uncomment the following line to automatically select country from the dropdown on page load
+    // setCountry()
 }
 
 configPage()
