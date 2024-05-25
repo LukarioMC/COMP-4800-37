@@ -100,5 +100,14 @@ function toggleTagSelection(tagElement) {
  * @param {number} attachmentId - The ID of the attachment to delete.
  */
 function deleteAttachment(attachmentId) {
-    
+    fetch(`/api/attachment/${attachmentId}`, { method: 'DELETE' })
+    .then(response => response.json())
+    .then(() => {
+        console.log('Attachment deleted successfully');
+        refreshAttachments();
+    })
+    .catch(error => {
+        console.error('Error deleting attachment', error);
+        alert('Error deleting attachment');
+    });
 }
