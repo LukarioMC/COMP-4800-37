@@ -129,7 +129,10 @@ function refreshAttachments() {
             const attachmentsContainer = document.getElementById('attachments-container');
             attachmentsContainer.innerHTML = '';
 
-            attachmentsContainer.forEach(att => {
+            const order = ['image', 'youtube', 'audio', 'website'];
+            const sortedAttachments = data.attachments.sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type));
+
+            sortedAttachments.forEach(att => {
                 const attachmentDiv = document.createElement('div');
                 attachmentDiv.classList.add('attachment');
                 let content = '';
