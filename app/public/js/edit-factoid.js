@@ -45,28 +45,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-        // adds event listener for delete button on click
-        document.getElementById('delete-button').addEventListener('click', async function() {
-            const confirmation = confirm('Are you sure you want to delete this fact? This action cannot be undone.');
-            if (confirmation) {
-                const factId = document.getElementById('submission-form').getAttribute('data-fact-id');
-                const response = await fetch(`/api/fact/${factId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                const result = await response.json();
-                if (response.ok) {
-                    alert('Fact deleted successfully');
-                    window.location.href = '/'; 
-                } else {
-                    alert('Error deleting fact: ' + result.error);
+    // adds event listener for delete button on click
+    document.getElementById('delete-button').addEventListener('click', async function() {
+        const confirmation = confirm('Are you sure you want to delete this fact? This action cannot be undone.');
+        if (confirmation) {
+            const factId = document.getElementById('submission-form').getAttribute('data-fact-id');
+            const response = await fetch(`/api/fact/${factId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert('Fact deleted successfully');
+                window.location.href = '/'; 
+            } else {
+                alert('Error deleting fact: ' + result.error);
             }
-        });
-})
+        }
+    });
+
+    // adds event for deleting an attachment
+    document.getElementById('attachments-container').addEventListener('click', function(event) {
+        if (event.target.classList.contains('btn-delete-attachment')) {
+            const attachmentId = event.target.getAttribute('data-attachment-id');
+            deleteAttachment(attachmentId);
+        }
+    });
+});
 
 // function to handle toggling of tags
 function toggleTagSelection(tagElement) {
