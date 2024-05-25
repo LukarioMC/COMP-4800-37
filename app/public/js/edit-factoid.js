@@ -76,7 +76,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// function to handle toggling of tags
+/**
+ * Toggles the selection of a tag element. If the tag is selected, it will be deselected, and vice versa.
+ * Updates the appearance of the tag element to reflect its selection state.
+ * @param {HTMLElement} tagElement - The tag element to toggle.
+ */
 function toggleTagSelection(tagElement) {
     const tagName = tagElement.getAttribute('data-tag');
 
