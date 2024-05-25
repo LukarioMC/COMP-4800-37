@@ -62,7 +62,7 @@ CREATE TABLE "Report" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "factoid_id" INTEGER NOT NULL,
     "submitter_id" TEXT,
-    "fact_content" TEXT NOT NULL,
+    "factoid_content" TEXT NOT NULL,
     "issue" TEXT NOT NULL,
     "submission_date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Report_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,

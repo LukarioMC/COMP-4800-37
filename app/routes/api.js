@@ -7,6 +7,7 @@ const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
+const { submitReport } = require('../handlers/report');
 const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
 const { upload, deleteUploads } = require('../modules/upload')
 
@@ -174,10 +175,14 @@ router.post('/report', (req, res) => {
         );
         return res.status(500).redirect('back');
     }
+
+    // Set all required data to variables
     const reporter = res.locals.user?.id || 'zzz3737';
     const factID = req.body.fact.id;
     const factContent = req.body.fact?.content || 'Unknown';
     const reportContent = req.body.issue.trim();
+    
+    // Set the mail configurations
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_RECEIVER,
@@ -199,6 +204,8 @@ router.post('/report', (req, res) => {
             </body>
             </html>`
     };
+
+    // Send the email
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error('Error sending email: ', error);
@@ -206,8 +213,16 @@ router.post('/report', (req, res) => {
             console.log('Email sent: ', info.response);
         }
     });
-    req.flash('success', 'Report successfully sent!');
-    res.redirect('back');
+
+    // Store the report in the database
+    try {
+        submitReport(factID, reporter, factContent, reportContent);
+        req.flash('success', 'Report successfully sent!');
+        res.redirect('back');
+    } catch (e) {
+        req.flash('error', e.message);
+        res.redirect('back');
+    }
 });
 
 // API endpoint to delete an attachment for a given attachment ID
