@@ -71,8 +71,7 @@ DROP TABLE IF EXISTS report;
 -- CreateTable
 DROP TABLE IF EXISTS Anon_User;
 CREATE TABLE "Anon_User" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "factoid_id" INTEGER NOT NULL,
+    "factoid_id" INTEGER NOT NULL PRIMARY KEY,
     "name" TEXT,
     "email" TEXT,
     "country" TEXT,

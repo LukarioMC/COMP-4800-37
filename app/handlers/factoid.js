@@ -178,7 +178,7 @@ function addFact({
 
 /**
  * Inserts anonymous submitter data into the database. 
- * @param {*} param0 Object containing the name, email and two letter country code of an anonymous submitter.
+ * @param {*} Object containing the name, email and two letter country code of an anonymous submitter.
  * @param {*} factID ID of the associated submitted fact.
  * @constraint One of name, email or country must be truthy.
  * @constraint Country code must either be falsy or a valid ISO country code. 
