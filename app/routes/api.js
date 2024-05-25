@@ -12,6 +12,7 @@ const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware
 const { upload, deleteUploads } = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
+
 // Configures email settings for reporting
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -167,6 +168,7 @@ router.put('/tag', rejectUnauthorizedRequest, (req, res) => {
     }
 });
 
+// Sends a report to the specified receiver, and stores the report information into the reports table
 router.post('/report', (req, res) => {
     if (!req.body.issue || !req.body.fact?.id) {
         req.flash(

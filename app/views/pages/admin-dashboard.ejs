@@ -9,7 +9,7 @@
         <h3>Pending Fact Submissions</h3>
     </div>
 
-    <div id="dashboard" class="container text-center">
+    <div id="dashboard" class="container text-center mb-3">
         <div class="row text-start fw-bold text-wrap">
             <div class="col mt-3">
                 <p>Date Submitted</p>
@@ -87,6 +87,49 @@
         </div>
         <% });
         } %>
+    </div>
+
+    <div class="container mt-5 mb-3 ps-0">
+        <h3>Reports</h3>
+    </div>
+
+    <div id="reportsDashboard" class="container text-center mb-3">
+        <div class="row text-start fw-bold text-wrap">
+            <div class="col mt-3">
+                <p>Date Submitted</p>
+            </div>
+            <div class="col mt-3">
+                <p>Fact #</p>
+            </div>
+            <div class="col mt-3">
+                <p>Submitter</p>
+            </div>
+            <div class="col mt-3">
+                <p>Fact</p>
+            </div>
+            <div class="col mt-3">
+                <p>Issue</p>
+            </div>
+            <div class="col mt-3"></div>
+        </div>
+
+        <hr />
+
+        <% console.log(reports.length) %>
+
+        <% if (reports.length > 0) {
+            reports.forEach(function (report) { %>
+        <div class="row text-start text-wrap pb-4">
+            <div class="col"><%= report.submission_date %></div>
+            <div class="col"><%= report.factoid_id %></div>
+            <div class="col"><%= report.submitter_id %></div>
+            <div class="col"><%= report.factoid_content %></div>
+            <div class="col"><%= report.issue %></div>
+            <div class="col"></div>
+        </div>
+        <% }); %>
+        <% } %>
+
     </div>
 
     <div class="container mt-5 mb-3 ps-0">

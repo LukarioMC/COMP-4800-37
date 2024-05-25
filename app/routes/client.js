@@ -6,7 +6,8 @@ const router = express.Router();
 const countryUtils = require('../modules/countryUtils');
 const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
 const { redirectUnauthorizedRequestHome } = require('../middleware');
-const { getTags } = require('../handlers/tag')
+const { getTags } = require('../handlers/tag');
+const { getReports } = require('../handlers/report');
 
 const PAGE_SIZE = 5
 
@@ -23,8 +24,10 @@ router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
         return fact;
     }
     const unapprovedFacts = getUnapprovedFacts().map(getTagNames);
+    const allReports = getReports();
+    console.log(allReports);
     const tags = getTags();
-    res.render('pages/admin-dashboard', { submissions: unapprovedFacts, tags: tags });
+    res.render('pages/admin-dashboard', { submissions: unapprovedFacts, reports: allReports, tags: tags });
 });
 
 // route for submitting facts

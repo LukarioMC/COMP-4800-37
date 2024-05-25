@@ -19,6 +19,25 @@ function submitReport(factoidID, submitterID, factoidContent, issue) {
     }
 }
 
+/**
+ * Gets all the rows in the report table
+ * 
+ * @returns All rows in the report table
+ */
+function getReports() {
+    try {
+        const getReportsStmt = db.prepare(`
+        SELECT * FROM report ORDER BY submission_date ASC
+    `);
+
+    return getReportsStmt.all();
+
+    } catch (e) {
+        return [];
+    }
+}
+
 module.exports = {
-    submitReport
+    submitReport,
+    getReports
 }
