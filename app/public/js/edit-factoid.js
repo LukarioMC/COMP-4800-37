@@ -94,3 +94,11 @@ function toggleTagSelection(tagElement) {
         tagElement.classList.add('bg-primary');
     }
 }
+
+/**
+ * Deletes the attachment with the specified attachment ID from the server.
+ * @param {number} attachmentId - The ID of the attachment to delete.
+ */
+function deleteAttachment(attachmentId) {
+    
+}
