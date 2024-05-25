@@ -43,12 +43,6 @@
             <div class="col"><%= submission.note %></div>
             <div class="col"><%= submission.tags.join(', ') %></div>
             <% if (submission.attachments) { %>
-                <script>
-                    function handleGETError(e) {
-                        console.log(e)
-                        console.log('test')
-                    }    
-                </script>
                 <div class="col">
                 <% const order = ['image', 'youtube', 'audio', 'website']
                 let sortedAttachments = submission.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
