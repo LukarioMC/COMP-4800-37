@@ -141,6 +141,7 @@ function resetForm() {
  * @returns undefined
  */
 function setCountry(i = 0) {
+    if (!countryMenu) return;
     if (i !== 0) { 
         countryMenu.selectedIndex = i
         return
