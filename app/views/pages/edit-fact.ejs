@@ -30,29 +30,41 @@
                     </div>
                 </div>
 
+                <!-- Attachments display with delete button -->
                 <div class="mb-3">
                     <label class="form-label">Attachments:</label>
-                    <div>
+                    <div id="attachments-container">
                         <% if (factoid.attachments) {
                             const order = ['image', 'youtube', 'audio', 'website']
                             let sortedAttachments = factoid.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
                             sortedAttachments.forEach(att => {
                                 switch (att.type) { 
                                     case 'image': %>
-                        <img src="../uploads/<%= att.link %>" style="width: 50%; height: 50%">
+                        <div class="attachment">
+                            <img src="../uploads/<%= att.link %>" style="width: 50%; height: 50%">
+                            <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
+                        </div>
                         <% break;
                                     case 'audio': %>
-                        <audio controls>
-                            <source src="../uploads/<%= att.link %>">
-                        </audio>
+                        <div class="attachment">
+                            <audio controls>
+                                <source src="../uploads/<%= att.link %>">
+                            </audio>
+                            <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
+                        </div>
                         <% break;
                                     case 'youtube': 
                                     const embedLink = att.link.replace('watch?v=', 'embed/') %>
-                        <iframe width="50%" height="50%" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                        </iframe>
+                        <div class="attachment">
+                            <iframe width="50%" height="50%" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
+                        </div>
                         <% break;
                                     case 'website': %>
-                        <a href="<%= att.link %>" style="display: block">Learn More</a>
+                        <div class="attachment">
+                            <a href="<%= att.link %>" style="display: block">Learn More</a>
+                            <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
+                        </div>
                         <% break;       
                         }})} %>
                     </div>
