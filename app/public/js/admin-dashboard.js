@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (action === 'approve') {
                 await approveFact(factID);
-            } else if (action === 'delete') {
-                await deleteFact(factID);
             } else if (action === 'edit') {
                 editFact(factID);
             }
@@ -16,26 +14,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-async function deleteFact(factID) {
-    const confirmation = confirm('Are you sure you want to delete this fact? This action cannot be undone.');
-    if (confirmation) {
-        const response = await fetch(`/api/fact/${factID}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+// async function deleteFact(factID) {
+//     const confirmation = confirm('Are you sure you want to delete this fact? This action cannot be undone.');
+//     if (confirmation) {
+//         const response = await fetch(`/api/fact/${factID}`, {
+//             method: 'DELETE',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             }
+//         });
 
-        const result = await response.json();
+//         const result = await response.json();
         
-        if (response.ok) {
-            alert('Fact deleted successfully');
-            window.location.reload();
-        } else {
-            alert('Error deleting fact: ' + result.message);
-        }
-    }
-}
+//         if (response.ok) {
+//             alert('Fact deleted successfully');
+//             window.location.reload();
+//         } else {
+//             alert('Error deleting fact: ' + result.message);
+//         }
+//     }
+// }
 
 async function approveFact(factID) {
     const response = await fetch(`/api/approve/${factID}`, {
