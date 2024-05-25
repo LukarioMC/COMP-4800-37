@@ -125,7 +125,7 @@ function createAttachmentInput() {
  */
 function resetForm() {
     let form = document.getElementById('submission-form')
-    let i = countryMenu.selectedIndex
+    let i = countryMenu?.selectedIndex || 0
     
     form.reset()
     document.getElementById('tags').innerHTML = ''
