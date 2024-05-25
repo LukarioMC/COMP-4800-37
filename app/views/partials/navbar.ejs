@@ -1,5 +1,4 @@
 <!-- Contains the navigation bar that should stay the same through pages. -->
-<!-- TODO: Update this with new wireframe content, copied from thirty-seven.org -->
 <nav class="navbar px-1 sticky-top">
     <button
         class="navbar-toggler"
@@ -14,7 +13,9 @@
     </button>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="navbar-content">
         <div class="offcanvas-header pb-0">
-            <a class="navbar-brand w-100 text-center" href="/">37</a>
+            <a class="navbar-brand w-100 text-center" href="/">
+              <h1>37</h1>
+            </a>
             <button
                 type="button"
                 class="btn-close"
@@ -26,6 +27,7 @@
             <h3 class="offcanvas-title pb-3 text-decoration-underline">
                 Categories
             </h3>
+            <ul class="navbar-nav">
             <% primaryTags.forEach(tag=> { %>
               <li class="nav-item">
                 <a href="/facts?&tag=<%= encodeURIComponent(tag.name) %>">
@@ -79,6 +81,8 @@
             <button class="btn btn-primary" type="submit">Sign out</button>
         </form>
     <% } else { %>
+      <div class="login">
         <a href="/login" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-3">Log In</a>
+      </div>
     <% } %>
 </nav>
