@@ -73,17 +73,27 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
     try {
         addFact({ submitter_id, content, discovery_date, note, tags, attachments, anonData: {name: name, email: email, country: country}});
         // Send email after adding fact
-        const submitter = res.locals.user?.id || 'zzz3737';
+        const submitter = res.locals.user?.id || req.body.email || 'zzz3737';
         const factContent = req.body.content || 'Unknown';
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_RECEIVER,
             subject: 'thirty-seven.org - New Fact has been Submitted for Approval',
             html:
-                `<p> Submitted by: ${submitter}
-                <br> Fact: ${factContent}
-                <br><br> Click <a href=${process.env.SITE_LINK}>here</a>
-                to go to the 37 admin dashboard for more details. You may need to log in. </p>`
+                `<!doctype html>
+                <html>
+                <body style="width: 100%; font-family: Arial, Helvetica, sans-serif;">
+                    <div style="max-width: fit-content; margin: 0 auto; padding: 1rem; background-color: #DEDEDE; border-radius: 2rem;">
+                        <p style="padding: 0.25rem; margin: 0; font-size: 3rem; font-weight: bold; border-bottom: 1px solid black; color: #370370; padding: 1rem;">Factoid Submission</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Submitter:</b> ${submitter}</p><br>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact:</b> ${factContent}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Note:</b> ${req.body.note || 'No notes attached.'}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Submission Timestamp:</b> ${new Date().toUTCString()}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><a href="${process.env.SITE_LINK}/admin" style="display: inline-block; background-color: #370370; color: #DEDEDE; text-decoration: none; padding: 0.75rem; border-radius: 1rem;">Go to the dashboard</a> (You may need to log in to access.)</p>
+                    </div>
+                    <p style="font-style: italic; width: fit-content; margin: 0 auto; margin-top: 0.5rem">This report was sent from <a href="${process.env.SITE_LINK}">${process.env.SITE_LINK}</a></p>
+                </body>
+                </html>`
         };
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
