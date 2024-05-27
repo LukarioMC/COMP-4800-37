@@ -7,10 +7,12 @@ const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
 const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
+const { submitReport, resolveReport } = require('../handlers/report');
 const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
 const { upload, deleteUploads } = require('../modules/upload')
 
 const nodemailer = require('nodemailer');
+
 // Configures email settings for reporting
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -165,6 +167,7 @@ router.put('/tag', rejectUnauthorizedRequest, (req, res) => {
     }
 });
 
+// Route to send a report to the specified receiver, and stores the report information into the reports table
 router.post('/report', (req, res) => {
     if (!req.body.issue || !req.body.fact?.id) {
         req.flash(
@@ -173,41 +176,67 @@ router.post('/report', (req, res) => {
         );
         return res.status(500).redirect('back');
     }
-    const reporter = res.locals.user?.id || 'zzz3737';
-    const factID = req.body.fact.id;
-    const factContent = req.body.fact?.content || 'Unknown';
-    const reportContent = req.body.issue.trim();
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_RECEIVER,
-        subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
-        html:
-            `<!doctype html>
-            <html>
-            <body style="width: 100%; font-family: Arial, Helvetica, sans-serif;">
-                <div style="max-width: fit-content; margin: 0 auto; padding: 1rem; background-color: #DEDEDE; border-radius: 2rem;">
-                    <p style="padding: 0.25rem; margin: 0; font-size: 3rem; font-weight: bold; border-bottom: 1px solid black; color: #370370; padding: 1rem;">Factoid Report</p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact #${factID}</b></p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact:</b> ${factContent}</p><br>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Issue:</b> ${reportContent}</p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Reported by:</b> ${reporter}</p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Timestamp:</b> ${new Date().toUTCString()}</p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><a href="${process.env.SITE_LINK}/admin" style="display: inline-block; background-color: #370370; color: #DEDEDE; text-decoration: none; padding: 0.75rem; border-radius: 1rem;">Go to the dashboard</a> (You may need to log in to access.)</p>
-                </div>
-                <p style="font-style: italic; width: fit-content; margin: 0 auto; margin-top: 0.5rem">This report was sent from <a href="${process.env.SITE_LINK}">${process.env.SITE_LINK}</a></p>
-            </body>
-            </html>`
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email: ', error);
-        } else {
-            console.log('Email sent: ', info.response);
-        }
-    });
-    req.flash('success', 'Report successfully sent!');
-    res.redirect('back');
+
+    try {
+        const factID = req.body.fact.id;
+        const reporter = res.locals.user?.id || 'zzz3737';
+        const factContent = req.body.fact?.content || 'Unknown';
+        const reportContent = req.body.issue.trim();
+        // Submit report to database
+        submitReport(factID, reporter, reportContent);
+        // Set the mail configuration and sender variables
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_RECEIVER,
+            subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
+            html:
+                `<!doctype html>
+                <html>
+                <body style="width: 100%; font-family: Arial, Helvetica, sans-serif;">
+                    <div style="max-width: fit-content; margin: 0 auto; padding: 1rem; background-color: #DEDEDE; border-radius: 2rem;">
+                        <p style="padding: 0.25rem; margin: 0; font-size: 3rem; font-weight: bold; border-bottom: 1px solid black; color: #370370; padding: 1rem;">Factoid Report</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact #${factID}</b></p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact:</b> ${factContent}</p><br>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Issue:</b> ${reportContent}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Reported by:</b> ${reporter}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Timestamp:</b> ${new Date().toUTCString()}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><a href="${process.env.SITE_LINK}/admin" style="display: inline-block; background-color: #370370; color: #DEDEDE; text-decoration: none; padding: 0.75rem; border-radius: 1rem;">Go to the dashboard</a> (You may need to log in to access.)</p>
+                    </div>
+                    <p style="font-style: italic; width: fit-content; margin: 0 auto; margin-top: 0.5rem">This report was sent from <a href="${process.env.SITE_LINK}">${process.env.SITE_LINK}</a></p>
+                </body>
+                </html>`
+        };
+        // Finally, send the email
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email: ', error);
+            } else {
+                console.log('Email sent: ', info.response);
+            }
+        });
+        req.flash('success', 'Report successfully sent!');
+        res.redirect('back');
+    } catch (e) {
+        req.flash('error', e.message);
+        res.redirect('back');
+    }
 });
+
+// Route to resolve/delete the specified report
+router.delete('/report/:reportID', rejectUnauthorizedRequest, (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    try {
+        const reportID = parseInt(req.params.reportID);
+        if (isNaN(reportID)) {
+            res.status(404).json({ message: 'Invalid report ID. Cannot delete report.' });
+        }
+        resolveReport(reportID);
+        res.status(200).json({ message: 'Report has been resolved.' });
+    } catch (e) {
+        res.status(500).json({ message: `Error in resolving report! ID: ${reportID}` });
+    }
+});
+
 
 // API endpoint to delete an attachment for a given attachment ID
 router.delete('/attachment/:attachmentID', rejectUnauthorizedRequest, (req, res, next) => {
