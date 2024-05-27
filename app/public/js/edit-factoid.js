@@ -216,6 +216,31 @@ function showDeleteConfirmationToast() {
     const bsToast = new bootstrap.Toast(toast, { delay: 10000 });
     bsToast.show();
 
+    document.getElementById('confirm-delete').addEventListener('click', async function() {
+        const factId = document.getElementById('submission-form').getAttribute('data-fact-id');
+        const response = await fetch(`/api/fact/${factId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            showToast('Fact deleted successfully', 'success');
+            setTimeout(() => {
+                window.location.href = '/admin'; 
+            }, 1500); 
+        } else {
+            showToast('Error deleting fact: ' + result.error, 'danger');
+        }
+        bsToast.hide();
+    });
+
+    document.getElementById('cancel-delete').addEventListener('click', function() {
+        bsToast.hide();
+    });
+
     toast.querySelector('.btn-close').addEventListener('click', function() {
         bsToast.hide();
     });
