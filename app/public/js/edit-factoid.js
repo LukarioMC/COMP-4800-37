@@ -189,4 +189,10 @@ function showToast(message, type) {
 
     const bsToast = new bootstrap.Toast(toast, { delay: 5000 });
     bsToast.show();
+
+    toast.querySelector('.btn-close').addEventListener('click', function() {
+        bsToast.hide();
+    });
+
+    setTimeout(() => toast.classList.add('show'), 10);
 }
