@@ -163,6 +163,12 @@ function refreshAttachments() {
 
 function showToast(message, type) {
     const toastContainer = document.getElementById('toast-container');
+    const existingToast = document.querySelector('.toast.show');
+    if (existingToast) {
+        existingToast.classList.remove('show');
+        setTimeout(() => existingToast.remove(), 500); // Ensure smooth transition before removing
+    }
+
     const toast = document.createElement('div');
     toast.className = `toast align-items-center text-white bg-${type} border-0`;
     toast.role = 'alert';
@@ -183,5 +189,4 @@ function showToast(message, type) {
 
     const bsToast = new bootstrap.Toast(toast, { delay: 5000 });
     bsToast.show();
-
 }
