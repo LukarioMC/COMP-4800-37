@@ -160,3 +160,6 @@ function refreshAttachments() {
             alert('Error fetching attachments');
         });
 }
+
+function showToast(message, type) {
+}
