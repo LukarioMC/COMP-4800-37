@@ -53,9 +53,8 @@ router.get('/fact', (req, res) => {
 
 // API endpoint to add a new fact to the database.
 router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, res) => {
-
-    let { userId, content, discovery_date, note, tag, attachment} = req.body.data ? JSON.parse(req.body.data) : req.body
-
+    let { userId, content, discovery_date, note, tag, attachment, name, email, country } = req.body.data ? JSON.parse(req.body.data) : req.body
+    
     if (!content) return res.status(400).json({ error: 'Content field is required' });
     
     if (!discovery_date) discovery_date = undefined;
@@ -72,7 +71,7 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
     tags = tags.filter(tag => tag !== '')
 
     try {
-        addFact({ submitter_id, content, discovery_date, note, tags, attachments});
+        addFact({ submitter_id, content, discovery_date, note, tags, attachments, anonData: {name: name, email: email, country: country}});
         // Send email after adding fact
         const submitter = res.locals.user?.id || 'zzz3737';
         const factContent = req.body.content || 'Unknown';
@@ -127,7 +126,7 @@ router.get('/fact/:id', (req, res) => {
                 .status(400)
                 .send({ message: 'Fact ID is not of the correct format.' });
         }
-        let fact = getFactByID(id);
+        let fact = getFactByID(id, !req.user?.isAdmin);
         if (fact) {
             let { is_approved, approval_date, cat_id, ...publicFields } = fact;
             return res.status(200).send(JSON.stringify(publicFields));

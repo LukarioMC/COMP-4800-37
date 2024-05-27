@@ -151,6 +151,15 @@ paths:
                   description: URL link(s) or file(s) associated with the fact. 
                   type: string
                   format: binary
+                name:
+                  description: Optional anonymous submitter name.
+                  type: string
+                email:
+                  description: Optional anonymous submitter email.
+                  type: string
+                country:
+                  description: Two letter ISO country code.
+                  type: string
                 data:
                   description: JSON that contains all the other mentioned fields with the
                     exception of attachment files (URLs still permissible). If present, all 
@@ -175,6 +184,15 @@ paths:
                         type: string
                     attachment:
                       description: URL link(s) associated with the fact. 
+                      type: string
+                    name:
+                      description: Optional anonymous submitter name.
+                      type: string
+                    email:
+                      description: Optional anonymous submitter email.
+                      type: string
+                    country:
+                      description: Two letter ISO country code.
                       type: string
       responses:
         '201':
