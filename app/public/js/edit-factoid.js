@@ -202,3 +202,6 @@ function showToast(message, type) {
 
     setTimeout(() => toast.classList.add('show'), 10);
 }
+
+function showDeleteConfirmationToast() {
+}
