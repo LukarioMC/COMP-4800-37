@@ -124,7 +124,9 @@ router.get('/fact/:id', (req, res) => {
                 .status(400)
                 .send({ message: 'Fact ID is not of the correct format.' });
         }
-        let fact = getFactByID(id);
+
+        let fact = getFactByID(id, !req.user?.isAdmin);
+   
         if (fact) {
             let { is_approved, approval_date, cat_id, ...publicFields } = fact;
             return res.status(200).send(JSON.stringify(publicFields));
