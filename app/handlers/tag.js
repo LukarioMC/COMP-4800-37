@@ -150,7 +150,7 @@ function updateTag(tagID, newTagName) {
       SET name = ?
       WHERE id = ?
     `)
-    const info = updateTagStmt.run(newTagName, tagID)
+    const info = updateTagStmt.run(newTagName.trim(), tagID)
     if (info.changes === 0) throw new Error(`Tag ${tagID} not found.`)
   } catch (err) {
     throw new Error(`Unable to update tag ${tagID}. Reason -> ${err.message}`)

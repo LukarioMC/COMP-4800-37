@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add onclick event handlers to buttons
     configurePendingFactEvents();
     configureReportEvents();
-    configDeleteTagBtns()
+    configDeleteTagBtns();
+    configEditTagBtns();
 });
 
 /**
@@ -83,7 +84,10 @@ async function deleteReport(reportID, reportElement) {
 function configDeleteTagBtns() {
     const deleteBtns = Array.from(document.getElementsByClassName('deleteTagButton'))
     deleteBtns.forEach((btn) => {
+        const tagHTML = document.querySelector(`.tagRow[tagID="${btn.getAttribute('data-id')}"]`)
+
         btn.onclick = () => {
+            const name = tagHTML.getAttribute('myTagName')
             fetch(`api/tag/${btn.getAttribute('data-id')}`, {
                 method: 'DELETE'
             })
@@ -93,22 +97,77 @@ function configDeleteTagBtns() {
             })
             .then(res => res.json())
             .then(res => {
-                alert(`Successfully deleted ${btn.getAttribute('tagName')} tag.`)
-                deleteTagHTML(btn.getAttribute('data-id'))
+                alert(`Successfully deleted ${name} tag.`)
+                tagHTML.remove()
             })
             .catch(err =>
-                alert(`Failed to delete ${btn.getAttribute('tagName')} tag.`)
+                alert(`Failed to delete ${name} tag.`)
             )
         }
     })
 }
 
 /**
- * Deletes the HTML node for the given tag category.
- * @param {Integer} tagID The ID of the tag.
+ * Configures all tag category delete buttons to call the tag delete API and deletes the HTML node on success.
  */
-function deleteTagHTML(tagID) {
-    const tags = Array.from(document.getElementsByClassName('tagRow'))
-    const tagHTML = tags.find(tag => tag.getAttribute('tagID') == tagID)
-    if (tagHTML) tagHTML.remove()
+function configEditTagBtns() {
+    const editBtns = Array.from(document.getElementsByClassName('editTagButton'))
+    editBtns.forEach((btn) => { btn.onclick = () => enableTagEditing(btn.getAttribute('data-id')) })
+}
+
+function enableTagEditing(tagID) {
+    const tagHTML = document.querySelector(`.tagRow[tagID="${tagID}"]`)
+    const tagNameHTML = tagHTML.querySelector('.tagName')
+    const editBtn = tagHTML.querySelector('.editTagButton')
+    const currentName = tagHTML.getAttribute('myTagName')
+
+    let newNameField = document.createElement('input')
+    newNameField.type = 'text'
+    newNameField.value = currentName
+    newNameField.classList.add('newTagNameField', 'form-control')
+    newNameField.width = '100%'
+
+    tagNameHTML.innerHTML = ""
+    tagNameHTML.appendChild(newNameField)
+
+    editBtn.innerHTML = 'Save'
+    editBtn.onclick = () => submitTagUpdate(tagID, currentName)
+}
+
+function submitTagUpdate(tagID, oldName) {
+    const tagHTML = document.querySelector(`.tagRow[tagID="${tagID}"]`)
+    const newName = tagHTML.querySelector(`.newTagNameField`).value
+    const editBtn = tagHTML.querySelector('.editTagButton')
+    
+    if (oldName === newName) {
+        tagHTML.querySelector('.tagName').innerHTML = oldName
+        editBtn.onclick = () => enableTagEditing(tagID)
+        editBtn.innerHTML = 'Edit'
+        return
+    }
+    fetch(`/api/tag/${tagID}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name: newName})
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Request failed.')
+        return res.json()
+    })
+    .then(res => {
+        alert(`Successfully changed category name from ${oldName} to ${newName}`)
+        tagHTML.querySelector('.tagName').innerHTML = newName
+        tagHTML.setAttribute('myTagName', newName)
+    })
+    .catch((err) => {
+        alert(err.message)
+        tagHTML.querySelector('.tagName').innerHTML = oldName
+        tagHTML.setAttribute('myTagName', oldName)
+    })
+    .finally((data) => {
+        editBtn.onclick = () => enableTagEditing(tagID)
+        editBtn.innerHTML = 'Edit'
+    })
 }
