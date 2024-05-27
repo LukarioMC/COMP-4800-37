@@ -367,14 +367,14 @@ router.put('/approve/:factoidID', rejectUnauthorizedRequest, (req, res) => {
     }
 })
 
-// API endpoint to delete a given tag
+// API endpoint to delete a given tag category
 router.delete('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
     try {
         const tagID = parseInt(req.params.tagID)
+        if (isNaN(tagID)) throw new Error('Tag must be an integer.')
         deleteTag(tagID)
         res.status(200).json({message: `Tag ${tagID} successfully deleted.`})
     } catch (err) {
-        if (isNaN(tagID)) res.status(400).json({message: 'Tag must be an integer.'})
         res.status(400).json({message: err.message})
     }
 })

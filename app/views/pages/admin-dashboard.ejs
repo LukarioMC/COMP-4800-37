@@ -169,15 +169,15 @@
             <div id="tags-list">
                 <% if (tags.length > 0) {
                     tags.forEach(function (tag) { %>
-                <div class="row text-start text-wrap pb-4 bg-light">
+                <div class="row text-start text-wrap pb-4 bg-light tagRow" tagID="<%= tag.id %>" tagName="<%= tag.name %>">
                     <div class="col">
                         <%= tag.name %>
                     </div>
                     <div class="col">
-                        <%= tag.is_primary %>
+                        <%= Boolean(tag.is_primary) %>
                     </div>
                     <div class="col">
-                        <button type="button" class="btn btn-danger btn-sm action-btn" data-action="delete-tag" data-id="<%= tag.id %>">Delete</button>
+                        <button type="button" class="btn btn-danger btn-sm action-btn deleteTagButton" data-action="delete-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">Delete</button>
                         <button type="button" class="btn btn-warning btn-sm action-btn" data-action="edit-tag" data-id="<%= tag.id %>">Edit</button>
                     </div>
                 </div>

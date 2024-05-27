@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add onclick event handlers to buttons
     configurePendingFactEvents();
     configureReportEvents();
+    configDeleteTagBtns()
 });
 
 /**
@@ -74,4 +75,40 @@ async function deleteReport(reportID, reportElement) {
         }
     })
     if (reportElement instanceof Element) reportElement.remove();
+}
+
+/**
+ * Configures all tag category delete buttons to call the tag delete API and deletes the HTML node on success.
+ */
+function configDeleteTagBtns() {
+    const deleteBtns = Array.from(document.getElementsByClassName('deleteTagButton'))
+    deleteBtns.forEach((btn) => {
+        btn.onclick = () => {
+            fetch(`api/tag/${btn.getAttribute('data-id')}`, {
+                method: 'DELETE'
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Request failed.')
+                return res
+            })
+            .then(res => res.json())
+            .then(res => {
+                alert(`Successfully deleted ${btn.getAttribute('tagName')} tag.`)
+                deleteTagHTML(btn.getAttribute('data-id'))
+            })
+            .catch(err =>
+                alert(`Failed to delete ${btn.getAttribute('tagName')} tag.`)
+            )
+        }
+    })
+}
+
+/**
+ * Deletes the HTML node for the given tag category.
+ * @param {Integer} tagID The ID of the tag.
+ */
+function deleteTagHTML(tagID) {
+    const tags = Array.from(document.getElementsByClassName('tagRow'))
+    const tagHTML = tags.find(tag => tag.getAttribute('tagID') == tagID)
+    if (tagHTML) tagHTML.remove()
 }
