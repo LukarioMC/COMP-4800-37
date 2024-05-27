@@ -26,7 +26,7 @@ function submitReport(factoidID, submitterID, issue) {
 function getReports() {
     try {
     const getReportsStmt = db.prepare(`
-    SELECT report.*, factoid.content
+    SELECT report.*, factoid.content as fact
     FROM report
     LEFT JOIN factoid ON report.factoid_id = factoid.id
     ORDER BY submission_date ASC
