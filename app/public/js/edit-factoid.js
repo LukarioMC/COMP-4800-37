@@ -39,32 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const result = await response.json();
         if (response.ok) {
-            alert('Fact updated successfully');
+            showToast('Fact updated successfully', 'success');
         } else {
-            alert('Error updating fact: ' + result.error);
+            showToast('Error updating fact: ' + result.error, 'danger');
         }
     });
 
-    // adds event listener for delete button on click
-    document.getElementById('delete-button').addEventListener('click', async function() {
-        const confirmation = confirm('Are you sure you want to delete this fact? This action cannot be undone.');
-        if (confirmation) {
-            const factId = document.getElementById('submission-form').getAttribute('data-fact-id');
-            const response = await fetch(`/api/fact/${factId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                alert('Fact deleted successfully');
-                window.location.href = '/admin'; 
-            } else {
-                alert('Error deleting fact: ' + result.error);
-            }
-        }
+  // adds event listener for delete button on click
+  document.getElementById('delete-button').addEventListener('click', async function() {
+    showDeleteConfirmationToast() 
     });
 
     // adds event for deleting an attachment
@@ -103,12 +86,12 @@ function deleteAttachment(attachmentId) {
     fetch(`/api/attachment/${attachmentId}`, { method: 'DELETE' })
     .then(response => response.json())
     .then(() => {
-        console.log('Attachment deleted successfully');
         refreshAttachments();
+        showToast('Attachment deleted successfully', 'success');
     })
     .catch(error => {
         console.error('Error deleting attachment', error);
-        alert('Error deleting attachment');
+        showToast('Error deleting attachment', 'danger');
     });
 }
 
@@ -125,7 +108,6 @@ function refreshAttachments() {
             return response.json();
         })
         .then(data => {
-            console.log('Fetched attachments:', data);
             const attachmentsContainer = document.getElementById('attachments-container');
             attachmentsContainer.innerHTML = '';
 
@@ -157,7 +139,7 @@ function refreshAttachments() {
         })
         .catch(error => {
             console.error('Error fetching attachments', error);
-            alert('Error fetching attachments');
+            showToast('Error fetching attachments', 'danger');
         });
 }
 
