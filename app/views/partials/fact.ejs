@@ -10,7 +10,9 @@
 
     <div id="collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" class="accordion-collapse collapse" aria-labelledby="heading-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" <% if(typeof accordionParent !== 'undefined') { %> data-bs-parent="<%= accordionParent %>" <% } %>>
         <div class="accordion-body">
-            <div style="white-space: pre-wrap"><%= factoid.note || "Nothing is here..." %></div>
+            <% if (factoid.note) { %>
+            <div style="white-space: pre-wrap"><%= factoid.note %></div>
+            <% } %>
             <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
             <div><b>By:</b> <%= factoid.submitter_id === 'zzz3737' ? `${factoid.submitter_id} (Anonymous)` : factoid.submitter_id %></div>
             <div>
