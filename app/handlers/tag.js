@@ -137,11 +137,32 @@ function deleteTag(tagID) {
   }
 }
 
+/**
+ * Updates the tag category specified by the given ID. As of now, only changes the name.
+ * @param {*} tagID tag category ID
+ * @param {*} newTagName new tag name
+ */
+function updateTag(tagID, newTagName) {
+  try {
+    if (newTagName === '') throw new Error('New tag name cannot be empty.')
+    const updateTagStmt = db.prepare(`
+      UPDATE category
+      SET name = ?
+      WHERE id = ?
+    `)
+    const info = updateTagStmt.run(newTagName, tagID)
+    if (info.changes === 0) throw new Error(`Tag ${tagID} not found.`)
+  } catch (err) {
+    throw new Error(`Unable to update tag ${tagID}. Reason -> ${err.message}`)
+  }
+}
+
 module.exports = {
   getTags,
   defineTag,
   deleteTagforFactoid,
   deleteAllTagsforFactoid,
   getPrimaryTags,
-  deleteTag
+  deleteTag,
+  updateTag
 }

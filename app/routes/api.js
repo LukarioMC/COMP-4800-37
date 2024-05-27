@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
-const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid, deleteTag } = require('../handlers/tag');
+const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid, deleteTag, updateTag } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
 const { submitReport, resolveReport } = require('../handlers/report');
 const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
@@ -371,9 +371,21 @@ router.put('/approve/:factoidID', rejectUnauthorizedRequest, (req, res) => {
 router.delete('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
     try {
         const tagID = parseInt(req.params.tagID)
-        if (isNaN(tagID)) throw new Error('Tag must be an integer.')
+        if (isNaN(tagID)) throw new Error('Tag ID must be an integer.')
         deleteTag(tagID)
         res.status(200).json({message: `Tag ${tagID} successfully deleted.`})
+    } catch (err) {
+        res.status(400).json({message: err.message})
+    }
+})
+
+// API endpoint to update a given tag category
+router.patch('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
+    try {
+        const tagID = parseInt(req.params.tagID)
+        if (isNaN(tagID)) throw new Error('Tag ID must be an integer.')
+        updateTag(tagID, req.body.name)
+        res.status(200).json({message: `Tag ${tagID} successfully edited.`})
     } catch (err) {
         res.status(400).json({message: err.message})
     }
