@@ -162,4 +162,26 @@ function refreshAttachments() {
 }
 
 function showToast(message, type) {
+    const toastContainer = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type} border-0`;
+    toast.role = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = 'true';
+
+    const toastBody = document.createElement('div');
+    toastBody.className = 'd-flex';
+    toastBody.innerHTML = `
+        <div class="toast-body">
+            ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"></button>
+    `;
+
+    toast.appendChild(toastBody);
+    toastContainer.appendChild(toast);
+
+    const bsToast = new bootstrap.Toast(toast, { delay: 5000 });
+    bsToast.show();
+
 }
