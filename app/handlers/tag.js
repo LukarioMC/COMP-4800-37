@@ -142,15 +142,17 @@ function deleteTag(tagID) {
  * @param {*} tagID tag category ID
  * @param {*} newTagName new tag name
  */
-function updateTag(tagID, newTagName) {
+function updateTag(tagID, newTagName, isPrimary) {
   try {
     if (newTagName === '') throw new Error('New tag name cannot be empty.')
     const updateTagStmt = db.prepare(`
       UPDATE category
-      SET name = ?
+      SET 
+        name = ?,
+        is_primary = ?
       WHERE id = ?
     `)
-    const info = updateTagStmt.run(newTagName.trim(), tagID)
+    const info = updateTagStmt.run(newTagName.trim(), isPrimary ? 1 : 0,tagID)
     if (info.changes === 0) throw new Error(`Tag ${tagID} not found.`)
   } catch (err) {
     throw new Error(`Unable to update tag ${tagID}. Reason -> ${err.message}`)

@@ -383,10 +383,16 @@ router.delete('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
 router.patch('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
     try {
         const tagID = parseInt(req.params.tagID)
+        const isPrimary = JSON.parse(req.body.isPrimary)
+        console.log(isPrimary)
+        if (isPrimary !== false && isPrimary !== true) {
+            throw new Error('The "isPrimary" parameter must be either true or false.')
+        }
         if (isNaN(tagID)) throw new Error('Tag ID must be an integer.')
-        updateTag(tagID, req.body.name)
+        updateTag(tagID, req.body.name, isPrimary)
         res.status(200).json({message: `Tag ${tagID} successfully edited.`})
     } catch (err) {
+        if (err instanceof SyntaxError) err.message = 'The "isPrimary" parameter must be either true or false.'
         res.status(400).json({message: err.message})
     }
 })
