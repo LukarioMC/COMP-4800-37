@@ -384,7 +384,6 @@ router.patch('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
     try {
         const tagID = parseInt(req.params.tagID)
         const isPrimary = JSON.parse(req.body.isPrimary)
-        console.log(isPrimary)
         if (isPrimary !== false && isPrimary !== true) {
             throw new Error('The "isPrimary" parameter must be either true or false.')
         }

@@ -171,10 +171,10 @@
                     tags.forEach(function (tag) { %>
                 <div class="row text-start text-wrap pb-4 bg-light tagRow" tagID="<%= tag.id %>" myTagName="<%= tag.name %>">
                     <div class="col tagName">
-                        <%= tag.name %>
+                         <%= tag.name %>
                     </div>
                     <div class="col">
-                        <%= Boolean(tag.is_primary) %>
+                        <input class="form-check-input border-primary" type="checkbox" value="" <%= Boolean(tag.is_primary) ? "checked" : "" %>  disabled>
                     </div>
                     <div class="col">
                         <button type="button" class="btn btn-danger btn-sm action-btn deleteTagButton" data-action="delete-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">Delete</button>
