@@ -177,47 +177,43 @@ router.post('/report', (req, res) => {
         return res.status(500).redirect('back');
     }
 
-    // Set all required data to variables
-    const reporter = res.locals.user?.id || 'zzz3737';
-    const factID = req.body.fact.id;
-    const factContent = req.body.fact?.content || 'Unknown';
-    const reportContent = req.body.issue.trim();
-    
-    // Set the mail configurations
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_RECEIVER,
-        subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
-        html:
-            `<!doctype html>
-            <html>
-            <body style="width: 100%; font-family: Arial, Helvetica, sans-serif;">
-                <div style="max-width: fit-content; margin: 0 auto; padding: 1rem; background-color: #DEDEDE; border-radius: 2rem;">
-                    <p style="padding: 0.25rem; margin: 0; font-size: 3rem; font-weight: bold; border-bottom: 1px solid black; color: #370370; padding: 1rem;">Factoid Report</p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact #${factID}</b></p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact:</b> ${factContent}</p><br>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Issue:</b> ${reportContent}</p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Reported by:</b> ${reporter}</p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Timestamp:</b> ${new Date().toUTCString()}</p>
-                    <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><a href="${process.env.SITE_LINK}/admin" style="display: inline-block; background-color: #370370; color: #DEDEDE; text-decoration: none; padding: 0.75rem; border-radius: 1rem;">Go to the dashboard</a> (You may need to log in to access.)</p>
-                </div>
-                <p style="font-style: italic; width: fit-content; margin: 0 auto; margin-top: 0.5rem">This report was sent from <a href="${process.env.SITE_LINK}">${process.env.SITE_LINK}</a></p>
-            </body>
-            </html>`
-    };
-
-    // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email: ', error);
-        } else {
-            console.log('Email sent: ', info.response);
-        }
-    });
-
-    // Store the report in the database
     try {
+        const factID = req.body.fact.id;
+        const reporter = res.locals.user?.id || 'zzz3737';
+        const factContent = req.body.fact?.content || 'Unknown';
+        const reportContent = req.body.issue.trim();
+        // Submit report to database
         submitReport(factID, reporter, reportContent);
+        // Set the mail configuration and sender variables
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_RECEIVER,
+            subject: 'thirty-seven.org - Fact #' + factID + ' Has Been Reported',
+            html:
+                `<!doctype html>
+                <html>
+                <body style="width: 100%; font-family: Arial, Helvetica, sans-serif;">
+                    <div style="max-width: fit-content; margin: 0 auto; padding: 1rem; background-color: #DEDEDE; border-radius: 2rem;">
+                        <p style="padding: 0.25rem; margin: 0; font-size: 3rem; font-weight: bold; border-bottom: 1px solid black; color: #370370; padding: 1rem;">Factoid Report</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact #${factID}</b></p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Fact:</b> ${factContent}</p><br>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Issue:</b> ${reportContent}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Reported by:</b> ${reporter}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><b>Timestamp:</b> ${new Date().toUTCString()}</p>
+                        <p style="padding: 0.25rem; margin: 0; margin-top: 0.5rem;"><a href="${process.env.SITE_LINK}/admin" style="display: inline-block; background-color: #370370; color: #DEDEDE; text-decoration: none; padding: 0.75rem; border-radius: 1rem;">Go to the dashboard</a> (You may need to log in to access.)</p>
+                    </div>
+                    <p style="font-style: italic; width: fit-content; margin: 0 auto; margin-top: 0.5rem">This report was sent from <a href="${process.env.SITE_LINK}">${process.env.SITE_LINK}</a></p>
+                </body>
+                </html>`
+        };
+        // Finally, send the email
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email: ', error);
+            } else {
+                console.log('Email sent: ', info.response);
+            }
+        });
         req.flash('success', 'Report successfully sent!');
         res.redirect('back');
     } catch (e) {
