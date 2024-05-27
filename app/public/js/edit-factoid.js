@@ -161,10 +161,15 @@ function refreshAttachments() {
         });
 }
 
+/**
+ * Displays a toast message in the page's toast container.
+ * @param {string} message - the message to display 
+ * @param {string} type - bootstrap colourign for the type of container
+ */
 function showToast(message, type) {
     const toastContainer = document.getElementById('toast-container');
     const existingToast = document.querySelector('.toast.show');
-    
+
     if (existingToast) {
         existingToast.classList.remove('show');
         setTimeout(() => existingToast.remove(), 500); // Ensure smooth transition before removing
