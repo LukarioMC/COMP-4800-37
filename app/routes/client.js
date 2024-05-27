@@ -4,9 +4,10 @@
 const express = require('express');
 const router = express.Router();
 const { readCountryData } = require('../modules/countryUtils');
-const { getFacts, getRandomFact, getUnapprovedFacts, getFactByID, updateFact } = require('../handlers/factoid');
-const { redirectUnauthorizedRequestHome, fetchPrimaryTags } = require('../middleware');
-const { getTags } = require('../handlers/tag')
+const { getFacts, getRandomFact, getUnapprovedFacts, getFactByID } = require('../handlers/factoid');
+const { redirectUnauthorizedRequestHome } = require('../middleware');
+const { getTags } = require('../handlers/tag');
+const { getReports } = require('../handlers/report');
 
 const PAGE_SIZE = 5
 
@@ -23,8 +24,9 @@ router.get('/admin', redirectUnauthorizedRequestHome, (req, res) => {
         return fact;
     }
     const unapprovedFacts = getUnapprovedFacts().map(getTagNames);
+    const allReports = getReports();
     const tags = getTags();
-    res.render('pages/admin-dashboard', { submissions: unapprovedFacts, tags: tags });
+    res.render('pages/admin-dashboard', { submissions: unapprovedFacts, reports: allReports, tags: tags });
 });
 
 // route for submitting facts
@@ -63,7 +65,7 @@ router.get('/edit-fact/:id', redirectUnauthorizedRequestHome, (req, res) => {
     if (!factoid) {
         return res.status(404).send('Fact not found');
     }
-  
+
     res.render('pages/edit-fact', { factoid, user: req.user, countries: readCountryData(), tags });
 });
 // Test path for uploading files.

@@ -9,7 +9,7 @@
         <h3>Pending Fact Submissions</h3>
     </div>
 
-    <div id="dashboard" class="container text-center">
+    <div id="dashboard" class="container text-center mb-3">
         <div class="row text-start fw-bold text-wrap">
             <div class="col mt-3">
                 <p>Date Submitted</p>
@@ -49,11 +49,11 @@
                 sortedAttachments.forEach(att => {
                     switch (att.type) { 
                         case 'image': %>
-                <img src="uploads/<%= att.link %>" style="width: 100%">
+                <img src="/uploads/<%= att.link %>" style="width: 100%">
                 <% break;
                         case 'audio': %>
                 <audio controls>
-                    <source src="uploads/<%= att.link %>">
+                    <source src="/uploads/<%= att.link %>">
                 </audio>
                 <% break;
                         case 'youtube': 
@@ -78,6 +78,53 @@
         </div>
         <% });
         } %>
+    </div>
+
+    <div class="container mt-5 mb-3 ps-0">
+        <h3>Reports</h3>
+    </div>
+
+    <div id="reportsDashboard" class="container text-center mb-3">
+        <div class="row text-start fw-bold text-wrap">
+            <div class="col mt-3">
+                <p>Date Submitted</p>
+            </div>
+            <div class="col mt-3">
+                <p>Submitter</p>
+            </div>
+            <div class="col mt-3">
+                <p>Fact #</p>
+            </div>
+            <div class="col mt-3">
+                <p>Fact</p>
+            </div>
+            <div class="col mt-3">
+                <p>Issue</p>
+            </div>
+            <div class="col mt-3"></div>
+        </div>
+
+        <hr />
+
+        <% if (reports.length > 0) {
+            reports.forEach(function (report) { %>
+        <div class="row text-start text-wrap pb-4" id="report-<%= report.id %>">
+            <div class="col"><%= report.submission_date %></div>
+            <div class="col"><%= report.submitter_id %></div>
+            <div class="col"><%= report.factoid_id %></div>
+            <div class="col text-truncate" data-bs-toggle="tooltip" title="<%= report.fact %>"><%= report.fact %></div>
+            <div class="col"><%= report.issue %></div>
+            <div class="col text-center">
+                <button type="button" data-report="<%= report.id %>" class="btn btn-success btn-sm resolve-btn" data-action="resolve">
+                    Resolve
+                </button>
+            </div>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <p class="pb-3">No reports to show</p>
+        <% } %>
+
     </div>
 
     <div class="container mt-5 mb-3 ps-0">
@@ -147,5 +194,4 @@
 </main>
 
 <%- include('../partials/footer'); %>
-
 <script src="/js/admin-dashboard.js" defer></script>
