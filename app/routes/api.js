@@ -230,22 +230,16 @@ router.post('/report', (req, res) => {
 // Route to resolve/delete the specified report
 router.delete('/report/:reportID', rejectUnauthorizedRequest, (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-
     try {
         const reportID = parseInt(req.params.reportID);
-
         if (isNaN(reportID)) {
-            req.flash('error', 'Invalid report ID. Cannot delete report.');
-            res.redirect('back');
+            res.status(404).json({ message: 'Invalid report ID. Cannot delete report.' });
         }
         resolveReport(reportID);
-        req.flash('success', 'Report has been resolved.');
-
+        res.status(200).json({ message: 'Report has been resolved.' });
     } catch (e) {
-        req.flash('error', 'Error deleting report.');
-        res.redirect('back');
+        res.status(500).json({ message: `Error in resolving report! ID: ${reportID}` });
     }
-    
 });
 
 

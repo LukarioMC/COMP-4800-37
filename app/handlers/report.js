@@ -47,16 +47,11 @@ function getReports() {
  */
 function resolveReport(reportID) {
     try {
-        const resolveReportsStmt = db.prepare(`
+        const resolveReportStmt = db.prepare(`
         DELETE FROM report
         WHERE id = ?
     `)
-    
-    resolveReportsStmt.run(reportID);
-
-    // Not sure why it needs this for page refresh to work
-    return getReportsStmt.all();
-
+    return resolveReportStmt.run(reportID);
     } catch (e) {
         throw new Error(`Failed to resolve report.`);
     }
