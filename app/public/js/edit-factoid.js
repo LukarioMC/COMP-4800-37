@@ -164,6 +164,7 @@ function refreshAttachments() {
 function showToast(message, type) {
     const toastContainer = document.getElementById('toast-container');
     const existingToast = document.querySelector('.toast.show');
+    
     if (existingToast) {
         existingToast.classList.remove('show');
         setTimeout(() => existingToast.remove(), 500); // Ensure smooth transition before removing
