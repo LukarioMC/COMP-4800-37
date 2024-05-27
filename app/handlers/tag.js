@@ -121,10 +121,24 @@ function getPrimaryTags() {
     }
 }
 
+/**
+ * Deletes the tag with the given ID.
+ * @param {Integer} tagID ID of the tag to be deleted.
+ */
+function deleteTag(tagID) {
+  try {
+    const deleteTagStmt = db.prepare(`DELETE FROM category WHERE id = ?`)
+    deleteTagStmt.run(tagID)
+  } catch (err) {
+    throw new Error(`Failed to delete tag. Reason -> ${err.message}`)
+  }
+}
+
 module.exports = {
   getTags,
   defineTag,
   deleteTagforFactoid,
   deleteAllTagsforFactoid,
-  getPrimaryTags
+  getPrimaryTags,
+  deleteTag
 }

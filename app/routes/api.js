@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
-const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
+const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid, deleteTag } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
 const { submitReport, resolveReport } = require('../handlers/report');
 const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
@@ -364,6 +364,18 @@ router.put('/approve/:factoidID', rejectUnauthorizedRequest, (req, res) => {
     } catch (e) {
         console.log(e)
         return res.status(500).send({ message: "Server error." })
+    }
+})
+
+// API endpoint to delete a given tag
+router.delete('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
+    try {
+        const tagID = parseInt(req.params.tagID)
+        deleteTag(tagID)
+        res.status(200).json({message: `Tag ${tagID} successfully deleted.`})
+    } catch (err) {
+        if (isNaN(tagID)) res.status(400).json({message: 'Tag must be an integer.'})
+        res.status(400).json({message: err.message})
     }
 })
 
