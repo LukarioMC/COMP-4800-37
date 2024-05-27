@@ -117,14 +117,14 @@
 
         <% if (reports.length > 0) {
             reports.forEach(function (report) { %>
-        <div class="row text-start text-wrap pb-4">
+        <div class="row text-start text-wrap pb-4" id="report-<%= report.id %>">
             <div class="col"><%= report.submission_date %></div>
             <div class="col"><%= report.submitter_id %></div>
             <div class="col"><%= report.factoid_id %></div>
             <div class="col text-truncate" data-bs-toggle="tooltip" title="<%= report.fact %>"><%= report.fact %></div>
             <div class="col"><%= report.issue %></div>
             <div class="col text-center">
-                <button type="button" id="button<%= report.id %>" name="<%= report.id %>" class="btn btn-success btn-sm resolve-btn" data-action="resolve">
+                <button type="button" data-report="<%= report.id %>" class="btn btn-success btn-sm resolve-btn" data-action="resolve">
                     Resolve
                 </button>
             </div>
