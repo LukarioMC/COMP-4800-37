@@ -24,11 +24,11 @@
                 sortedAttachments.forEach(att => {
                     switch (att.type) { 
                         case 'image': %>
-            <img src="uploads/<%= att.link %>" style="width: 50%; height: 50%">
+            <img src="/uploads/<%= att.link %>" style="width: 50%; height: 50%">
             <% break;
                         case 'audio': %>
             <audio controls>
-                <source src="uploads/<%= att.link %>">
+                <source src="/uploads/<%= att.link %>">
             </audio>
             <% break;
                         case 'youtube': 

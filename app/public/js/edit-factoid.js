@@ -138,10 +138,10 @@ function refreshAttachments() {
                 let content = '';
                 switch (att.type) {
                     case 'image':
-                        content = `<img src="../uploads/${att.link}" style="width: 50%; height: 50%"><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
+                        content = `<img src="/uploads/${att.link}" style="width: 50%; height: 50%"><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
                         break;
                     case 'audio':
-                        content = `<audio controls><source src="../uploads/${att.link}"></audio><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
+                        content = `<audio controls><source src="/uploads/${att.link}"></audio><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
                         break;
                     case 'youtube':
                         const embedLink = att.link.replace('watch?v=', 'embed/');

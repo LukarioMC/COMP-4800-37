@@ -41,14 +41,14 @@
                                 switch (att.type) { 
                                     case 'image': %>
                         <div class="attachment">
-                            <img src="../uploads/<%= att.link %>" style="width: 50%; height: 50%">
+                            <img src="/uploads/<%= att.link %>" style="width: 50%; height: 50%">
                             <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
                         </div>
                         <% break;
                                     case 'audio': %>
                         <div class="attachment">
                             <audio controls>
-                                <source src="../uploads/<%= att.link %>">
+                                <source src="/uploads/<%= att.link %>">
                             </audio>
                             <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
                         </div>
