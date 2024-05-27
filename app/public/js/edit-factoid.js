@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
             if (response.ok) {
                 alert('Fact deleted successfully');
-                window.location.href = '/'; 
+                window.location.href = '/admin'; 
             } else {
                 alert('Error deleting fact: ' + result.error);
             }
