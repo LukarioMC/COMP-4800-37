@@ -4,8 +4,8 @@
 const express = require('express');
 const router = express.Router();
 const { readCountryData } = require('../modules/countryUtils');
-const { getFacts, getRandomFact, getUnapprovedFacts } = require('../handlers/factoid');
-const { redirectUnauthorizedRequestHome } = require('../middleware');
+const { getFacts, getRandomFact, getUnapprovedFacts, getFactByID, updateFact } = require('../handlers/factoid');
+const { redirectUnauthorizedRequestHome, fetchPrimaryTags } = require('../middleware');
 const { getTags } = require('../handlers/tag')
 
 const PAGE_SIZE = 5
@@ -54,6 +54,18 @@ router.get('/contact', (_, res) => {
     res.render('pages/contact');
 });
 
+// Route to edit a fact
+router.get('/edit-fact/:id', redirectUnauthorizedRequestHome, (req, res) => {
+    const factID = req.params.id;
+    const factoid = getFactByID(factID, false); 
+    const tags = getTags();
+
+    if (!factoid) {
+        return res.status(404).send('Fact not found');
+    }
+  
+    res.render('pages/edit-fact', { factoid, user: req.user, countries: readCountryData(), tags });
+});
 // Test path for uploading files.
 router.get('/upload', (req, res) => {
     res.render('pages/upload')

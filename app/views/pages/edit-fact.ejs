@@ -1,0 +1,81 @@
+<%- include('../partials/header'); %>
+<%- include('../partials/navbar'); %>
+
+<main class="container-xl mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Edit Fact <%= factoid.id %></h2>
+
+            <!-- submission form -->
+            <form id="submission-form" method="POST" data-fact-id="<%= factoid.id %>">
+                <div class="mb-3">
+                    <label for="text-line" class="form-label">Fact:</label>
+                    <input type="text" class="form-control" id="text-line" name="content" value="<%= factoid.content %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="note" class="form-label">Note:</label>
+                    <textarea class="form-control" id="note" name="note" rows="3"><%= factoid.note %></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Discovery Date:</label>
+                    <input type="date" class="form-control" id="discovery-date" name="discovery_date" value="<%= factoid.discovery_date.split(' ')[0] %>">
+                </div>
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags:</label>
+                    <div id="tags-container">
+                        <!-- loops through the tags and displays each as a selectable button -->
+                        <% tags.forEach((tag) => { %>
+                        <span class="badge rounded-pill tag-selectable <%= factoid.tags.some(factTag => factTag.name === tag.name) ? 'bg-primary' : 'bg-secondary' %>" data-tag="<%= tag.name %>"><%= tag.name %></span>
+                        <% }) %>
+                    </div>
+                </div>
+
+                <!-- Attachments display with delete button -->
+                <div class="mb-3">
+                    <label class="form-label">Attachments:</label>
+                    <div id="attachments-container">
+                        <% if (factoid.attachments) {
+                            const order = ['image', 'youtube', 'audio', 'website']
+                            let sortedAttachments = factoid.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
+                            sortedAttachments.forEach(att => {
+                                switch (att.type) { 
+                                    case 'image': %>
+                        <div class="attachment">
+                            <img src="../uploads/<%= att.link %>" style="width: 50%; height: 50%">
+                            <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
+                        </div>
+                        <% break;
+                                    case 'audio': %>
+                        <div class="attachment">
+                            <audio controls>
+                                <source src="../uploads/<%= att.link %>">
+                            </audio>
+                            <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
+                        </div>
+                        <% break;
+                                    case 'youtube': 
+                                    const embedLink = att.link.replace('watch?v=', 'embed/') %>
+                        <div class="attachment">
+                            <iframe width="50%" height="50%" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
+                        </div>
+                        <% break;
+                                    case 'website': %>
+                        <div class="attachment">
+                            <a href="<%= att.link %>" style="display: block">Learn More</a>
+                            <button type="button" class="btn-delete-attachment" data-attachment-id="<%= att.id %>">&times;</button>
+                        </div>
+                        <% break;       
+                        }})} %>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Fact</button>
+                <button type="button" id="delete-button" class="btn btn-danger">Delete Fact</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer'); %>
+
+<script src="/js/edit-factoid.js" defer></script>

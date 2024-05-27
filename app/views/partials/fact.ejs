@@ -24,37 +24,29 @@
                 sortedAttachments.forEach(att => {
                     switch (att.type) { 
                         case 'image': %>
-                            <img src="uploads/<%= att.link %>" style="width: 50%; height: 50%">
-                            <% break;
+            <img src="uploads/<%= att.link %>" style="width: 50%; height: 50%">
+            <% break;
                         case 'audio': %>
-                            <audio controls><source src="uploads/<%= att.link %>"></audio>
-                            <% break;
+            <audio controls>
+                <source src="uploads/<%= att.link %>">
+            </audio>
+            <% break;
                         case 'youtube': 
                             const embedLink = att.link.replace('watch?v=', 'embed/') %>
-                            <iframe 
-                                width="50%" 
-                                height="50%" 
-                                src="<%=embedLink%>" 
-                                title="YouTube video player" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                referrerpolicy="strict-origin-when-cross-origin" 
-                                allowfullscreen>
-                            </iframe>
-                            <% break;
+            <iframe width="50%" height="50%" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+            </iframe>
+            <% break;
                         case 'website': %>
-                            <a href="<%= att.link %>" style="display: block">Learn More</a>
-                            <% break;       
+            <a href="<%= att.link %>" style="display: block">Learn More</a>
+            <% break;       
             }})} %>
-            
+
             <!-- Button trigger modal -->
             <br />
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
-            <!-- TODO: Link edit fact page here -->
-            <a class="btn btn-primary mb-3" id=<%= factoid.id %> href="#">Edit</a>
+            <a class="btn btn-primary mb-3" id=<%= factoid.id %> href="/edit-fact/<%= factoid.id %>">Edit</a>
             <% } %>
-
         </div>
     </div>
 
