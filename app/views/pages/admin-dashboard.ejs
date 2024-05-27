@@ -151,45 +151,43 @@
     </div>
 
     <div class="container mt-5 mb-3 ps-0">
-      <h3>Existing Tags</h3>
-    
-      <div id="dashboard" class="container text-center">
-        <div class="row text-start fw-bold text-wrap">
-          <div class="col mt-3">
-            <p>Tag Name</p>
-          </div>
-          <div class="col mt-3">
-            <p>Type</p>
-          </div>
-          <div class="col mt-3"></div>
-        </div>
-    
-        <hr />
-    
-        <div id="tags-list">
-          <% if (tags.length> 0) {
-            tags.forEach(function (tag) { %>
-            <div class="row text-start text-wrap pb-4" data-id="<%= tag.id %>">
-              <div class="col">
-                <%= tag.name %>
-              </div>
-              <div class="col">
-                <% if (tag.is_primary) { %>
-                  Primary (Category)
-                <% } else { %>
-                  Non-primary
-                <% } %>
-              </div>
-              <div class="col">
-                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="delete-tag"
-                  data-id="<%= tag.id %>">Delete</button>
-                <button type="button" class="btn btn-warning btn-sm action-btn" data-action="edit-tag"
-                  data-id="<%= tag.id %>">Edit</button>
-              </div>
+        <h3>Existing Tags</h3>
+
+        <div id="tags-dashboard" class="container text-center">
+            <div class="row text-start fw-bold text-wrap">
+                <div class="col mt-3">
+                    <p>Tag Name</p>
+                </div>
+                <div class="col mt-3">
+                    <p>Type</p>
+                </div>
+                <div class="col mt-3"></div>
             </div>
-            <% }); } %>
+
+            <hr />
+
+            <div id="tags-list">
+                <% if (tags.length> 0) {
+            tags.forEach(function (tag) { %>
+                <div class="row text-start text-wrap pb-4" data-id="<%= tag.id %>">
+                    <div class="col">
+                        <%= tag.name %>
+                    </div>
+                    <div class="col">
+                        <% if (tag.is_primary) { %>
+                        Primary (Category)
+                        <% } else { %>
+                        Non-primary
+                        <% } %>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-danger btn-sm action-btn" data-action="delete-tag" data-id="<%= tag.id %>">Delete</button>
+                        <button type="button" class="btn btn-warning btn-sm action-btn" data-action="edit-tag" data-id="<%= tag.id %>">Edit</button>
+                    </div>
+                </div>
+                <% }); } %>
+            </div>
         </div>
-      </div>
     </div>
 </main>
 
