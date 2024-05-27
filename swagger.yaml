@@ -335,6 +335,24 @@ paths:
         '500':
           description: Server error.
 
+  /api/report/{reportID}:
+    delete:
+      summary: Deletes a report by its ID.
+      parameters:
+        - name: reportID
+          in: path
+          description: ID of the report to be deleted.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Report deleted successfully.
+        '403':
+          description: Unauthorized request; user must be administrator.
+        '500':
+          description: Server error.
+
   /api/tags:
     get:
       summary: Returns a list of all categories.
@@ -463,19 +481,3 @@ paths:
           description: 'Invalid request.'
         '403':
           description: Unauthorized request; user must be administrator.
-          
-  /api/report/{reportID}:
-    delete:
-      summary: Deletes a report by its ID.
-      parameters:
-        - name: reportID
-          in: path
-          description: ID of the report to be deleted.
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Report deleted successfully.
-        '403':
-          description: 'Unauthorized request; user must be administrator.'
