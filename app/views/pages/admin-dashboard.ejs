@@ -58,7 +58,7 @@
                 <% break;
                         case 'youtube': 
                             const embedLink = att.link.replace('watch?v=', 'embed/') %>
-                <iframe width="100%" style="max-height: 20%;" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                <iframe width="100%" style="max-height: max(20vh, 100px); min-width: 100px;" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
                 </iframe>
                 <% break;
                         case 'website': %>
