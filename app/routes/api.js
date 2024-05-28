@@ -111,8 +111,8 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
 });
 
 // API endpoint to update an existing fact in the database.
-router.put('/fact/:id', rejectUnauthorizedRequest, (req, res) => {
-    const factID = req.params.id;
+router.put('/fact/:factoidID', rejectUnauthorizedRequest, (req, res) => {
+    const factID = req.params.factoidID;
     const { content, note, discovery_date, tags } = req.body;
 
     const result = updateFact(factID, { content, note, discovery_date, tags });
