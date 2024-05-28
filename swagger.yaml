@@ -9,6 +9,8 @@ info:
 servers:
   - url: "http://localhost:8000/"
     description: "Local server"
+  - url: "http://thirty-seven.duckdns.org/"
+    description: "Hosted Test Server"
 
 components:
   schemas:
