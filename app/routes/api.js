@@ -127,10 +127,10 @@ router.put('/fact/:factoidID', rejectUnauthorizedRequest, (req, res) => {
 });
 
 // API endpoint to get the fact with the given id.
-router.get('/fact/:id', (req, res) => {
+router.get('/fact/:factoidID', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     try {
-        let id = parseInt(req.params.id);
+        let id = parseInt(req.params.factoidID);
         if (isNaN(id)) {
             return res
                 .status(400)

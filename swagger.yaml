@@ -204,7 +204,7 @@ paths:
         '400':
           description: Invalid submission.
 
-  /api/fact/{factID}:
+  /api/fact/{factoidID}:
     get:
       summary: Returns a fact by ID.
       parameters:
@@ -270,12 +270,10 @@ paths:
           description: Fact not found.
         '500':
           description: Server error.
-
-  /api/fact/{factoidID}:
     delete:
       summary: Deletes a fact by its ID.
       parameters:
-        - name: factoidID
+        - name: id
           in: path
           description: ID of the factoid to be deleted.
           required: true
@@ -289,9 +287,10 @@ paths:
         '404':
           description: Fact not found.
         '500':
-          description: Server error.
+          description: Server error.  
+  
 
-  /api/approve/{id}:
+  /api/approve/{factoidID}:
     put:
       summary: Approve a fact by ID.
       parameters:
