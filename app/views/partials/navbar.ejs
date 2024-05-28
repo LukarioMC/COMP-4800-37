@@ -31,11 +31,11 @@
             </a>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body pt-0">
-            <h3 class="offcanvas-title pb-3 text-decoration-underline">
-                Categories
-            </h3>
-            <ul class="navbar-nav">
+        <div class="offcanvas-body p-0">
+            <ul class="navbar-nav px-2">
+                <h3 class="offcanvas-title pb-3 text-decoration-underline px-2">
+                    Categories
+                </h3>
                 <% primaryTags.forEach(tag=> { %>
                 <li class="nav-item">
                     <a href="/facts?&tag=<%= encodeURIComponent(tag.name) %>">
@@ -75,10 +75,10 @@
                 <li class="nav-item">
                     <a href="/contact">Contacting Me</a>
                 </li>
+                <br>
+                <hr size="1" />
             </ul>
-            <br>
-            <hr size="1" />
-            <address>
+            <address class="w-100 text-center">
                 <font size="-1">
                     <a href="http://magliery.com/">Tom Magliery</a>
                     <br />
