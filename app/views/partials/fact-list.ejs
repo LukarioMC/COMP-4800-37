@@ -7,10 +7,10 @@
 <% } %>
 <script src="/js/factoids.js" defer></script>
 
-<section class="container-xl">
-    <br>
-
-    <div class="input-group mb-5 mt-3">
+<section class="container-xl px-0">
+    <h3>Seach and Filter</h3>
+    <p>Enter a prompt and/or select tag(s), then click on the search button.</p>
+    <div class="input-group mb-3">
         <input class="form-control" type="text" placeholder="Look up a fact by text..." id="searchBarText" value="<%= searchText %>" />
         <button class="btn btn-primary" type="button" id="search-by-text-btn">
             Search
@@ -30,7 +30,9 @@
         </ul>
     </div>
 
+    <br>
     <!-- Factoids Section -->
+    <h3>Facts</h3>
     <div id="factoids" class="container accordion p-0">
         <% if (typeof factoids !== 'undefined') { %>
         <% factoids.forEach((factoid) => { %>

@@ -11,7 +11,7 @@
 body {
     font-family: '37', sans-serif;
     color: #370370;
-    background-color: #dedeb9;
+    background-color: #dedede;
 }
 
 h1, h2, h3, h5 {
@@ -31,7 +31,7 @@ h1, h2, h3, h5 {
 }
 
 nav.navbar {
-    color: #dedeb9;
+    color: #dedede;
     background-color: #370370;
 }
 
@@ -49,15 +49,15 @@ nav.navbar > .offcanvas a:hover {
 }
 
 nav .navbar-toggler {
-    background-color: #dedeb9;
+    background-color: #dedede;
 }
 
 nav .navbar-toggler:hover {
-    background-color: #b9b9de;
+    background-color: #dedede;
 }
 
 nav.navbar > .login a {
-    color: #dedeb9 !important;
+    color: #dedede !important;
 }
 
 nav.navbar > .login a:hover {
@@ -66,17 +66,17 @@ nav.navbar > .login a:hover {
 
 .card {
     color: #370370;
-    background-color: #dedede;
+    background-color: #de94b9;
 }
 
 .form-control {
     color: #370370;
-    background-color: #dedede;
+    background-color: white;
 }
 
 .fact {
     color: #370370;
-    background-color: #dedede;
+    background-color: white;
 }
 
 .fact > .accordion-header {
@@ -85,7 +85,7 @@ nav.navbar > .login a:hover {
 
 .fact > .accordion-header > .accordion-button {
     color: #370370;
-    background-color: #dedede;
+    background-color: #de94b9;
 }
 
 .fact > .accordion-header > .accordion-button:hover {
@@ -100,17 +100,17 @@ nav.navbar > .login a:hover {
 
 .pagination {
     color: #370370;
-    background-color: #dedeb9;
+    background-color: #dedede;
 }
 
 .pagination > .page-item > .page-link {
     color: #370370;
-    background-color: #dedede;
+    background-color: white;
 }
 
 .pagination > .page-item > .page-link:hover {
     color: #370370;
-    background-color: #b9b9de;
+    background-color: white;
 }
 
 footer {
@@ -118,7 +118,7 @@ footer {
 }
 
 footer > .text-center a {
-    color: #dedeb9;
+    color: #dedede;
 }
 
 footer > .text-center a:hover {
