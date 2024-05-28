@@ -24,16 +24,16 @@
     <% } %>
     
     <!-- Offcanvas Navbar -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="navbar-content">
+    <div class="offcanvas offcanvas-start min-vh-100" tabindex="-1" id="navbar-content">
         <div class="offcanvas-header pb-0">
             <a class="navbar-brand w-100 text-center" href="/">
                 <h1>37</h1>
             </a>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body p-0">
-            <ul class="navbar-nav px-2">
-                <h3 class="offcanvas-title pb-3 text-decoration-underline px-2">
+        <div class="offcanvas-body p-0 position-relative">
+            <ul class="navbar-nav">
+                <h3 class="offcanvas-title mb-3 text-decoration-underline">
                     Categories
                 </h3>
                 <% primaryTags.forEach(tag=> { %>
@@ -43,9 +43,7 @@
                     </a>
                 </li>
                 <% }); %>
-                <br>
-                <hr size="1" />
-                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                <h3 class="offcanvas-title my-3 text-decoration-underline">
                     Functionalities
                 </h3>
                 <li class="nav-item">
@@ -55,18 +53,14 @@
                 <li class="nav-item">
                     <a href="/admin">Admin Dashboard</a>
                 </li>
-                <br>
                 <% } %>
-                <hr size="1" />
-                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                <h3 class="offcanvas-title my-3 text-decoration-underline">
                     User
                 </h3>
                 <li class="nav-item">
                     <a href="/account">Profile</a>
                 </li>
-                <br>
-                <hr size="1" />
-                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                <h3 class="offcanvas-title my-3 text-decoration-underline">
                     More Info
                 </h3>
                 <li class="nav-item">
@@ -75,10 +69,9 @@
                 <li class="nav-item">
                     <a href="/contact">Contacting Me</a>
                 </li>
-                <br>
-                <hr size="1" />
             </ul>
-            <address class="w-100 text-center">
+            <address class="w-100 text-center mt-4">
+                <hr/>
                 <font size="-1">
                     <a href="http://magliery.com/">Tom Magliery</a>
                     <br />

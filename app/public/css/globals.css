@@ -40,6 +40,17 @@ h1, h2, h3, h5 {
     overflow: auto;
 }
 
+.navbar-nav > * {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.navbar-nav > .offcanvas-title {
+    background-color: #370370;
+    color: #dedede;
+    padding: 0.5rem 1rem;
+}
+
 a:hover {
     color:#de94b9;
 }
