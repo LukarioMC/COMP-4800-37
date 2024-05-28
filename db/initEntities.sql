@@ -42,8 +42,8 @@ CREATE TABLE "Tag" (
     "category_id" INTEGER NOT NULL,
 
     PRIMARY KEY ("factoid_id", "category_id"),
-    CONSTRAINT "Tag_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "Tag_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "Category" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "Tag_factoid_id_fkey" FOREIGN KEY ("factoid_id") REFERENCES "Factoid" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Tag_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "Category" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable

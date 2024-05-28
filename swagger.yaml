@@ -9,6 +9,8 @@ info:
 servers:
   - url: "http://localhost:8000/"
     description: "Local server"
+  - url: "http://thirty-seven.duckdns.org/"
+    description: "Hosted Test Server"
 
 components:
   schemas:
@@ -398,6 +400,37 @@ paths:
         '500':
           description: Server error.
 
+    patch:
+      summary: Updates the given tag category's fields.
+      requestBody:
+        description: Object with category id, name and isPrimary flag.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  required: true
+                name:
+                  type: string
+                  required: true
+                isPrimary:
+                  type: boolean
+                  required: true
+      responses:
+        '200':
+          description: Tag category updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+        '400':
+          description: Failure to update tag category.
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
+
   /api/tag/{factoidID}/{categoryID}:
     delete:
       summary: Deletes a tag for a given factoid ID and category ID.
@@ -427,6 +460,28 @@ paths:
           description: Tag not found.
         '500':
           description: Server error.
+
+  /api/tag/{tagID}:
+    delete:
+      summary: Deletes the tag category specified by ID.
+      parameters:
+        - name: tagIDs
+          in: path
+          required: true
+          description: ID of the tag to be deleted.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tag category deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+        '400':
+          description: Failure to delete tag category.
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
 
   /api/attachment/{attachmentID}:
     delete:

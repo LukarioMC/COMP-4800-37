@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const { getFacts, getFactByID, deleteFactByID, approveFactByID, addFact, updateFact } = require('../handlers/factoid');
-const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid } = require('../handlers/tag');
+const { getTags, defineTag, deleteTagforFactoid, deleteAllTagsforFactoid, deleteTag, updateTag } = require('../handlers/tag');
 const { deleteAttachmentforFactoid, deleteAllAttachmentsforFactoid, insertAttachments } = require('../handlers/attachment');
 const { submitReport, resolveReport } = require('../handlers/report');
 const { rejectUnauthorizedRequest, uploadErrorHandler } = require('../middleware');
@@ -364,6 +364,35 @@ router.put('/approve/:factoidID', rejectUnauthorizedRequest, (req, res) => {
     } catch (e) {
         console.log(e)
         return res.status(500).send({ message: "Server error." })
+    }
+})
+
+// API endpoint to delete a given tag category
+router.delete('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
+    try {
+        const tagID = parseInt(req.params.tagID)
+        if (isNaN(tagID)) throw new Error('Tag ID must be an integer.')
+        deleteTag(tagID)
+        res.status(200).json({message: `Tag ${tagID} successfully deleted.`})
+    } catch (err) {
+        res.status(400).json({message: err.message})
+    }
+})
+
+// API endpoint to update a given tag category
+router.patch('/tag', rejectUnauthorizedRequest, (req, res) => {
+    try {
+        const tagID = parseInt(req.body.id)
+        const isPrimary = JSON.parse(req.body.isPrimary)
+        if (isPrimary !== false && isPrimary !== true) {
+            throw new Error('The "isPrimary" parameter must be either true or false.')
+        }
+        if (isNaN(tagID)) throw new Error('Tag ID must be an integer.')
+        updateTag(tagID, req.body.name, isPrimary)
+        res.status(200).json({message: `Tag ${tagID} successfully edited.`})
+    } catch (err) {
+        if (err instanceof SyntaxError) err.message = 'The "isPrimary" parameter must be either true or false.'
+        res.status(400).json({message: err.message})
     }
 })
 
