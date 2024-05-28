@@ -3,17 +3,17 @@ nav.navbar {
     background-color: #370370;
 }
 
-nav.navbar > .offcanvas {
+.offcanvas {
     color: #370370;
     background-color: #dedede;
 }
 
-nav.navbar > .offcanvas a {
+.offcanvas a {
     color: #370370;
 }
 
-nav.navbar > .offcanvas a:hover {
-    color: #de94b9;
+.offcanvas a:hover {
+    color: #de94b9 !important;
 }
 
 nav .navbar-toggler {
@@ -24,10 +24,19 @@ nav .navbar-toggler:hover {
     background-color: #dedede;
 }
 
-nav.navbar > .login a {
+.login a {
     color: #dedede !important;
 }
 
-nav.navbar > .login a:hover {
+.login a:hover {
     color: #b9b9de !important;
+}
+
+.navbar-brand, .nav-link {
+    color: #dedede;
+    display: inline-block;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #de94b9;
 }

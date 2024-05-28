@@ -39,3 +39,11 @@ h1, h2, h3, h5 {
     max-height: 30vh;
     overflow: auto;
 }
+
+a {
+    color:#370370;
+}
+
+a:hover {
+    color:#de94b9;
+}
