@@ -9,17 +9,17 @@
 
 .fact > .accordion-header > .accordion-button {
     color: #370370;
-    background-color: #de94b9;
+    background-color: #b9b9de;
 }
 
 .fact > .accordion-header > .accordion-button:hover {
     color: #370370;
-    background-color: #b9b9de;
+    background-color: #de94b9;
 }
 
 .fact > .accordion-header > .accordion-button:focus {
     color: #370370;
-    background-color: #b9b9de;
+    background-color: #de94b9;
 }
 
 .pagination {
