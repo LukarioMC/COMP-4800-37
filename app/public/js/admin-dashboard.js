@@ -166,12 +166,13 @@ function submitTagUpdate(tagID, oldName, wasPrimary) {
         isPrimaryCheckbox.disabled = true
         return
     }
-    fetch(`/api/tag/${tagID}`, {
+    fetch(`/api/tag`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+            id: tagID,
             name: newName,
             isPrimary: isPrimaryCheckbox.checked
         })

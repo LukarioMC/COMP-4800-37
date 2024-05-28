@@ -380,9 +380,9 @@ router.delete('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
 })
 
 // API endpoint to update a given tag category
-router.patch('/tag/:tagID', rejectUnauthorizedRequest, (req, res) => {
+router.patch('/tag', rejectUnauthorizedRequest, (req, res) => {
     try {
-        const tagID = parseInt(req.params.tagID)
+        const tagID = parseInt(req.body.id)
         const isPrimary = JSON.parse(req.body.isPrimary)
         if (isPrimary !== false && isPrimary !== true) {
             throw new Error('The "isPrimary" parameter must be either true or false.')
