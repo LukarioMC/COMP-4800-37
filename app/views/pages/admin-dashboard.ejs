@@ -49,20 +49,19 @@
                 sortedAttachments.forEach(att => {
                     switch (att.type) { 
                         case 'image': %>
-                <img src="/uploads/<%= att.link %>" style="width: 100%">
-                <% break;
+                            <img src="/uploads/<%= att.link %>" style="width: 100%">
+                            <% break;
                         case 'audio': %>
-                <audio controls>
-                    <source src="/uploads/<%= att.link %>">
-                </audio>
-                <% break;
+                            <audio controls><source src="/uploads/<%= att.link %>"></audio>
+                            <% break;
                         case 'youtube': 
                             const embedLink = att.link.replace('watch?v=', 'embed/') %>
-                <iframe width="100%" style="max-height: max(20vh, 100px); min-width: 100px;" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                </iframe>
-                <% break;
+                            <iframe width="100%" style="max-height: max(20vh, 100px); min-width: 100px;" src="<%=embedLink%>" title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                            </iframe>
+                            <% break;
                         case 'website': %>
-                <a href="<%= att.link %>" style="display: block">Learn More</a>
+                            <a href="<%= att.link %>" style="display: block">Learn More</a>
                 <% break;       
                 }}) %>
             </div>
@@ -125,7 +124,7 @@
         </div>
         <% }); %>
         <% } else { %>
-        <p class="pb-3">No reports to show.</p>
+            <p class="pb-3">No reports to show.</p>
         <% } %>
 
     </div>
