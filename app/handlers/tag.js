@@ -7,7 +7,7 @@ const { SqliteError } = require("better-sqlite3");
  */
 function getTags() {
   let getTagsStmt = db.prepare(
-    "SELECT * FROM category ORDER BY is_primary DESC"
+    "SELECT * FROM category ORDER BY is_primary DESC, name ASC"
   );
   return getTagsStmt.all();
 }

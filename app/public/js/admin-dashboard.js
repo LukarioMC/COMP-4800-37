@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
  * pending facts.
  */
 function configurePendingFactEvents() {
-    document.getElementById('dashboard').addEventListener('click', async function(event) {
+    document.getElementById('pending-dashboard').addEventListener('click', async function(event) {
         const target = event.target;
         if (target.classList.contains('action-btn')) {
             const factID = target.closest('.row').dataset.id;
