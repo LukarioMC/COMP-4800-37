@@ -226,11 +226,11 @@ VALUES
     ('fact n', null, true, null),
     ('fact o', null, true, null),
     -- links
-    ('fact p', null, true, null),
-    ('fact q', null, true, null),
-    ('fact r', null, true, null),
-    ('fact s', null, true, null),
-    ('fact t', null, true, null),
+    ('Element 37 -- groovin'' band, good guys', null, true, null),
+    ('37.com -- nice folks, useful site.', null, true, null),
+    ('Gallery 37 Chicago', null, true, null),
+    ('The 37 zone', null, true, null),
+    ('37th Street: The Street of Lights', null, true, null),
     -- multiples
     ('The Macintosh tank game Bolo has a tank numbered 74 on its splash screen.', null, true, null),
     ('The "number of the beast" is 666.', null, true, null),
@@ -382,5 +382,11 @@ VALUES
     (1, 'gif.gif', 'image'),
     (1, 'sound.mp3', 'audio'),
     (2, 'https://example.com/image.jpg', 'image'),
-    (3, 'https://example.com/audio.mp3', 'audio')
+    (3, 'https://example.com/audio.mp3', 'audio'),
+    -- links
+    (72, 'https://www.element37.com/lander', 'website'),
+    (73, 'https://37.com/', 'website'),
+    (74, '', 'website'),
+    (75, '', 'website'),
+    (76, '', 'website')
 ;
