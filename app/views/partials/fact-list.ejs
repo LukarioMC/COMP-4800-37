@@ -12,23 +12,25 @@
     <p>Enter a prompt and/or select tag(s), then click on the search button.</p>
     <div class="input-group mb-3 w-50">
         <input class="form-control" type="text" placeholder="Look up a fact by text..." id="searchBarText" value="<%= searchText %>" />
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle rounded-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Tags
+            </button>
+            <ul class="dropdown-menu">
+                <% tags.forEach((tag) => { %>
+                <li class="37-dropdown-tag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
+                <% })%>
+            </ul>
+        </div>
         <button class="btn btn-primary" type="button" id="search-by-text-btn">
+            <i class="bi bi-search"></i>
             Search
         </button>
     </div>
 
     <div id="tags" class="mb-3"></div>
 
-    <div class="dropdown mb-3">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Tags
-        </button>
-        <ul class="dropdown-menu">
-            <% tags.forEach((tag) => { %>
-            <li class="37-dropdown-tag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
-            <% })%>
-        </ul>
-    </div>
+
 
     <br>
     <!-- Factoids Section -->
