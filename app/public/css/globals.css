@@ -34,3 +34,8 @@ h1, h2, h3, h5 {
     color: #370370;
     background-color: white;
 }
+
+.dropdown-menu {
+    max-height: 30vh;
+    overflow: auto;
+}
