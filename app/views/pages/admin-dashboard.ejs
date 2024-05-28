@@ -165,7 +165,7 @@
                         <div class="col">
                             <input class="form-check-input border-primary" type="checkbox" value="" <%= Boolean(tag.is_primary) ? "checked" : "" %> disabled>
                         </div>
-                        <div class="col">
+                        <div class="col d-flex flex-row justify-content-end gap-2">
                             <button type="button" class="btn btn-warning btn-sm action-btn editTagButton" data-action="edit-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">
                                 <i class="bi bi-pencil-square"></i>
                                 Edit
