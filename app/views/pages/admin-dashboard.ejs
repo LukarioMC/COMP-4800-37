@@ -147,7 +147,7 @@
             </div>
             <div>
                 <input type="checkbox" id="isPrimary" class="form-check-input" name="isPrimary" />
-                <label for="isPrimary">Is it a primary tag?</label>
+                <label for="isPrimary">Is it a category?</label>
             </div>
         </form>
     </div>
@@ -161,7 +161,7 @@
                     <p>Tag Name</p>
                 </div>
                 <div class="col mt-3">
-                    <p>Type</p>
+                    <p>Primary Tag (Category)</p>
                 </div>
                 <div class="col mt-3"></div>
             </div>
@@ -169,22 +169,18 @@
             <hr />
 
             <div id="tags-list">
-                <% if (tags.length> 0) {
-            tags.forEach(function (tag) { %>
-                <div class="row text-start text-wrap pb-4" data-id="<%= tag.id %>">
-                    <div class="col">
-                        <%= tag.name %>
+                <% if (tags.length > 0) {
+                    tags.forEach(function (tag) { %>
+                <div class="row text-start text-wrap pb-4 bg-light tagRow" tagID="<%= tag.id %>" myTagName="<%= tag.name %>">
+                    <div class="col tagName">
+                         <%= tag.name %>
                     </div>
                     <div class="col">
-                        <% if (tag.is_primary) { %>
-                        Category
-                        <% } else { %>
-                        Tag
-                        <% } %>
+                        <input class="form-check-input border-primary" type="checkbox" value="" <%= Boolean(tag.is_primary) ? "checked" : "" %>  disabled>
                     </div>
                     <div class="col">
-                        <button type="button" class="btn btn-danger btn-sm action-btn" data-action="delete-tag" data-id="<%= tag.id %>">Delete</button>
-                        <button type="button" class="btn btn-warning btn-sm action-btn" data-action="edit-tag" data-id="<%= tag.id %>">Edit</button>
+                        <button type="button" class="btn btn-danger btn-sm action-btn deleteTagButton" data-action="delete-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">Delete</button>
+                        <button type="button" class="btn btn-warning btn-sm action-btn editTagButton" data-action="edit-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">Edit</button>
                     </div>
                 </div>
                 <% }); } %>
