@@ -1,189 +1,182 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
 <link rel="stylesheet" href="css/admin-dashboard.css" />
 
-<main>
+<main class="container-xl">
     <%- include("../partials/flash") %>
     <h1 class="text-center my-5">Welcome back, <%= user.id %></h1>
+    <div class="col">
+        <div class="row mb-3">
+            <h3>Pending Fact Submissions</h3>
+            <div id="pending-dashboard" class="dashboard container-fluid text-center mb-3">
+                <div class="row text-start fw-bold text-wrap">
+                    <p class="col mt-3">Date Submitted</p>
+                    <p class="col mt-3">User</p>
+                    <p class="col mt-3">Fact</p>
+                    <p class="col mt-3">Note</p>
+                    <p class="col mt-3">Tags</p>
+                    <p class="col mt-3">Attachments</p>
+                    <div class="col mt-3"></div>
+                </div>
 
-    <div class="container mb-3 ps-0">
-        <h3>Pending Fact Submissions</h3>
-    </div>
+                <hr />
 
-    <div id="pending-dashboard" class="container dashboard text-center mb-3">
-        <div class="row text-start fw-bold text-wrap">
-            <div class="col mt-3">
-                <p>Date Submitted</p>
+                <% if (submissions.length > 0) {
+                    submissions.forEach(function (submission) { %>
+                        <div class="row text-start text-wrap pb-4" data-id="<%= submission.id %>">
+                            <p class="col"><%= submission.posting_date %></p>
+                            <p class="col"><%= submission.submitter_id %></p>
+                            <p class="col"><%= submission.content %></p>
+                            <p class="col"><%= submission.note %></p>
+                            <p class="col"><%= submission.tags.join(', ') %></p>
+                            <% if (submission.attachments) { %>
+                            <div class="col">
+                            <% const order = ['image', 'youtube', 'audio', 'website']
+                            let sortedAttachments = submission.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
+                            sortedAttachments.forEach(att => {
+                                switch (att.type) { 
+                                    case 'image': %>
+                                        <img src="/uploads/<%= att.link %>" style="width: 100%">
+                                        <% break;
+                                    case 'audio': %>
+                                        <audio controls>
+                                            <source src="/uploads/<%= att.link %>">
+                                        </audio>
+                                        <% break;
+                                    case 'youtube': 
+                                        const embedLink = att.link.replace('watch?v=', 'embed/') %>
+                                        <iframe width="100%" style="max-height: max(20vh, 100px); min-width: 100px;" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                                        </iframe>
+                                        <% break;
+                                    case 'website': %>
+                                        <a href="<%= att.link %>" style="display: block">Learn More</a>
+                                        <% break;       
+                                }
+                            }); %>
+                            </div>
+                            <% } %>
+                            <div class="col">
+                                <button type="button" class="btn btn-warning btn-sm action-btn" data-action="edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Edit
+                                </button>
+                                <button type="button" class="btn btn-success btn-sm action-btn" data-action="approve">
+                                    <i class="bi bi-check-lg"></i>
+                                    Approve
+                                </button>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                <p>No pending fact submissions to show.</p>
+                <% } %>
             </div>
-            <div class="col mt-3">
-                <p>User</p>
-            </div>
-            <div class="col mt-3">
-                <p>Fact</p>
-            </div>
-            <div class="col mt-3">
-                <p>Note</p>
-            </div>
-            <div class="col mt-3">
-                <p>Tags</p>
-            </div>
-            <div class="col mt-3">
-                <p>Attachments</p>
-            </div>
-            <div class="col mt-3"></div>
         </div>
 
-        <hr />
-
-        <% if (submissions.length > 0) {
-            submissions.forEach(function (submission) { %>
-        <div class="row text-start text-wrap pb-4" data-id="<%= submission.id %>">
-            <div class="col"><%= submission.posting_date %></div>
-            <div class="col"><%= submission.submitter_id %></div>
-            <div class="col"><%= submission.content %></div>
-            <div class="col"><%= submission.note %></div>
-            <div class="col"><%= submission.tags.join(', ') %></div>
-            <% if (submission.attachments) { %>
-            <div class="col">
-                <% const order = ['image', 'youtube', 'audio', 'website']
-                let sortedAttachments = submission.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
-                sortedAttachments.forEach(att => {
-                    switch (att.type) { 
-                        case 'image': %>
-                            <img src="/uploads/<%= att.link %>" style="width: 100%">
-                            <% break;
-                        case 'audio': %>
-                            <audio controls><source src="/uploads/<%= att.link %>"></audio>
-                            <% break;
-                        case 'youtube': 
-                            const embedLink = att.link.replace('watch?v=', 'embed/') %>
-                            <iframe width="100%" style="max-height: max(20vh, 100px); min-width: 100px;" src="<%=embedLink%>" title="YouTube video player" frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                            </iframe>
-                            <% break;
-                        case 'website': %>
-                            <a href="<%= att.link %>" style="display: block">Learn More</a>
-                <% break;       
-                }}) %>
-            </div>
-            <% } %>
-            <div class="col">
-                <button type="button" class="btn btn-success btn-sm action-btn" data-action="approve">
-                    Approve
-                </button>
-                <button type="button" class="btn btn-warning btn-sm action-btn" data-action="edit">
-                    Edit
-                </button>
-            </div>
-        </div>
-        <% }); %>
-        <% } else { %>
-            <p>No pending fact submissions to show.</p>
-        <% } %>
-
-    </div>
-
-    <div class="container mt-5 mb-3 ps-0">
-        <h3>Reports</h3>
-    </div>
-
-    <div id="report-dashboard" class="container dashboard text-center mb-3">
-        <div class="row text-start fw-bold text-wrap">
-            <div class="col mt-3">
-                <p>Date Submitted</p>
-            </div>
-            <div class="col mt-3">
-                <p>Submitter</p>
-            </div>
-            <div class="col mt-3">
-                <p>Fact #</p>
-            </div>
-            <div class="col mt-3">
-                <p>Fact</p>
-            </div>
-            <div class="col mt-3">
-                <p>Issue</p>
-            </div>
-            <div class="col mt-3"></div>
-        </div>
-
-        <hr />
-
-        <% if (reports.length > 0) {
-            reports.forEach(function (report) { %>
-        <div class="row text-start text-wrap pb-4" id="report-<%= report.id %>">
-            <div class="col"><%= report.submission_date %></div>
-            <div class="col"><%= report.submitter_id %></div>
-            <div class="col"><%= report.factoid_id %></div>
-            <div class="col text-truncate" data-bs-toggle="tooltip" title="<%= report.fact %>"><%= report.fact %></div>
-            <div class="col"><%= report.issue %></div>
-            <div class="col text-center">
-                <button type="button" data-report="<%= report.id %>" class="btn btn-success btn-sm resolve-btn" data-action="resolve">
-                    Resolve
-                </button>
-            </div>
-        </div>
-        <% }); %>
-        <% } else { %>
-            <p class="pb-3">No reports to show.</p>
-        <% } %>
-
-    </div>
-
-    <div class="container mt-5 mb-3 ps-0">
-        <h3>Create a New Tag</h3>
-    </div>
-
-    <div class="container mb-3 ps-0">
-        <form action="/api/tag?_method=PUT" method="POST">
-            <div class="row text-start">
-                <div class="col-3">
-                    <input type="text" class="form-control" placeholder="Tag name" name="tagName" aria-label="Tag name" />
-                </div>
-                <div class="col">
-                    <button type="submit" class="btn btn-success btn">
-                        Create Tag
-                    </button>
-                </div>
-            </div>
-            <div>
-                <input type="checkbox" id="isPrimary" class="form-check-input" name="isPrimary" />
-                <label for="isPrimary">Is it a category?</label>
-            </div>
-        </form>
-    </div>
-
-    <div class="container mt-5 mb-3 ps-0">
-        <h3>Existing Tags</h3>
-
-        <div id="tags-dashboard" class="container dashboard text-center">
-            <div class="row text-start fw-bold text-wrap">
-                <div class="col mt-3">
-                    <p>Tag Name</p>
-                </div>
-                <div class="col mt-3">
-                    <p>Primary Tag (Category)</p>
-                </div>
-                <div class="col mt-3"></div>
-            </div>
-
-            <hr />
-
-            <div id="tags-list">
-                <% if (tags.length > 0) {
-                    tags.forEach(function (tag) { %>
-                <div class="row text-start text-wrap pb-4 bg-light tagRow" tagID="<%= tag.id %>" myTagName="<%= tag.name %>">
-                    <div class="col tagName">
-                         <%= tag.name %>
+        <div class="row mt-4 mb-3">
+            <h3>Reports</h3>
+            <div id="report-dashboard" class="container-fluid dashboard text-center mb-3">
+                <div class="row text-start fw-bold text-wrap">
+                    <div class="col mt-3">
+                        <p>Date Submitted</p>
                     </div>
-                    <div class="col">
-                        <input class="form-check-input border-primary" type="checkbox" value="" <%= Boolean(tag.is_primary) ? "checked" : "" %>  disabled>
+                    <div class="col mt-3">
+                        <p>Submitter</p>
                     </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-danger btn-sm action-btn deleteTagButton" data-action="delete-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">Delete</button>
-                        <button type="button" class="btn btn-warning btn-sm action-btn editTagButton" data-action="edit-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">Edit</button>
+                    <div class="col mt-3">
+                        <p>Fact #</p>
                     </div>
+                    <div class="col mt-3">
+                        <p>Fact</p>
+                    </div>
+                    <div class="col mt-3">
+                        <p>Issue</p>
+                    </div>
+                    <div class="col mt-3"></div>
                 </div>
-                <% }); } %>
+
+                <hr />
+
+                <% if (reports.length > 0) {
+                    reports.forEach(function (report) { %>
+                        <div class="row text-start text-wrap pb-4" id="report-<%= report.id %>">
+                            <div class="col"><%= report.submission_date %></div>
+                            <div class="col"><%= report.submitter_id %></div>
+                            <div class="col"><%= report.factoid_id %></div>
+                            <div class="col text-truncate" data-bs-toggle="tooltip" title="<%= report.fact %>"><%= report.fact %></div>
+                            <div class="col"><%= report.issue %></div>
+                            <div class="col text-center">
+                                <button type="button" data-report="<%= report.id %>" class="btn btn-success btn-sm resolve-btn" data-action="resolve">
+                                    Resolve
+                                </button>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p class="pb-3">No reports to show. <i class="bi bi-emoji-smile"></i></p>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-3">
+            <h3>Create a New Tag</h3>
+            <div class="container-fluid mb-3">
+                <form action="/api/tag?_method=PUT" method="POST">
+                    <div class="row text-start">
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder="Tag name" name="tagName" aria-label="Tag name" />
+                        </div>
+                        <div class="col">
+                            <button type="submit" class="btn btn-success btn">
+                                Create Tag
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="isPrimary" class="form-check-input" name="isPrimary" />
+                        <label for="isPrimary">Is it a category?</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-3">
+            <h3>Existing Tags</h3>
+            <div id="tags-dashboard" class="container-fluid dashboard text-center">
+                <div class="row text-start fw-bold text-wrap">
+                    <div class="col mt-3">
+                        <p>Tag Name</p>
+                    </div>
+                    <div class="col mt-3">
+                        <p>Primary Tag (Category)</p>
+                    </div>
+                    <div class="col mt-3"></div>
+                </div>
+
+                <hr />
+
+                <div id="tags-list">
+                    <% if (tags.length > 0) {
+                        tags.forEach(function (tag) { %>
+                    <div class="row text-start text-wrap mb-4 tagRow" tagID="<%= tag.id %>" myTagName="<%= tag.name %>">
+                        <div class="col tagName">
+                            <%= tag.name %>
+                        </div>
+                        <div class="col">
+                            <input class="form-check-input border-primary" type="checkbox" value="" <%= Boolean(tag.is_primary) ? "checked" : "" %> disabled>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-warning btn-sm action-btn editTagButton" data-action="edit-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">
+                                <i class="bi bi-pencil-square"></i>
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm action-btn deleteTagButton" data-action="delete-tag" data-id="<%= tag.id %>" tagName="<%= tag.name %>">
+                                <i class="bi bi-trash3-fill"></i>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                    <% }); } %>
+                </div>
             </div>
         </div>
     </div>
