@@ -120,6 +120,7 @@ function enableTagEditing(tagID) {
     const tagNameHTML = tagHTML.querySelector('.tagName')
     const editBtn = tagHTML.querySelector('.editTagButton')
     const currentName = tagHTML.getAttribute('myTagName')
+    const currentlyPrimary = tagHTML.querySelector('.form-check-input').checked
 
     let newNameField = document.createElement('input')
     newNameField.type = 'text'
@@ -127,22 +128,28 @@ function enableTagEditing(tagID) {
     newNameField.classList.add('newTagNameField', 'form-control')
     newNameField.width = '100%'
 
+    tagHTML.querySelector('.form-check-input').disabled = false
+
     tagNameHTML.innerHTML = ""
     tagNameHTML.appendChild(newNameField)
 
     editBtn.innerHTML = 'Save'
-    editBtn.onclick = () => submitTagUpdate(tagID, currentName)
+    editBtn.onclick = () => submitTagUpdate(tagID, currentName, currentlyPrimary)
 }
 
-function submitTagUpdate(tagID, oldName) {
+function submitTagUpdate(tagID, oldName, wasPrimary) {
     const tagHTML = document.querySelector(`.tagRow[tagID="${tagID}"]`)
     const newName = tagHTML.querySelector(`.newTagNameField`).value
     const editBtn = tagHTML.querySelector('.editTagButton')
+    const isPrimaryCheckbox = tagHTML.querySelector('.form-check-input')
     
-    if (oldName === newName) {
+    if (oldName === newName.trim() && wasPrimary === isPrimaryCheckbox.checked) {
         tagHTML.querySelector('.tagName').innerHTML = oldName
         editBtn.onclick = () => enableTagEditing(tagID)
         editBtn.innerHTML = 'Edit'
+        isPrimaryCheckbox.checked = wasPrimary
+        console.log(wasPrimary)
+        isPrimaryCheckbox.disabled = true
         return
     }
     fetch(`/api/tag/${tagID}`, {
@@ -150,14 +157,20 @@ function submitTagUpdate(tagID, oldName) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name: newName})
+        body: JSON.stringify({
+            name: newName,
+            isPrimary: isPrimaryCheckbox.checked
+        })
     })
     .then(res => {
         if (!res.ok) throw new Error('Request failed.')
         return res.json()
     })
     .then(res => {
-        alert(`Successfully changed category name from ${oldName} to ${newName}`)
+        let nameChange = oldName !== newName.trim() ? `\n- Changed category name from ${oldName} to ${newName}` : ''
+        let isPrimaryChange = isPrimaryCheckbox.checked !== wasPrimary ? `\n- Changed isPrimary status to ${isPrimaryCheckbox.checked}` : ''
+        let allChanges = `The following changes occured:` + nameChange + isPrimaryChange
+        alert(allChanges)
         tagHTML.querySelector('.tagName').innerHTML = newName
         tagHTML.setAttribute('myTagName', newName)
     })
@@ -165,9 +178,11 @@ function submitTagUpdate(tagID, oldName) {
         alert(err.message)
         tagHTML.querySelector('.tagName').innerHTML = oldName
         tagHTML.setAttribute('myTagName', oldName)
+        isPrimaryCheckbox.checked = wasPrimary
     })
     .finally((data) => {
         editBtn.onclick = () => enableTagEditing(tagID)
         editBtn.innerHTML = 'Edit'
+        isPrimaryCheckbox.disabled = true
     })
 }
