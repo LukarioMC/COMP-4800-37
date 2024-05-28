@@ -187,8 +187,9 @@ router.post('/api/logout', function (req, res, next) {
         if (err) {
             return next(err);
         }
-        let url = req.header('Referer') || '/';
-        res.redirect(url);
+        // let url = req.header('Referer') || '/';
+        // res.redirect(url);
+        res.redirect('/'); // Redirect users back to the landing page on logout
     });
 });
 
