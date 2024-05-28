@@ -6,12 +6,14 @@
         </button>
         <a class="navbar-brand align-bottom px-2" href="/"><h3 class="mb-0">37</h3></a>
         <a class="nav-link px-2" href="/submit">Submit a Fact</a>
-        <% if (user?.isAdmin) { %>
-            <a class="nav-link px-2" href="/admin">Admin Dashboard</a>
-        <% } %>
-        <a class="nav-link px-2" href="/account">Profile</a>
-        <a class="nav-link px-2" href="/about">Why 37?</a>
-        <a class="nav-link px-2" href="/contact">Contact</a>
+        <div class="d-none d-lg-inline-block">
+            <% if (user?.isAdmin) { %>
+                <a class="nav-link px-2" href="/admin">Admin Dashboard</a>
+            <% } %>
+            <a class="nav-link px-2" href="/account">Profile</a>
+            <a class="nav-link px-2" href="/about">Why 37?</a>
+            <a class="nav-link px-2" href="/contact">Contact</a>
+        </div>
     </div>
     
     <% if (user && user.id) { %>
