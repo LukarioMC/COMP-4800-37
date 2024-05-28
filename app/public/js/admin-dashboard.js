@@ -108,13 +108,17 @@ function configDeleteTagBtns() {
 }
 
 /**
- * Configures all tag category delete buttons to call the tag delete API and deletes the HTML node on success.
+ * Configures all tag category edit buttons to call the tag PATCH API and updates the tag HTML node on success.
  */
 function configEditTagBtns() {
     const editBtns = Array.from(document.getElementsByClassName('editTagButton'))
     editBtns.forEach((btn) => { btn.onclick = () => enableTagEditing(btn.getAttribute('data-id')) })
 }
 
+/**
+ * Makes tag HTML fields editable.
+ * @param {Integer} tagID Given tag ID.
+ */
 function enableTagEditing(tagID) {
     const tagHTML = document.querySelector(`.tagRow[tagID="${tagID}"]`)
     const tagNameHTML = tagHTML.querySelector('.tagName')
@@ -137,18 +141,28 @@ function enableTagEditing(tagID) {
     editBtn.onclick = () => submitTagUpdate(tagID, currentName, currentlyPrimary)
 }
 
+/**
+ * Issues a request to update tag data. 
+ * If it fails or the fields are the same as before editing, changes are reverted.
+ * Otherwise updates the fields to reflect the changes.
+ * @param {*} tagID Given tag ID.
+ * @param {*} oldName The tag name before edits.
+ * @param {*} wasPrimary The tag isPrimary status before edits.
+ * @returns 
+ */
 function submitTagUpdate(tagID, oldName, wasPrimary) {
     const tagHTML = document.querySelector(`.tagRow[tagID="${tagID}"]`)
-    const newName = tagHTML.querySelector(`.newTagNameField`).value
+    let newName = tagHTML.querySelector(`.newTagNameField`).value
     const editBtn = tagHTML.querySelector('.editTagButton')
     const isPrimaryCheckbox = tagHTML.querySelector('.form-check-input')
+
+    newName = newName.trim()
     
-    if (oldName === newName.trim() && wasPrimary === isPrimaryCheckbox.checked) {
+    if (oldName === newName && wasPrimary === isPrimaryCheckbox.checked) {
         tagHTML.querySelector('.tagName').innerHTML = oldName
         editBtn.onclick = () => enableTagEditing(tagID)
         editBtn.innerHTML = 'Edit'
         isPrimaryCheckbox.checked = wasPrimary
-        console.log(wasPrimary)
         isPrimaryCheckbox.disabled = true
         return
     }
@@ -167,7 +181,7 @@ function submitTagUpdate(tagID, oldName, wasPrimary) {
         return res.json()
     })
     .then(res => {
-        let nameChange = oldName !== newName.trim() ? `\n- Changed category name from ${oldName} to ${newName}` : ''
+        let nameChange = oldName !== newName ? `\n- Changed category name from ${oldName} to ${newName}` : ''
         let isPrimaryChange = isPrimaryCheckbox.checked !== wasPrimary ? `\n- Changed isPrimary status to ${isPrimaryCheckbox.checked}` : ''
         let allChanges = `The following changes occured:` + nameChange + isPrimaryChange
         alert(allChanges)
