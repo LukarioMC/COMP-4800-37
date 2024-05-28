@@ -1,0 +1,33 @@
+nav.navbar {
+    color: #dedede;
+    background-color: #370370;
+}
+
+nav.navbar > .offcanvas {
+    color: #370370;
+    background-color: #dedede;
+}
+
+nav.navbar > .offcanvas a {
+    color: #370370;
+}
+
+nav.navbar > .offcanvas a:hover {
+    color: #de94b9;
+}
+
+nav .navbar-toggler {
+    background-color: #dedede;
+}
+
+nav .navbar-toggler:hover {
+    background-color: #dedede;
+}
+
+nav.navbar > .login a {
+    color: #dedede !important;
+}
+
+nav.navbar > .login a:hover {
+    color: #b9b9de !important;
+}
