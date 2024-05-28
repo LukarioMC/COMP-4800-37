@@ -36,3 +36,7 @@
     color: #370370;
     background-color: white;
 }
+
+.badge.bg-primary {
+    background-color: #370370 !important;
+}
