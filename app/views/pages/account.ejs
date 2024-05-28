@@ -1,6 +1,9 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
 
 <main class="container-xl my-5">
+  <% if (user) { %>
+    <h1 class="text-center mb-5"><%= user.id %>'s Profile</h1>
+    <% } %>
   <div class="card">
     <div class="card-body">
       <% if (user) { %>
