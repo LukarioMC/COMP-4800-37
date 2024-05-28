@@ -103,7 +103,7 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
             }
         });
         
-        return res.status(201).json({message: 'Successfully added fact.'})
+        return res.status(201).json({message: 'Successfully submitted fact for approval.'})
     } catch (err) {
         deleteUploads(res.locals.filenames)
         return res.status(400).json({message: err.message})
