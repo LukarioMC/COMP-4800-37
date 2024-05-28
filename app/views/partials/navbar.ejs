@@ -4,70 +4,6 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="navbar-content">
-            <div class="offcanvas-header pb-0">
-                <a class="navbar-brand w-100 text-center" href="/">
-                    <h1>37</h1>
-                </a>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body pt-0">
-                <h3 class="offcanvas-title pb-3 text-decoration-underline">
-                    Categories
-                </h3>
-                <ul class="navbar-nav">
-                    <% primaryTags.forEach(tag=> { %>
-                    <li class="nav-item">
-                        <a href="/facts?&tag=<%= encodeURIComponent(tag.name) %>">
-                            <%= tag.name %>
-                        </a>
-                    </li>
-                    <% }); %>
-                    <br>
-                    <hr size="1" />
-                    <h3 class="offcanvas-title pb-3 text-decoration-underline">
-                        Functionalities
-                    </h3>
-                    <li class="nav-item">
-                        <a href="/submit">Submit a Fact</a>
-                    </li>
-                    <% if (user?.isAdmin) { %>
-                    <li class="nav-item">
-                        <a href="/admin">Admin Dashboard</a>
-                    </li>
-                    <br>
-                    <% } %>
-                    <hr size="1" />
-                    <h3 class="offcanvas-title pb-3 text-decoration-underline">
-                        User
-                    </h3>
-                    <li class="nav-item">
-                        <a href="/account">Profile</a>
-                    </li>
-                    <br>
-                    <hr size="1" />
-                    <h3 class="offcanvas-title pb-3 text-decoration-underline">
-                        More Info
-                    </h3>
-                    <li class="nav-item">
-                        <a href="/about">But Why??</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/contact">Contacting Me</a>
-                    </li>
-                </ul>
-                <br>
-                <hr size="1" />
-                <address>
-                    <font size="-1">
-                        <a href="http://magliery.com/">Tom Magliery</a>
-                        <br />
-                        <a href="#">tom@magliery.com</a>
-                    </font>
-                </address>
-            </div>
-        </div>
-    
         <a class="navbar-brand align-bottom px-2" href="/"><h3 class="mb-0">37</h3></a>
         <a class="nav-link px-2" href="/submit">Submit a Fact</a>
         <% if (user?.isAdmin) { %>
@@ -77,15 +13,78 @@
         <a class="nav-link px-2" href="/about">Why 37?</a>
         <a class="nav-link px-2" href="/contact">Contact</a>
     </div>
-
-        <% if (user && user.id) { %>
-        <form action="/api/logout" method="post">
-            <span class="me-2">Hi <%= user.id %>!</span>
-            <button class="btn btn-primary" type="submit">Sign out</button>
-        </form>
-        <% } else { %>
-        <div class="login">
-            <a href="/login" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-3">Log In</a>
+    
+    <% if (user && user.id) { %>
+    <form action="/api/logout" method="post">
+        <span class="me-2">Hi <%= user.id %>!</span>
+        <button class="btn btn-primary" type="submit">Sign out</button>
+    </form>
+    <% } else { %>
+    <a href="/login" class="link-primary login link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover px-3">Log In</a>
+    <% } %>
+    
+    <!-- Offcanvas Navbar -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="navbar-content">
+        <div class="offcanvas-header pb-0">
+            <a class="navbar-brand w-100 text-center" href="/">
+                <h1>37</h1>
+            </a>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <% } %>
+        <div class="offcanvas-body pt-0">
+            <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                Categories
+            </h3>
+            <ul class="navbar-nav">
+                <% primaryTags.forEach(tag=> { %>
+                <li class="nav-item">
+                    <a href="/facts?&tag=<%= encodeURIComponent(tag.name) %>">
+                        <%= tag.name %>
+                    </a>
+                </li>
+                <% }); %>
+                <br>
+                <hr size="1" />
+                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                    Functionalities
+                </h3>
+                <li class="nav-item">
+                    <a href="/submit">Submit a Fact</a>
+                </li>
+                <% if (user?.isAdmin) { %>
+                <li class="nav-item">
+                    <a href="/admin">Admin Dashboard</a>
+                </li>
+                <br>
+                <% } %>
+                <hr size="1" />
+                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                    User
+                </h3>
+                <li class="nav-item">
+                    <a href="/account">Profile</a>
+                </li>
+                <br>
+                <hr size="1" />
+                <h3 class="offcanvas-title pb-3 text-decoration-underline">
+                    More Info
+                </h3>
+                <li class="nav-item">
+                    <a href="/about">But Why??</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/contact">Contacting Me</a>
+                </li>
+            </ul>
+            <br>
+            <hr size="1" />
+            <address>
+                <font size="-1">
+                    <a href="http://magliery.com/">Tom Magliery</a>
+                    <br />
+                    <a href="#">tom@magliery.com</a>
+                </font>
+            </address>
+        </div>
+    </div>
 </nav>

@@ -24,11 +24,11 @@ nav .navbar-toggler:hover {
     background-color: #dedede;
 }
 
-.login a {
+.login {
     color: #dedede !important;
 }
 
-.login a:hover {
+.login:hover {
     color: #b9b9de !important;
 }
 
