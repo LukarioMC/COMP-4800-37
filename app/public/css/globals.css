@@ -54,3 +54,8 @@ h1, h2, h3, h5 {
 a:hover {
     color:#de94b9;
 }
+
+/* Easter egg styling on landing */
+#thirty-seven:hover {
+    color: #373737;
+}
