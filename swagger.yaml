@@ -426,10 +426,8 @@ paths:
                 $ref: '#/components/schemas/ResponseMessage'
         '400':
           description: Failure to update tag category.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseMessage'
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
 
   /api/tag/{factoidID}/{categoryID}:
     delete:
@@ -465,10 +463,12 @@ paths:
     delete:
       summary: Deletes the tag category specified by ID.
       parameters:
-        - tagID:
+        - name: tagIDs
           in: path
           required: true
-          type: integer
+          description: ID of the tag to be deleted.
+          schema:
+            type: integer
       responses:
         '200':
           description: Tag category deleted successfully.
@@ -478,10 +478,8 @@ paths:
                 $ref: '#/components/schemas/ResponseMessage'
         '400':
           description: Failure to delete tag category.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseMessage'
+        '403':
+          description: 'Unauthorized request; user must be administrator.'
 
   /api/attachment/{attachmentID}:
     delete:
