@@ -1,4 +1,4 @@
-<%- include('../partials/header'); %> 
+<%- include('../partials/header'); %>
 <%- include('../partials/navbar'); %>
 
 <main class="container-xl mt-5 mb-5">
@@ -10,9 +10,9 @@
 
             <!-- note that will appear when user is not passed in -->
             <% if (!user) { %>
-                <div class="mb-3 text-center">
-                    <small id="submit-note" class="form-text text-muted text-center">You are not logged in. Your fact will be submitted anonymously.</small>
-                </div>
+            <div class="mb-3 text-center">
+                <small id="submit-note" class="form-text text-muted text-center">You are not logged in. Your fact will be submitted anonymously.</small>
+            </div>
             <% } %>
 
             <!-- submission form -->
@@ -33,7 +33,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <% tags.forEach((tag) => { %>
-                            <li class="37-dropdown-tag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
+                        <li class="37-dropdown-tag dropdown-item" id="<%= tag.name %>"><%= tag.name %></li>
                         <% })%>
                     </ul>
                 </div>
@@ -41,42 +41,42 @@
                 <div class="mb-3" id="attachments">
                     <label for="attachment" class="form-label">Attachment(s):</label>
                 </div>
-                
+
                 <div class="mb-3">
-                    <label for="date" class="form-label" > 
-                        Discovery Date 
-                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="When did you learn this?"></i> : 
-                        </label>
+                    <label for="date" class="form-label">
+                        Discovery Date
+                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="When did you learn this?"></i> :
+                    </label>
                     <input type="date" class="form-control" id="discovery-date" name="discovery_date" value="<%= new Date().toISOString().substr(0, 10) %>">
                 </div>
 
                 <!-- additional component appearing when user is not passed in  -->
                 <% if (!user) { %>
-                    <div class="mb-4">
-                        <h5 type="button" data-bs-toggle="collapse" data-bs-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo" class="text-left mb-4">Submitter Information (Optional) ▼</h5>
-                        <div class="collapse" id="additionalInfo">
-                            <div class="additional-component">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Name:</label>
-                                    <input type="text" class="form-control" id="name" name="name">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email:</label>
-                                    <input type="email" class="form-control" id="email" name="email">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="country" class="form-label">Country:</label>
-                                    <select class="form-select" id="country" name="country">
-                                        <option value="" selected>No Country Selected</option>
-                                        <% countries.forEach(country => { %>
-                                            <option value="<%= country.code %>"><%= country.name %></option>
-                                        <% }) %>
-                                    </select>
-                                </div>
+                <div class="mb-4">
+                    <h5 type="button" data-bs-toggle="collapse" data-bs-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo" class="text-left mb-4">Submitter Information (Optional) ▼</h5>
+                    <div class="collapse" id="additionalInfo">
+                        <div class="additional-component">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="country" class="form-label">Country:</label>
+                                <select class="form-select" id="country" name="country">
+                                    <option value="" selected>No Country Selected</option>
+                                    <% countries.forEach(country => { %>
+                                    <option value="<%= country.code %>"><%= country.name %></option>
+                                    <% }) %>
+                                </select>
                             </div>
                         </div>
                     </div>
-                <% } %>         
+                </div>
+                <% } %>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary text-left">Submit</button>
                 </div>
@@ -85,4 +85,8 @@
     </div>
 </main>
 
+<div id="toast-container" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050;"></div>
+
 <%- include('../partials/footer'); %>
+
+<script src="/js/toast.js" defer></script>

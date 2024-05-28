@@ -88,7 +88,7 @@ function createAttachmentInput() {
             if (input.type === 'file' && input.files.length > 0) {
                 if (input.files[0].size > 5 * Math.pow(1024, 2)) {
                     input.value = ''
-                    alert('File is too large.')
+                    showToast('File is too large.', 'danger')
                 } else {
                     createAttachmentInput()
                 }  
@@ -179,10 +179,10 @@ function configPage() {
             if (res.status === 201) resetForm()
             return res.json()
         })
-        .then((result) => alert(result.message))
+        .then((result) => showToast(result.message, 'success'))
         .catch((err) => {
             if (err instanceof TypeError) {
-                alert('Failure to upload attachment. Ensure that all attachments are of valid type and size.')
+                showToast('Failure to upload attachment. Ensure that all attachments are of valid type and size.', 'danger')
             }
         })
     }
