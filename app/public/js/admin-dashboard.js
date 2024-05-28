@@ -137,7 +137,7 @@ function enableTagEditing(tagID) {
     tagNameHTML.innerHTML = ""
     tagNameHTML.appendChild(newNameField)
 
-    editBtn.innerHTML = 'Save'
+    editBtn.innerHTML = '<i class="bi bi-floppy"></i> Save'
     editBtn.onclick = () => submitTagUpdate(tagID, currentName, currentlyPrimary)
 }
 
@@ -161,7 +161,7 @@ function submitTagUpdate(tagID, oldName, wasPrimary) {
     if (oldName === newName && wasPrimary === isPrimaryCheckbox.checked) {
         tagHTML.querySelector('.tagName').innerHTML = oldName
         editBtn.onclick = () => enableTagEditing(tagID)
-        editBtn.innerHTML = 'Edit'
+        editBtn.innerHTML = '<i class="bi bi-pencil-square"></i> Edit'
         isPrimaryCheckbox.checked = wasPrimary
         isPrimaryCheckbox.disabled = true
         return
