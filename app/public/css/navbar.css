@@ -1,0 +1,42 @@
+nav.navbar {
+    color: #dedede;
+    background-color: #370370;
+}
+
+.offcanvas {
+    color: #370370;
+    background-color: #dedede;
+}
+
+.offcanvas a {
+    color: #370370;
+}
+
+.offcanvas a:hover {
+    color: #de94b9 !important;
+}
+
+nav .navbar-toggler {
+    background-color: #dedede;
+}
+
+nav .navbar-toggler:hover {
+    background-color: #dedede;
+}
+
+.login a {
+    color: #dedede !important;
+}
+
+.login a:hover {
+    color: #b9b9de !important;
+}
+
+.navbar-brand, .nav-link {
+    color: #dedede;
+    display: inline-block;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #de94b9;
+}

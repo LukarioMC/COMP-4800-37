@@ -1,47 +1,49 @@
-<%- include('../partials/header'); %> 
+<%- include('../partials/header'); %>
 <%- include('../partials/navbar'); %>
 
-<main class="container-xl">
+<main class="container-xl mt-5 mb-5">
     <% if (err) { %>
-        <div class="alert alert-danger" role="alert"><%= err %></div>
-    <% } %>  
-    <h1>Sign Up</h1>
-    <form action="/api/register" method="post">
-        <div class="mb-3">
-            <label for="username" class="form-label">Email</label>
-            <input id="email" name="email" type="email" class="form-control" autocomplete="email" required>
+    <div class="alert alert-danger" role="alert"><%= err %></div>
+    <% } %>
+    <h1 class="text-center mb-3">Sign Up</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <form action="/api/register" method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Email</label>
+                    <input id="email" name="email" type="email" class="form-control" autocomplete="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="new-password" class="form-label">Password</label>
+                    <input id="new-password" name="password" type="password" class="form-control" autocomplete="new-password" required pattern="^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).{8,100}$" title="Password must be between 8 and 100 characters long, contain no spaces, and include at least one digit and one letter.">
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <span class="text-danger" id="passwordMismatchAlert" style="display:none">(Passwords do not match!)</span>
+                    <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" autocomplete="confirm-password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="fname" class="form-label">First Name (Optional)</label>
+                    <input id="fname" name="fname" type="text" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="lname" class="form-label">Last Name (Optional)</label>
+                    <input id="lname" name="lname" type="text" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="country" class="form-label">Country (Optional)</label>
+                    <select class="form-select" id="country" name="country">
+                        <option value="" selected>No Country Selected</option>
+                        <% countries.forEach(country => { %>
+                        <option value="<%= country.code %>"><%= country.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <button id="submit" type="submit" class="btn btn-primary">Sign up</button>
+                <div class="mt-3"><a href="/login">Already have an account? Log in here!</a></div>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="new-password" class="form-label">Password</label>
-            <input id="new-password" name="password" type="password" class="form-control" autocomplete="new-password" required
-            pattern="^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).{8,100}$" 
-            title="Password must be between 8 and 100 characters long, contain no spaces, and include at least one digit and one letter.">
-        </div>
-        <div class="mb-3">
-            <label for="confirmPassword" class="form-label">Confirm Password</label>
-            <span class="text-danger" id="passwordMismatchAlert" style="display:none">(Passwords do not match!)</span>
-            <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" autocomplete="confirm-password" required>
-        </div>
-        <div class="mb-3">
-            <label for="fname" class="form-label">First Name (Optional)</label>
-            <input id="fname" name="fname" type="text" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="lname" class="form-label">Last Name (Optional)</label>
-            <input id="lname" name="lname" type="text" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="country" class="form-label">Country (Optional)</label>
-            <select class="form-select" id="country" name="country">
-                <option value="" selected>No Country Selected</option>
-                <% countries.forEach(country => { %>
-                    <option value="<%= country.code %>"><%= country.name %></option>
-                <% }) %>
-            </select>
-        </div>
-        <button id="submit" type="submit" class="btn btn-primary">Sign up</button>
-        <div class="mt-3"><a href="/login">Already have an account? Log in here!</a></div>
-    </form>
+    </div>
 
     <script src="/js/register.js" defer></script>
 </main>

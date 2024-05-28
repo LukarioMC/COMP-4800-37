@@ -1,0 +1,11 @@
+footer {
+    background-color: #370370;
+}
+
+footer > .text-center a {
+    color: #dedede;
+}
+
+footer > .text-center a:hover {
+    color: #de94b9;
+}

@@ -10,47 +10,67 @@
 
     <div id="collapse-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" class="accordion-collapse collapse" aria-labelledby="heading-<%= typeof rand !== 'undefined' ? rand: factoid.id %>" <% if(typeof accordionParent !== 'undefined') { %> data-bs-parent="<%= accordionParent %>" <% } %>>
         <div class="accordion-body">
-            <div style="white-space: pre-wrap"><%= factoid.note || "Nothing is here..." %></div>
+            <% if (factoid.note) { %>
+                <div style="white-space: pre-wrap"><%= factoid.note %></div>
+                <br>
+            <% } %>
+            
             <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
             <div><b>By:</b> <%= factoid.submitter_id === 'zzz3737' ? `${factoid.submitter_id} (Anonymous)` : factoid.submitter_id %></div>
+            
+            <br>
+            
             <div>
                 <% factoid.tags.forEach((tag) => { %>
                 <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
                 <% }) %>
             </div>
+
+            <br>
+
             <% if (factoid.attachments) {
                 const order = ['image', 'youtube', 'audio', 'website']
                 let sortedAttachments = factoid.attachments.sort((t1, t2) => { return order.indexOf(t1.type) - order.indexOf(t2.type) })
                 sortedAttachments.forEach(att => {
                     switch (att.type) { 
                         case 'image': %>
-            <img src="/uploads/<%= att.link %>" style="width: 50%; height: 50%">
-            <% break;
+                            <img src="/uploads/<%= att.link %>" style="width: 50%; height: 50%">
+                            <br>
+                            <br>
+
+                        <% break;
+
                         case 'audio': %>
-            <audio controls>
-                <source src="/uploads/<%= att.link %>">
-            </audio>
-            <% break;
+                            <audio controls><source src="/uploads/<%= att.link %>"></audio>
+                            <br>
+                            <br>
+                            <% break;
+
                         case 'youtube': 
                             const embedLink = att.link.replace('watch?v=', 'embed/') %>
-            <iframe width="50%" height="50%" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-            </iframe>
-            <% break;
+                            <iframe width="50%" height="50%" src="<%=embedLink%>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <br>
+                            <br>
+                            <% break;
+                        
                         case 'website': %>
-            <a href="<%= att.link %>" style="display: block">Learn More</a>
-            <% break;       
-            }})} %>
+                            <a href="<%= att.link %>" style="display: block">Learn More</a>
+                            <br>
+                            <% break;
+            }})} else { %>
+                <br>
+                <%  } %>
 
-            <!-- Button trigger modal -->
-            <br />
+            <!-- Report Modal Button -->
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
-            <a class="btn btn-primary mb-3" id=<%= factoid.id %> href="/edit-fact/<%= factoid.id %>">Edit</a>
+            <a class="btn btn-primary mb-3" id="edit-fact-<%= factoid.id %>" href="/edit-fact/<%= factoid.id %>">Edit</a>
             <% } %>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Report Modal -->
     <div class="modal fade" id="reportModal-<%= factoid.id %>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -20,13 +20,17 @@
                 <div class="mb-3">
                     <label for="text-line" class="form-label">Fact:</label>
                     <input type="text" class="form-control" id="text-line" name="content" required>
-                </div>
+                </div> 
+                <br>
+                
                 <div class="mb-3">
                     <label for="note" class="form-label">Note:</label>
                     <textarea class="form-control" id="note" name="note" rows="3"></textarea>
                 </div>
-
+                <br>
+                
                 <div id="tags" class="mb-3"></div>
+
                 <div class="dropdown mb-3">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Tags
@@ -37,11 +41,13 @@
                         <% })%>
                     </ul>
                 </div>
+                <br>
 
                 <div class="mb-3" id="attachments">
                     <label for="attachment" class="form-label">Attachment(s):</label>
                 </div>
-                
+                <br>
+
                 <div class="mb-3">
                     <label for="date" class="form-label" > 
                         Discovery Date 
@@ -49,6 +55,9 @@
                         </label>
                     <input type="date" class="form-control" id="discovery-date" name="discovery_date" value="<%= new Date().toISOString().substr(0, 10) %>">
                 </div>
+                <br>
+                <br>
+                <br>
 
                 <!-- additional component appearing when user is not passed in  -->
                 <% if (!user) { %>
@@ -60,10 +69,14 @@
                                     <label for="name" class="form-label">Name:</label>
                                     <input type="text" class="form-control" id="name" name="name">
                                 </div>
+                                <br>
+
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email:</label>
                                     <input type="email" class="form-control" id="email" name="email">
                                 </div>
+                                <br>
+
                                 <div class="mb-3">
                                     <label for="country" class="form-label">Country:</label>
                                     <select class="form-select" id="country" name="country">
@@ -73,6 +86,8 @@
                                         <% }) %>
                                     </select>
                                 </div>
+                                <br>
+
                             </div>
                         </div>
                     </div>

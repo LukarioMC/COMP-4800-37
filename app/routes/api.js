@@ -103,7 +103,7 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
             }
         });
         
-        return res.status(201).json({message: 'Successfully added fact.'})
+        return res.status(201).json({message: 'Successfully submitted fact for approval.'})
     } catch (err) {
         deleteUploads(res.locals.filenames)
         return res.status(400).json({message: err.message})
@@ -111,8 +111,8 @@ router.post('/fact', upload.array('attachment', 5), uploadErrorHandler, (req, re
 });
 
 // API endpoint to update an existing fact in the database.
-router.put('/fact/:id', rejectUnauthorizedRequest, (req, res) => {
-    const factID = req.params.id;
+router.put('/fact/:factoidID', rejectUnauthorizedRequest, (req, res) => {
+    const factID = req.params.factoidID;
     const { content, note, discovery_date, tags } = req.body;
 
     const result = updateFact(factID, { content, note, discovery_date, tags });
@@ -127,10 +127,10 @@ router.put('/fact/:id', rejectUnauthorizedRequest, (req, res) => {
 });
 
 // API endpoint to get the fact with the given id.
-router.get('/fact/:id', (req, res) => {
+router.get('/fact/:factoidID', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     try {
-        let id = parseInt(req.params.id);
+        let id = parseInt(req.params.factoidID);
         if (isNaN(id)) {
             return res
                 .status(400)

@@ -1,5 +1,7 @@
 .dashboard {
     background-color: white;
+    max-height: 75dvh;
+    overflow-y: auto;
 }
 
 hr {

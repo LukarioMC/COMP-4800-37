@@ -1,38 +1,45 @@
 <%- include('../partials/header'); %> <%- include('../partials/navbar'); %>
 
 <main class="container-xl my-5">
-  <div class="card">
-    <div class="card-body">
-      <% if (user) { %>
-        <h5 class="card-title">User Information</h5>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><b>ID:</b>
-            <%= user.id %>
-          </li>
-          <li class="list-group-item"><b>Email:</b>
-            <%= user.email %>
-          </li>
-          <% if (user.fname) { %>
-            <li class="list-group-item"><b>First Name:</b>
-              <%= user.fname %>
-            </li>
-          <% } %>
-          <% if (user.lname) { %>
-            <li class="list-group-item"><b>Last Name:</b>
-              <%= user.lname %>
-            </li>
-          <% } %>
-          <% if (user.isAdmin) { %>
-            <a href="/admin" class="btn btn-primary mt-3">Admin Dashboard</a>
-          <% } %>
-        </ul>
-        <% } else { %>
-          <div class="alert alert-warning" role="alert">
-            Not Logged In
-          </div>
-          <% } %>
+    <% if (user) { %>
+    <h1 class="text-center mb-5"><%= user.id %>'s Profile</h1>
+    <% } %>
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <% if (user) { %>
+                    <h5 class="card-title">User Information</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><b>ID:</b>
+                            <%= user.id %>
+                        </li>
+                        <li class="list-group-item"><b>Email:</b>
+                            <%= user.email %>
+                        </li>
+                        <% if (user.fname) { %>
+                        <li class="list-group-item"><b>First Name:</b>
+                            <%= user.fname %>
+                        </li>
+                        <% } %>
+                        <% if (user.lname) { %>
+                        <li class="list-group-item"><b>Last Name:</b>
+                            <%= user.lname %>
+                        </li>
+                        <% } %>
+                        <% if (user.isAdmin) { %>
+                        <a href="/admin" class="btn btn-primary mt-3">Admin Dashboard</a>
+                        <% } %>
+                    </ul>
+                    <% } else { %>
+                    <div class="alert alert-warning" role="alert">
+                        Not Logged In
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </main>
 
 <%- include('../partials/footer'); %>

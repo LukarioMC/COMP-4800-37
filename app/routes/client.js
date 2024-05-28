@@ -68,10 +68,6 @@ router.get('/edit-fact/:id', redirectUnauthorizedRequestHome, (req, res) => {
 
     res.render('pages/edit-fact', { factoid, user: req.user, countries: readCountryData(), tags });
 });
-// Test path for uploading files.
-router.get('/upload', (req, res) => {
-    res.render('pages/upload')
-})
 
 /**
  * Returns an object with properties necessary to render fact-list.ejs. Can modify an existing object via the pageContext arg or return a new one if pageContext is undefined.

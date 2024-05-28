@@ -14,10 +14,10 @@ function createSearchTag(name) {
 
     searchTags.push(name)
     let tag = document.createElement('span')
-    tag.className = "badge rounded-pill bg-primary"
+    tag.className = "badge rounded-pill bg-primary me-2"
     tag.id = name
     tag.innerHTML = name + `
-    <button type="button" class="btn-close" aria-label="Close"></button>
+    <button type="button" class="btn-close btn-close-white" aria-label="Remove Tag"></button>
     `
     document.getElementById('tags').appendChild(tag)
     tag.onclick = () => {
