@@ -9,6 +9,8 @@ info:
 servers:
   - url: "http://localhost:8000/"
     description: "Local server"
+  - url: "http://thirty-seven.duckdns.org/"
+    description: "Student-hosted server"
 
 components:
   schemas:
@@ -208,7 +210,7 @@ paths:
     get:
       summary: Returns a fact by ID.
       parameters:
-        - name: factID
+        - name: factoidID
           in: path
           description: An ID for a fact.
           required: true
