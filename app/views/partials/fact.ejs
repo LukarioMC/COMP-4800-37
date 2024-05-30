@@ -14,19 +14,6 @@
                 <div style="white-space: pre-wrap"><%= factoid.note %></div>
                 <br>
             <% } %>
-            
-            <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
-            <div><b>By:</b> <%= factoid.submitter_id === 'zzz3737' ? `${factoid.submitter_id} (Anonymous)` : factoid.submitter_id %></div>
-            
-            <br>
-            
-            <div>
-                <% factoid.tags.forEach((tag) => { %>
-                <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
-                <% }) %>
-            </div>
-
-            <br>
 
             <% if (factoid.attachments) {
                 const order = ['image', 'youtube', 'audio', 'website']
@@ -58,10 +45,24 @@
                             <a href="<%= att.link %>" style="display: block">Learn More</a>
                             <br>
                             <% break;
-            }})} else { %>
+                    }
+                })
+            } else { %>
                 <br>
-                <%  } %>
+            <%  } %>
 
+            <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
+            <div><b>By:</b> <%= factoid.submitter_id === 'zzz3737' ? `${factoid.submitter_id} (Anonymous)` : factoid.submitter_id %></div>
+            
+            <br>
+            
+            <div>
+                <% factoid.tags.forEach((tag) => { %>
+                <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
+                <% }) %>
+            </div>
+
+            <br>
             <!-- Report Modal Button -->
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
