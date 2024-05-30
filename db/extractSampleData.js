@@ -10,7 +10,7 @@ const { inferType, parseYoutubeUrlToEmbeded } = require('../app/modules/upload')
 
 const OUTPUT_FILE = './extractedSampleData.sql';
 const BASE_URL = 'http://thirty-seven.org/';
-const URLS = {
+const CATEGORY_URLS = {
 	'Amazing': 'http://thirty-seven.org/amazing.html',
 	'Historical': 'http://thirty-seven.org/historical.html',
 	'Ephemeral': 'http://thirty-seven.org/ephemeral.html',
@@ -82,12 +82,13 @@ function processNode(node) {
 /**
  * Fetches a list of HTML links that return a list and will parse them into objects for further manipulation.
  * 
- * @param {string[]} links 
+ * @param {Object} links Object of key value pairs mapping categories to links
  * @returns Array of factoid objects and attachment links
  */
 async function fetchAndParseData(links) {
 	const factoids = [];
-	for (const link of links) {
+	for (const category in links) {
+		const link = links[category];
 		try {
 			const body = await fetchHTMLDocument(link);
 			// Get all list items from the parsed document
@@ -95,7 +96,7 @@ async function fetchAndParseData(links) {
 			for (const item of Array.from(listItems)) {
 				const { rawFactoid, note } = await extractNote(item); // Fetch note data
 				const { factoid, attachments } = parsefactoid(rawFactoid);
-				factoids.push({ factoid, note, attachments });
+				factoids.push({ factoid, note, attachments, category });
 			}
 		} catch (error) {
 			console.error(`Error fetching data for url ${link}`, error);
@@ -162,7 +163,7 @@ function createSQLFile(factoids) {
 	const data = [];
 	let id = 373737; // Starting Factoid ID
 	// Returns {string: int} for fact ID lookup after creating insertion statements
-	const categories = insertCategories(Object.keys(URLS), data);
+	const categories = insertCategories(Object.keys(CATEGORY_URLS), data);
 	for (const { factoid, note, attachments, category } of factoids) {
 		if (!factoid) throw new Error('Invalid factoid data provided!');
 		data.push(`-- INSERTING DATA FOR FACT ID ${id}`);
@@ -174,28 +175,33 @@ function createSQLFile(factoids) {
 				'${factoid}',
 				datetime('1997-02-06 00:22:49'),
 				datetime('1997-02-06 00:22:49'),
-				'${note}',
+				${!note ? null : `'${note}'`},
 				TRUE,
 				CURRENT_TIMESTAMP
 			);`
 		);
 		// Create category tag entry
-		data.push(`INSERT INTO Tag (factoid_id, category_id) VALUES (${id}, ${categories[category]});`);
+		const categoryId = categories[category];
+		data.push(`INSERT INTO Tag (factoid_id, category_id) VALUES (${id}, ${categoryId});`);
 		// Insert the factoids attachments and parse it if it's a youtube link.
-		for (const url of attachments) {
+		for (let url of attachments) {
 			const type = inferType(url);
 			if (type === 'youtube') {
 				url = parseYoutubeUrlToEmbeded(url);
+			}
+			if (!url.startsWith("HTTP") || !url.startsWith('http')) {
+				url = BASE_URL + url;
 			}
 			data.push(
 				`INSERT INTO Attachment (factoid_id, link, type)
 				VALUES (
 					${id},
-					${url},
-					${type}
+					'${url}',
+					'${type}'
 				);`
 			);
 		}
+		id++;
 	}
 	// Make the insert SQL file.
 	fs.writeFileSync(OUTPUT_FILE, data.join('\n'));
@@ -222,5 +228,6 @@ function insertCategories(keys, statements) {
 	return categories;
 }
 
-fetchAndParseData(Object.values(URLS))
+// fetchAndParseData({"Numerical": 'http://thirty-seven.org/numerical.html'})
+fetchAndParseData(CATEGORY_URLS)
 .then(createSQLFile);
