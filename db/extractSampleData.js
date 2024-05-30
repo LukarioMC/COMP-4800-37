@@ -8,7 +8,7 @@ const { JSDOM } = require('jsdom');
 const { document, Node } = (new JSDOM(`...`)).window;
 const { inferType, parseYoutubeUrlToEmbeded } = require('../app/modules/upload');
 
-const OUTPUT_FILE = './extractedSampleData.sql';
+const OUTPUT_FILE = './db/insertSampleData.sql'; // Will overwrite insertSampleData.sql on fetch
 const BASE_URL = 'http://thirty-seven.org/';
 const CATEGORY_URLS = {
 	'Amazing': 'http://thirty-seven.org/amazing.html',
@@ -86,6 +86,7 @@ function processNode(node) {
  * @returns Array of factoid objects and attachment links
  */
 async function fetchAndParseData(links) {
+	console.log('Beginning to fetch data from links. This may take a while...');
 	const factoids = [];
 	for (const category in links) {
 		const link = links[category];
@@ -102,6 +103,7 @@ async function fetchAndParseData(links) {
 			console.error(`Error fetching data for url ${link}`, error);
 		}
 	}
+	console.log('Fetched data from links.');
 	return factoids;
 }
 
@@ -160,6 +162,7 @@ async function extractNote(listItem) {
  * @param {Object[]} factoids 
  */
 function createSQLFile(factoids) {
+	console.log('Creating SQL file...');
 	const data = [];
 	let id = 373737; // Starting Factoid ID
 	// Returns {string: int} for fact ID lookup after creating insertion statements
@@ -205,6 +208,7 @@ function createSQLFile(factoids) {
 	}
 	// Make the insert SQL file.
 	fs.writeFileSync(OUTPUT_FILE, data.join('\n'));
+	console.log(`SQL file created/overwritten at '${OUTPUT_FILE}'!`);
 }
 
 /**
@@ -228,6 +232,5 @@ function insertCategories(keys, statements) {
 	return categories;
 }
 
-// fetchAndParseData({"Numerical": 'http://thirty-seven.org/numerical.html'})
 fetchAndParseData(CATEGORY_URLS)
 .then(createSQLFile);
