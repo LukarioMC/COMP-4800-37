@@ -71,18 +71,29 @@ function configPage() {
  * Configures the page naviation buttons.
  */
 function configPagination() {
-    let pagesMenu = document.getElementById('pages')
-    let next = document.getElementById('next')
+    let pagesMenu = document.getElementById('pages');
+    let next = document.getElementById('next');
+    let prev = document.getElementById('prev');
     let displayedPages = 5;
     try {
-        current = parseInt(current) - Math.floor(displayedPages / 2);
-        if (current < 0) current = 1;
+        current = parseInt(current);
+        let currentPage = current - Math.floor(displayedPages / 2);
+        if (currentPage < 1) currentPage = 1;
         let url = new URL(window.location.href);
-        while(displayedPages > 0 && current < maxPages) {
-            url.searchParams.set('pageNum', current)
-            pagesMenu.insertBefore(createPageButton(current, url.toString()), next)
+        while(displayedPages > 0 && currentPage < maxPages) {
+            url.searchParams.set('pageNum', currentPage)
+            pagesMenu.insertBefore(createPageButton(currentPage, url.toString()), next)
             displayedPages--;
-            current++;
+            currentPage++;
+        }
+        // Set prev, next
+        if (current > 1) {
+            url.searchParams.set('pageNum', current - 1);
+            prev.children[0].href = url.toString();
+        }
+        if (current + 1 <= maxPages) {
+            url.searchParams.set('pageNum', current + 1);
+            next.children[0].href = url.toString();
         }
     } catch (e) {
         console.log(e)
