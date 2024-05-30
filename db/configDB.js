@@ -6,9 +6,6 @@ const crypto = require('crypto');
 const initScript = fs.readFileSync('./db/initEntities.sql', 'utf8');
 db.exec(initScript);
 
-const insertScript = fs.readFileSync('./db/insertSampleData.sql', 'utf8');
-db.exec(insertScript);
-
 const { ANON_PWD, ANON_EMAIL, TOMS_PWD } = process.env;
 if (!ANON_PWD || !ANON_EMAIL || !TOMS_PWD)
     throw 'Invalid configuration! `.env` *must* provide values for "ANON_PWD", "ANON_EMAIL", & "TOMS_PWD"';
@@ -28,6 +25,9 @@ addUserStmt.run(
     1,
     tomSalt
 );
+
+const insertScript = fs.readFileSync('./db/insertSampleData.sql', 'utf8');
+db.exec(insertScript);
 
 let updateAnonFactsStmt = db.prepare(`
     UPDATE factoid

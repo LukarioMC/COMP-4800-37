@@ -7,7 +7,7 @@
     "start": "nodemon app/index.js",
     "dev": "nodemon app/index.js --watch app --watch swagger.yaml",
     "resetdb": "node db/configDB.js",
-    "extractOriginalData": "node db/extractSampleData.js"
+    "extractSampleData": "node db/extractSampleData.js"
   },
   "repository": {
     "type": "git",
