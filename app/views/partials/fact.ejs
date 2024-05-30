@@ -56,7 +56,9 @@
             
             <div class="mt-1">
                 <% factoid.tags.forEach((tag) => { %>
-                <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
+                <a href="/facts?tag=<%= tag.name %>" class="badge rounded-pill bg-primary text-decoration-none">
+                    <%= tag.name %>
+                </a>
                 <% }) %>
             </div>
 
