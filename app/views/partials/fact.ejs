@@ -54,17 +54,14 @@
             <div><b>Posted On:</b> <%= new Date(factoid.posting_date).toUTCString() %></div>
             <div><b>By:</b> <%= factoid.submitter_id === 'zzz3737' ? `${factoid.submitter_id} (Anonymous)` : factoid.submitter_id %></div>
             
-            <br>
-            
-            <div>
+            <div class="mt-1">
                 <% factoid.tags.forEach((tag) => { %>
                 <span class="badge rounded-pill bg-primary"><%= tag.name %></span>
                 <% }) %>
             </div>
 
-            <br>
             <!-- Report Modal Button -->
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
+            <button type="button" class="btn btn-primary mt-3 mb-1" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
             <a class="btn btn-primary mb-3" id="edit-fact-<%= factoid.id %>" href="/edit-fact/<%= factoid.id %>">Edit</a>
             <% } %>
