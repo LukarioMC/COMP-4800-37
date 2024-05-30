@@ -9,8 +9,6 @@ const { redirectUnauthorizedRequestHome } = require('../middleware');
 const { getTags } = require('../handlers/tag');
 const { getReports } = require('../handlers/report');
 
-const PAGE_SIZE = 5
-
 router.get('/', (req, res) => {
     pageContext = prepForFactList(req);
     pageContext.factoid = getRandomFact();
@@ -76,10 +74,11 @@ router.get('/edit-fact/:id', redirectUnauthorizedRequestHome, (req, res) => {
  * @returns object with necessary properties to render fact-list.ejs.
  */
 function prepForFactList(req, pageContext = {}) {
-    pageNum = req.query.pageNum && req.query.pageNum > 0 ? req.query.pageNum : 1
+    pageNum = parseInt(req.query.pageNum) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 5;
 
     const retrieveApproved = req.user?.isAdmin ? null : true; // Pass null to retrieve all facts if user is an administrator.
-    let factoids = getFacts(retrieveApproved, req.query.tag, req.query.searchText, pageNum, PAGE_SIZE)
+    let factoids = getFacts(retrieveApproved, req.query.tag, req.query.searchText, pageNum, pageSize);
     
     // Extract non-public fields if unauthorized/non-admin user.
     if (!req.user?.isAdmin) {
@@ -89,7 +88,7 @@ function prepForFactList(req, pageContext = {}) {
         });
     }
 
-    maxPages = Math.ceil(getFacts(retrieveApproved, req.query.tag, req.query.searchText).length / PAGE_SIZE)
+    maxPages = Math.ceil(getFacts(retrieveApproved, req.query.tag, req.query.searchText).length / pageSize);
     
     pageContext.factoids = factoids, 
     pageContext.tags = getTags(), 
