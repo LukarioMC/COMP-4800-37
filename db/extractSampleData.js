@@ -217,7 +217,7 @@ function insertCategories(keys, statements) {
 	// Create rest of the categories
 	for(const key of keys) {
 		categories[key] = id;
-		statements.push(`INSERT INTO Category (id, name, is_primary) VALUES (${id++}, ${key}, TRUE);`);
+		statements.push(`INSERT INTO Category (id, name, is_primary) VALUES (${id++}, '${key}', TRUE);`);
 	}
 	return categories;
 }
