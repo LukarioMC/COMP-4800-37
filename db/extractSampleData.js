@@ -56,6 +56,11 @@ function processNode(node) {
 			break;
 		case Node.ELEMENT_NODE:
 			if (node.tagName === 'A') {
+				if (node.href.startsWith('#')) {
+					content += node.textContent;
+					break; // Skip on-page element links
+				}
+				// Append URL to text content
 				let url = ''
 				if (node.href.startsWith('http') || node.href.startsWith('HTTP')) {
 					url = node.href;
@@ -146,14 +151,26 @@ function parsefactoid(listItem) {
  */
 async function extractNote(listItem) {
 	// Pattern to match the end of the HTML with a "(Note)." w/ an anchor tag. Contains two capture groups.
-	const pattern = /\((<a href="([^"]+)">Note<\/a>)\)\.\n?$/;
-	const match = listItem.innerHTML.match(pattern);
-	if (!match) return { rawFactoid: listItem }; // No note was found, return early.
-	const url = BASE_URL + match[2];
+	const endNotePattern = /\((<a href="([^"]+)">Note<\/a>)\)\.\n?$/;
+	const inlineNotePattern = /<a href="(notes\/[^"]+)">([^<]+)<\/a>/i;
+	const matchEndNote = listItem.innerHTML.match(endNotePattern);
+	const matchInlineNote = listItem.innerHTML.match(inlineNotePattern);
+	
+	if (!(matchEndNote || matchInlineNote)) return { rawFactoid: listItem }; // No note was found, return early.
+	
+	let url = '';
+	if (matchEndNote) {
+		url = BASE_URL + matchEndNote[2]; // Note at end of fact found, extract
+		listItem.innerHTML = listItem.innerHTML.replace(endNotePattern, '');
+	} else { 
+		url = BASE_URL + matchInlineNote[1]; // Inline note found, extract and replace w/ text
+		listItem.innerHTML = listItem.innerHTML.replace(inlineNotePattern, matchInlineNote[2]);
+	}
+	
 	const body = await fetchHTMLDocument(url);
-	// Parse fetched body into note text
+	// Parse fetched body into note text, excape single quotes.
 	const note = processNode(body)?.trim().replace(/'/g, "''");
-	listItem.innerHTML = listItem.innerHTML.replace(pattern, '');
+	
 	return { rawFactoid: listItem, note }
 }
 
