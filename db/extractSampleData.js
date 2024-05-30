@@ -185,6 +185,7 @@ function createSQLFile(factoids) {
 		);
 		// Create category tag entry
 		const categoryId = categories[category];
+		data.push(`INSERT INTO Tag (factoid_id, category_id) VALUES (${id}, 373737;`); // Insert "OG Tag"
 		data.push(`INSERT INTO Tag (factoid_id, category_id) VALUES (${id}, ${categoryId});`);
 		// Insert the factoids attachments and parse it if it's a youtube link.
 		for (let url of attachments) {
