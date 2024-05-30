@@ -42,51 +42,6 @@ async function fetchHTMLDocument(url) {
 }
 
 /**
- * Fetches a list of HTML links that return a list and will parse them into objects for further manipulation.
- * 
- * @param {string[]} links 
- * @returns Array of factoid objects and attachment links
- */
-async function fetchAndParseData(links) {
-	const factoids = [];
-	for (const link of links) {
-		try {
-			const body = await fetchHTMLDocument(link);
-			// Get all list items from the parsed document
-			const listItems = body.querySelectorAll('ul li, ol li');
-			for (const item of Array.from(listItems)) {
-				const { rawFactoid, note } = await getNote(item); // Fetch note data
-				const { factoid, attachments } = parsefactoid(rawFactoid);
-				factoids.push({ factoid, note, attachments });
-			}
-		} catch (error) {
-			console.error(`Error fetching data for url ${link}`, error);
-		}
-	}
-	return factoids;
-}
-
-/**
- * Parses a note from a passed list item and returns the modified HTML. Assumes
- * the note matches the pattern `(<a href="*">Note</a>)`.
- * 
- * @param {HTMLElement} listItem to extract the note from
- * @returns Object of the (possibly modified) raw fact HTML and retrieved note text
- */
-async function getNote(listItem) {
-	// Pattern to match the end of the HTML with a "(Note)." w/ an anchor tag. Contains two capture groups.
-	const pattern = /\((<a href="([^"]+)">Note<\/a>)\)\.\n?$/;
-	const match = listItem.innerHTML.match(pattern);
-	if (!match) return { rawFactoid: listItem }; // No note was found, return early.
-	const url = BASE_URL + match[2];
-	const body = await fetchHTMLDocument(url);
-	// Parse fetched body into note text
-	const note = processNode(body)?.trim();
-	listItem.innerHTML = listItem.innerHTML.replace(pattern, '');
-	return { rawFactoid: listItem, note }
-}
-
-/**
  * Recursively processess a simplified node tree into text content. Has support
  * for the following tags: p, li, a. 
  * Other tags are ignored and the inner text nodes are simply appended.
@@ -125,6 +80,31 @@ function processNode(node) {
 }
 
 /**
+ * Fetches a list of HTML links that return a list and will parse them into objects for further manipulation.
+ * 
+ * @param {string[]} links 
+ * @returns Array of factoid objects and attachment links
+ */
+async function fetchAndParseData(links) {
+	const factoids = [];
+	for (const link of links) {
+		try {
+			const body = await fetchHTMLDocument(link);
+			// Get all list items from the parsed document
+			const listItems = body.querySelectorAll('ul li, ol li');
+			for (const item of Array.from(listItems)) {
+				const { rawFactoid, note } = await extractNote(item); // Fetch note data
+				const { factoid, attachments } = parsefactoid(rawFactoid);
+				factoids.push({ factoid, note, attachments });
+			}
+		} catch (error) {
+			console.error(`Error fetching data for url ${link}`, error);
+		}
+	}
+	return factoids;
+}
+
+/**
  * Parses a list item into a factoid object (strips newlines, img, & anchor tags from factoid) 
  * 
  * @param {HTMLElement} listItem to parse
@@ -155,24 +135,23 @@ function parsefactoid(listItem) {
 }
 
 /**
- * Appends tag insert statements to the end of the passed in `statements`. Sets
- * each `key` to be a primary tag.
+ * Parses a note from a passed list item and returns the modified HTML. Assumes
+ * the note matches the pattern `(<a href="*">Note</a>)`.
  * 
- * @param {string[]} keys to be used as category names
- * @param {string[]} statements SQL statements to be joined later.
- * @returns Object of category names to inserted category ID.
+ * @param {HTMLElement} listItem to extract the note from
+ * @returns Object of the (possibly modified) raw fact HTML and retrieved note text
  */
-function insertCategories(keys, statements) {
-	let id = 373737; // Starting category id
-	let categories = {};
-	// Create OG category
-	statements.push(`INSERT INTO Category (id, name, is_primary) VALUES (${id++}, 'OG', TRUE);`);
-	// Create rest of the categories
-	for(const key of keys) {
-		categories[key] = id;
-		statements.push(`INSERT INTO Category (id, name, is_primary) VALUES (${id++}, ${key}, TRUE);`);
-	}
-	return categories;
+async function extractNote(listItem) {
+	// Pattern to match the end of the HTML with a "(Note)." w/ an anchor tag. Contains two capture groups.
+	const pattern = /\((<a href="([^"]+)">Note<\/a>)\)\.\n?$/;
+	const match = listItem.innerHTML.match(pattern);
+	if (!match) return { rawFactoid: listItem }; // No note was found, return early.
+	const url = BASE_URL + match[2];
+	const body = await fetchHTMLDocument(url);
+	// Parse fetched body into note text
+	const note = processNode(body)?.trim();
+	listItem.innerHTML = listItem.innerHTML.replace(pattern, '');
+	return { rawFactoid: listItem, note }
 }
 
 /**
@@ -220,6 +199,27 @@ function createSQLFile(factoids) {
 	}
 	// Make the insert SQL file.
 	fs.writeFileSync(OUTPUT_FILE, data.join('\n'));
+}
+
+/**
+ * Appends tag insert statements to the end of the passed in `statements`. Sets
+ * each `key` to be a primary tag.
+ * 
+ * @param {string[]} keys to be used as category names
+ * @param {string[]} statements SQL statements to be joined later.
+ * @returns Object of category names to inserted category ID.
+ */
+function insertCategories(keys, statements) {
+	let id = 373737; // Starting category id
+	let categories = {};
+	// Create OG category
+	statements.push(`INSERT INTO Category (id, name, is_primary) VALUES (${id++}, 'OG', TRUE);`);
+	// Create rest of the categories
+	for(const key of keys) {
+		categories[key] = id;
+		statements.push(`INSERT INTO Category (id, name, is_primary) VALUES (${id++}, ${key}, TRUE);`);
+	}
+	return categories;
 }
 
 fetchAndParseData(Object.values(URLS))
