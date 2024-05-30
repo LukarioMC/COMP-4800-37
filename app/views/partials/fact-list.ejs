@@ -54,14 +54,16 @@
     <!-- Factoids Section -->
     <h3>Facts</h3>
     <div id="factoids" class="container accordion p-0">
-        <% if (typeof factoids !== 'undefined') { %>
+        <% if (typeof factoids !== 'undefined' && factoids.length > 0) { %>
         <% factoids.forEach((factoid) => { %>
         <%- include('../partials/fact', { factoid, accordionParent: '#factoids' }) %>
         <% }) %>
+        <% } else { %>
+            <div class="display-5 opacity-50 text-center my-4">No facts found...</br><small>Please try again.</small></div>
         <% } %>
-    </div>
+    </>
 
-    <nav aria-label="Fact Pagination" <%= maxPages == 1 ? 'hidden' : ''%>>
+    <nav aria-label="Fact Pagination" <%= maxPages <= 1 ? 'hidden' : ''%>>
         <ul class="pagination d-flex justify-content-center pb-5" id="pages">
             <li class="page-item" id="prev">
                 <a class="page-link" aria-label="Previous">
