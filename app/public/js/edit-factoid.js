@@ -103,7 +103,6 @@ function deleteAttachment(attachmentId) {
     fetch(`/api/attachment/${attachmentId}`, { method: 'DELETE' })
     .then(response => response.json())
     .then(() => {
-        console.log('Attachment deleted successfully');
         refreshAttachments();
     })
     .catch(error => {
@@ -125,7 +124,6 @@ function refreshAttachments() {
             return response.json();
         })
         .then(data => {
-            console.log('Fetched attachments:', data);
             const attachmentsContainer = document.getElementById('attachments-container');
             attachmentsContainer.innerHTML = '';
 
