@@ -52,7 +52,7 @@ function processNode(node) {
 	let content = '';
 	switch (node.nodeType) {
 		case Node.TEXT_NODE:
-			content += node.nodeValue.replace(/'/g, "''");
+			content += node.nodeValue;
 			break;
 		case Node.ELEMENT_NODE:
 			if (node.tagName === 'A') {
@@ -150,7 +150,7 @@ async function extractNote(listItem) {
 	const url = BASE_URL + match[2];
 	const body = await fetchHTMLDocument(url);
 	// Parse fetched body into note text
-	const note = processNode(body)?.trim();
+	const note = processNode(body)?.trim().replace(/'/g, "''");
 	listItem.innerHTML = listItem.innerHTML.replace(pattern, '');
 	return { rawFactoid: listItem, note }
 }
@@ -189,7 +189,7 @@ function createSQLFile(factoids) {
 			if (type === 'youtube') {
 				url = parseYoutubeUrlToEmbeded(url);
 			}
-			if (!url.startsWith("HTTP") || !url.startsWith('http')) {
+			if (!(url.startsWith("HTTP") && url.startsWith('http'))) {
 				url = BASE_URL + url;
 			}
 			data.push(
