@@ -10,7 +10,7 @@
 <section class="container-xl px-0">
     <h3>Search and Filter</h3>
     <p>Enter a prompt and/or select tag(s), then click on the search button.</p>
-    <div class="input-group mb-3 w-50">
+    <form class="input-group mb-3 w-50" id="search-form">
         <input class="form-control" type="text" placeholder="Look up a fact by text..." id="searchBarText" value="<%= searchText %>" />
         <div class="dropdown">
             <button class="btn btn-primary dropdown-toggle rounded-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,7 +26,7 @@
             <i class="bi bi-search"></i>
             Search
         </button>
-    </div>
+    </form>
 
     <div id="tags" class="mb-3"></div>
 

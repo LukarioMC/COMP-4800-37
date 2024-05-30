@@ -59,6 +59,10 @@ function configPage() {
     }
     
     document.getElementById('search-by-text-btn').onclick = () => search()
+    document.getElementById('search-form').onsubmit = (e) => {
+        e.preventDefault();
+        search();
+    }
 
     configPagination()
 }
