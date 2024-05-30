@@ -2,7 +2,7 @@
 Recreation of the historical 37 website which contains facts about the number.
 
 # Installation
-To install, you must configure the applications environment variables via an `.env` file that should be created in the root directory.
+To install, you must configure the applications environment variables via an `.env` file that should be created in the root directory. Optionally, you may run the script to extract the original site data and then reset the database.
 
 ## `.env` Configuration
 Required Variables:
@@ -32,6 +32,8 @@ Optional Variables (Can be omitted or have default values):
 
 ## Scripts:
 Run the following using 'npm run [cmd]'
+ - `start` - Runs the app normally on the specified port (default 8000).
+ - `extractSampleData` - A single-use script that will extract and parse a new `insertSampleData.sql` file to seed the database with. Data fetched from the original [thirty-seven](thirty-seven.org) website.
  - `resetdb` - Creates all database entities (e.g. tables, indices) in app.db. Will drop pre-existing entities. Should only be run once the server has stopped.
  - `dev` - Run the app using nodemon serving to the localhost at the specified port (default of 8000).
 
