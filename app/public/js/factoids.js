@@ -40,6 +40,8 @@ function search() {
     if (searchText !== '') {
         url = url.concat(`&searchText=${searchText}`)
     }
+    let pageSize = document.getElementById('page-size-select').value;
+    url += `&pageSize=${pageSize}`;
 
     window.location.href = url
 }
@@ -63,6 +65,10 @@ function configPage() {
         e.preventDefault();
         search();
     }
+    // Select chosen page size from query parameter
+    const params = new URLSearchParams(window.location.search);
+    const pageSize = params.get('pageSize') || 5;
+    document.getElementById('page-size-select').value = pageSize;
 
     configPagination()
 }
