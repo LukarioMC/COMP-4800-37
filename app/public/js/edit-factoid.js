@@ -146,7 +146,7 @@ function refreshAttachments() {
                         content = `<iframe width="50%" height="50%" src="${embedLink}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
                         break;
                     case 'website':
-                        content = `<a href="${att.link}" style="display: block">Learn More</a><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
+                        content = `<a href="${att.link}" style="display: block">Note.</a><button type="button" class="btn-delete-attachment" data-attachment-id="${att.id}">&times;</button>`;
                         break;
                 }
                 attachmentDiv.innerHTML = content;
