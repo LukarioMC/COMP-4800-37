@@ -69,23 +69,16 @@ function configPage() {
 function configPagination() {
     let pagesMenu = document.getElementById('pages')
     let next = document.getElementById('next')
-    let prev = document.getElementById('prev')
-    let pages = []
-
+    let displayedPages = 5;
     try {
-        current = parseInt(current)
-        if (current > 1) {
-            pagesMenu.insertBefore(createPageButton(current - 1), next)
-            let url = new URL(window.location.href)
-            url.searchParams.set('pageNum', current - 1)
-            prev.children[0].href = url.toString()
-        }
-        pagesMenu.insertBefore(createPageButton(current), next)
-        if (current + 1 <= maxPages) {
-            pagesMenu.insertBefore(createPageButton(current + 1), next)
-            let url = new URL(window.location.href)
-            url.searchParams.set('pageNum', current + 1)
-            next.children[0].href = url.toString()
+        current = parseInt(current) - Math.floor(displayedPages / 2);
+        if (current < 0) current = 1;
+        let url = new URL(window.location.href);
+        while(displayedPages > 0 && current < maxPages) {
+            url.searchParams.set('pageNum', current)
+            pagesMenu.insertBefore(createPageButton(current, url.toString()), next)
+            displayedPages--;
+            current++;
         }
     } catch (e) {
         console.log(e)
@@ -95,20 +88,18 @@ function configPagination() {
 /**
  * Creates a page navigation button.
  * @param {number} n The page number. 
- * @returns The page navigation button.
+ * @param {string} url URL string of the page link.
+ * @returns The created page navigation button.
  */
-function createPageButton(n) {
-    let pageBtn = document.createElement('li')
-    pageBtn.className = 'page-item'
-    let pageBtnLink = document.createElement('a')
-    pageBtnLink.className = 'page-link'
-    pageBtnLink.innerHTML = n
-    let url = new URL(window.location.href)
-    url.searchParams.set('pageNum', n)
-    pageBtnLink.href = url.toString()
-
-    pageBtn.appendChild(pageBtnLink)
-    return pageBtn
+function createPageButton(n, url) {
+    let pageBtn = document.createElement('li');
+    pageBtn.className = 'page-item';
+    let pageBtnLink = document.createElement('a');
+    pageBtnLink.className = 'page-link';
+    pageBtnLink.innerHTML = n;
+    pageBtnLink.href = url;
+    pageBtn.appendChild(pageBtnLink);
+    return pageBtn;
 }
 
-configPage()
+configPage();
