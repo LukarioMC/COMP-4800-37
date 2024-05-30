@@ -97,7 +97,7 @@ function processNode(node) {
 	let content = '';
 	switch (node.nodeType) {
 		case Node.TEXT_NODE:
-			content += node.nodeValue;
+			content += node.nodeValue.replace(/'/g, "''");
 			break;
 		case Node.ELEMENT_NODE:
 			if (node.tagName === 'A') {
@@ -150,7 +150,7 @@ function parsefactoid(listItem) {
     }
   });
   // Extract the remaining text content (Removing whitespace)
-  const factoid = listItem.textContent.replace(/\n/g, ' ').trim() || null;
+  const factoid = listItem.textContent.replace(/\n/g, ' ').replace(/'/g, "''").trim() || null;
   return { factoid, attachments };
 }
 
@@ -168,7 +168,7 @@ function insertCategories(keys, statements) {
 	// Create OG category
 	statements.push(`INSERT INTO Category (id, name, is_primary) VALUES (${id++}, 'OG', TRUE);`);
 	// Create rest of the categories
-	for(const key in keys) {
+	for(const key of keys) {
 		categories[key] = id;
 		statements.push(`INSERT INTO Category (id, name, is_primary) VALUES (${id++}, ${key}, TRUE);`);
 	}
@@ -192,10 +192,10 @@ function createSQLFile(factoids) {
 			VALUES (
 				${id},
 				'mag3737',
-				${factoid},
-				datetime(1997-02-06 00:22:49),
-				datetime(1997-02-06 00:22:49),
-				${note},
+				'${factoid}',
+				datetime('1997-02-06 00:22:49'),
+				datetime('1997-02-06 00:22:49'),
+				'${note}',
 				TRUE,
 				CURRENT_TIMESTAMP
 			);`
