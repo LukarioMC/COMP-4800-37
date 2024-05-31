@@ -65,7 +65,7 @@
             <!-- Report Modal Button -->
             <button type="button" class="btn btn-primary mt-3 mb-1" data-bs-toggle="modal" data-bs-target="#reportModal-<%= factoid.id %>">Report</button>
             <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
-            <a class="btn btn-primary mb-3" id="edit-fact-<%= factoid.id %>" href="/edit-fact/<%= factoid.id %>">Edit</a>
+            <a class="btn btn-primary mt-3 mb-1" id="edit-fact-<%= factoid.id %>" href="/edit-fact/<%= factoid.id %>">Edit</a>
             <% } %>
         </div>
     </div>
