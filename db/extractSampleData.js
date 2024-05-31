@@ -52,7 +52,7 @@ function processNode(node) {
 	let content = '';
 	switch (node.nodeType) {
 		case Node.TEXT_NODE:
-			content += node.nodeValue;
+			if (node.nodeValue.trim() !== '') content += node.nodeValue;
 			break;
 		case Node.ELEMENT_NODE:
 			if (node.tagName === 'A') {
@@ -76,6 +76,7 @@ function processNode(node) {
 					content += processNode(child);
 				}
 			}
+
 			if (node.tagName === 'P' || node.tagName === 'LI') {
 				content += '\n'; // Add newline after <p> and <li>
 			}
@@ -137,8 +138,8 @@ function parsefactoid(listItem) {
       el.remove();
     }
   });
-  // Extract the remaining text content (Removing whitespace)
-  const factoid = listItem.textContent.replace(/\n/g, ' ').replace(/'/g, "''").trim() || null;
+  // Extract the remaining text content (Removing whitespace & excaping single quotes)
+  const factoid = listItem.textContent.replace(/\s+/g, ' ').replace(/'/g, "''").trim() || null;
   return { factoid, attachments };
 }
 
@@ -169,7 +170,9 @@ async function extractNote(listItem) {
 	
 	const body = await fetchHTMLDocument(url);
 	// Parse fetched body into note text, excape single quotes.
-	const note = processNode(body)?.trim().replace(/'/g, "''");
+	const note = processNode(body)?.trim()
+		.replace(/'/g, "''")
+		.replace(/(\r\n|\r|\n){2,}/g, '$1\n'); // Strip multiple newlines
 	
 	return { rawFactoid: listItem, note }
 }
